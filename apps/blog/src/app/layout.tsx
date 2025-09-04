@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "OrangeCat, The Product Engineer",
   description: "Orange Cat, Who Loves to Code with Typescript",
   icons: {
-    icon: "/favicon.png",
+    icon: "/images/favicon.png",
   },
 };
 
