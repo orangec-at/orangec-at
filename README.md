@@ -53,10 +53,6 @@ Currently building the yoga tech ecosystem with two live products while explorin
 - Balance startup building with stable collaboration
 - Work with product-minded, AI-forward teams
 
-## 📈 GitHub Stats
-
-![GitHub Stats](https://github-readme-stats.vercel.app/api?username=orangec-at&show_icons=true&theme=minimal)
-
 ## 🔗 Links
 
 - 📧 Email: radio941016@gmail.com
