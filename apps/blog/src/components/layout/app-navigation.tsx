@@ -1,8 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import MobileHeader from "./mobile/header";
-import MobileBottomNav from "./mobile/bottom-navigation";
+import MobileBottom from "./mobile/bottom";
 import DesktopHeader from "./desktop/header";
 import DesktopFooter from "./desktop/footer";
 
@@ -18,22 +17,17 @@ export default function AppNavigation({ children }: AppNavigationProps) {
         <DesktopHeader />
       </div>
 
-      {/* Mobile Header */}
-      <div className="md:hidden">
-        <MobileHeader />
-      </div>
-
       {/* Main Content */}
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 pt-4 pb-20 md:pt-24 md:pb-0">{children}</main>
 
       {/* Desktop Footer */}
       <div className="hidden md:block">
         <DesktopFooter />
       </div>
 
-      {/* Mobile Bottom Navigation */}
+      {/* Mobile Bottom Header Navigation */}
       <div className="md:hidden">
-        <MobileBottomNav />
+        <MobileBottom />
       </div>
     </div>
   );
