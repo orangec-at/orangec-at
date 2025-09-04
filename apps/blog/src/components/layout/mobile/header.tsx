@@ -1,15 +1,16 @@
 "use client";
 
+import { APP_NAME } from "@/constant/layout";
+import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export default function MobileHeader() {
   return (
     <header className="flex items-center justify-between px-4 py-2 bg-white shadow-md md:hidden">
+      <Image src="/svgs/logo.svg" alt="Logo" width={40} height={40} />
       <Link href="/" className="text-lg font-bold">
-        My Portfolio
+        {APP_NAME}
       </Link>
-      <Button className="px-3 py-1">Menu</Button>
     </header>
   );
 }
