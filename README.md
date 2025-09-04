@@ -43,7 +43,7 @@ Currently building the yoga tech ecosystem with two live products while explorin
 ![Supabase](https://img.shields.io/badge/-Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white)
 
 ### AI Tools
-![Claude Code](https://img.shields.io/badge/-Claude-4A90E2?style=flat-square)
+![Claude Code](https://img.shields.io/badge/-ClaudeCode-4A90E2?style=flat-square)
 
 ## 🎯 What I'm Looking For
 
