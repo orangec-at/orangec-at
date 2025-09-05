@@ -1,3 +1,5 @@
+import { designTokens } from "@/lib/design-tokens";
+
 export default function CareerTimeline() {
   const experiences = [
     {
@@ -46,7 +48,7 @@ export default function CareerTimeline() {
 
   return (
     <section className="max-w-3xl mx-auto space-y-8">
-      <h2 className="text-3xl font-bold text-center text-gray-900">Work Experience</h2>
+      <h2 className={`${designTokens.typography.section} text-center`}>Work Experience</h2>
       
       <div className="space-y-8">
         {experiences.map((exp, index) => (
@@ -58,7 +60,7 @@ export default function CareerTimeline() {
               {/* Header */}
               <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">{exp.company}</h3>
+                  <h3 className={designTokens.typography.cardTitle}>{exp.company}</h3>
                   <p className="text-gray-600">{exp.team} | {exp.role}</p>
                 </div>
                 <span className="text-sm text-gray-500 font-medium mt-1 md:mt-0">
@@ -73,7 +75,7 @@ export default function CareerTimeline() {
               <ul className="space-y-1 text-sm text-gray-600">
                 {exp.highlights.map((highlight, i) => (
                   <li key={i} className="flex items-start">
-                    <span className="text-blue-500 mr-2 mt-1 flex-shrink-0">•</span>
+                    <span className="text-gray-400 mr-2 mt-1 flex-shrink-0">•</span>
                     <span>{highlight}</span>
                   </li>
                 ))}
