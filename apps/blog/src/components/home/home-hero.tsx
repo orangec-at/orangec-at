@@ -2,15 +2,41 @@ import Link from "next/link";
 
 export default function HomeHero() {
   return (
-    <section className="text-center space-y-4">
-      <h1 className="text-4xl font-bold">Hi, I'm Jaeil Lee</h1>
-      <p className="text-lg text-gray-700">
-        Frontend / Fullstack Developer. React & Next.js Specialist. 0→1 프로젝트
-        경험 보유.
-      </p>
-      <Link href="/projects" className="underline text-blue-600">
-        View Projects
-      </Link>
+    <section className="max-w-3xl mx-auto text-center space-y-8">
+      {/* Avatar Image */}
+      <div className="flex justify-center">
+        <img 
+          src="/images/avatar.png" 
+          alt="Jaeil Lee" 
+          className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
+        />
+      </div>
+      
+      {/* Main Introduction */}
+      <div className="space-y-4">
+        <h1 className="text-4xl font-bold text-gray-900">
+          Jaeil Lee – Frontend & Fullstack Developer
+        </h1>
+        <p className="text-xl text-gray-600 leading-relaxed">
+          4.5년 프론트엔드 전문가로 창업부터 기업 SaaS까지, 사용자 중심 제품을 만듭니다.
+        </p>
+      </div>
+
+      {/* CTA Buttons */}
+      <div className="flex justify-center space-x-4">
+        <a
+          href="#projects"
+          className="bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+        >
+          View Projects
+        </a>
+        <a
+          href="/contact"
+          className="border border-gray-300 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          Contact Me
+        </a>
+      </div>
     </section>
   );
 }

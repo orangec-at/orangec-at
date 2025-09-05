@@ -6,12 +6,23 @@ import TechStack from "@/components/home/tech-stack";
 
 export default function HomePage() {
   return (
-    <main className="px-4 py-8 md:px-16 md:py-12 space-y-16">
-      <HomeHero />
-      <FeaturedProjects />
-      <TechStack />
-      <AboutMe />
-      <ContactCTA />
+    <main className="min-h-screen bg-white">
+      <div className="max-w-4xl mx-auto px-6 py-16 space-y-20">
+        {/* 1. Hero Section */}
+        <HomeHero />
+
+        {/* 2. Featured Projects */}
+        <FeaturedProjects />
+
+        {/* 3. Tech Stack */}
+        <TechStack />
+
+        {/* 4. About Me */}
+        <AboutMe />
+
+        {/* 5. Contact CTA */}
+        <ContactCTA />
+      </div>
     </main>
   );
 }
