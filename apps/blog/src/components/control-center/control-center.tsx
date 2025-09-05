@@ -1,35 +1,32 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { X } from "lucide-react";
 import { useTheme } from "@/contexts/theme-context";
 import { Button } from "@/components/ui/button";
 import { ControlItemRenderer } from "./items";
-import { defaultControlCenterConfig } from "./config";
-import { ControlItem, ControlItemSize } from "./types";
+import { defaultControlCenterConfig, inlineControlCenterConfig } from "./config";
+import { ControlItem, ControlItemSize, ControlCenterConfig } from "./types";
 
 interface ControlCenterProps {
-  isOpen: boolean;
-  onClose: () => void;
+  variant?: "inline" | "popup";
+  className?: string;
+  onAction?: (action: string, data?: any) => void;
 }
 
-export function ControlCenter({ isOpen, onClose }: ControlCenterProps) {
+export function ControlCenter({ 
+  variant = "inline", 
+  className = "", 
+  onAction 
+}: ControlCenterProps) {
   const { theme, setTheme } = useTheme();
 
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen]);
+  // Removed body overflow management for inline variant
 
   // Create config with injected theme functions
   const config = useMemo(() => {
-    const configCopy = { ...defaultControlCenterConfig };
+    const baseConfig = variant === "inline" ? inlineControlCenterConfig : defaultControlCenterConfig;
+    const configCopy = { ...baseConfig };
     configCopy.items = configCopy.items.map((item) => {
       if (item.type === "theme") {
         return {
@@ -82,60 +79,43 @@ export function ControlCenter({ isOpen, onClose }: ControlCenterProps) {
     return rows;
   }, [sortedItems]);
 
-  return (
-    <>
-      {/* Backdrop */}
-      {isOpen && (
+  if (variant === "popup") {
+    return (
+      <>
+        {/* Legacy popup backdrop - only for popup variant */}
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-all duration-300"
-          onClick={onClose}
+          onClick={() => onAction?.("close")}
         />
-      )}
-
-      {/* Control Center Panel */}
-      <div
-        className={`fixed right-2 top-2 sm:right-4 sm:top-4 w-[calc(100vw-1rem)] max-w-[${
-          config.layout.maxWidth
-        }] sm:w-[${
-          config.layout.maxWidth
-        }] bg-popover border shadow-lg rounded-xl z-50 transition-all duration-500 ease-out ${
-          isOpen
-            ? "opacity-100 scale-100 translate-y-0"
-            : "opacity-0 scale-95 translate-y-4 pointer-events-none"
-        }`}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 sm:p-6 pb-3 sm:pb-4 border-b">
-          <h2 className="text-base sm:text-lg font-semibold text-popover-foreground">
-            Control Center
-          </h2>
-          <Button
-            onClick={onClose}
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-          >
-            <X className="h-4 w-4" />
-          </Button>
+        
+        {/* Legacy popup panel */}
+        <div className="fixed right-2 top-2 sm:right-4 sm:top-4 w-[calc(100vw-1rem)] max-w-[380px] sm:w-[380px] bg-popover border shadow-lg rounded-xl z-50">
+          <PopupContent config={config} layoutRows={layoutRows} onAction={onAction} />
         </div>
+      </>
+    );
+  }
 
-        {/* Dynamic Control Grid */}
-        <div className="p-4 sm:p-6">
-          <div className="space-y-3 sm:space-y-4">
-            {layoutRows.map((row, rowIndex) => (
-              <div
-                key={rowIndex}
-                className={`grid grid-cols-${config.layout.columns} gap-2 sm:gap-3`}
-              >
-                {row.map((item) => (
-                  <ControlItemRenderer key={item.id} item={item} />
-                ))}
-              </div>
+  return (
+    <div className={`w-full max-w-none ${className}`}>
+      {/* Inline Control Grid - No header needed */}
+      <div className="space-y-4">
+        {layoutRows.map((row, rowIndex) => (
+          <div
+            key={rowIndex}
+            className={`grid grid-cols-${config.layout.columns} gap-3`}
+          >
+            {row.map((item) => (
+              <ControlItemRenderer 
+                key={item.id} 
+                item={item} 
+                onAction={onAction}
+              />
             ))}
           </div>
-        </div>
+        ))}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -153,4 +133,50 @@ function getItemSpan(size: ControlItemSize): number {
     default:
       return 2;
   }
+}
+
+// Legacy popup content component
+function PopupContent({ 
+  config, 
+  layoutRows, 
+  onAction 
+}: { 
+  config: ControlCenterConfig; 
+  layoutRows: ControlItem[][]; 
+  onAction?: (action: string, data?: any) => void;
+}) {
+  return (
+    <>
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 sm:p-6 pb-3 sm:pb-4 border-b">
+        <h2 className="text-base sm:text-lg font-semibold text-popover-foreground">
+          Control Center
+        </h2>
+        <Button
+          onClick={() => onAction?.("close")}
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Dynamic Control Grid */}
+      <div className="p-4 sm:p-6">
+        <div className="space-y-3 sm:space-y-4">
+          {layoutRows.map((row, rowIndex) => (
+            <div
+              key={rowIndex}
+              className={`grid grid-cols-${config.layout.columns} gap-2 sm:gap-3`}
+            >
+              {row.map((item) => (
+                <ControlItemRenderer key={item.id} item={item} onAction={onAction} />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
 }
