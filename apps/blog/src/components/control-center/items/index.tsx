@@ -9,7 +9,7 @@ import MusicPlayerItemComponent from "./music-player-item";
 
 interface ControlItemRendererProps {
   item: ControlItem;
-  onAction?: (action: string, data?: any) => void;
+  onAction?: (action: string, data?: unknown) => void;
 }
 
 export function ControlItemRenderer({ item, onAction }: ControlItemRendererProps) {

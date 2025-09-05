@@ -3,7 +3,7 @@ import { MusicPlayerItem } from "../types";
 
 interface MusicPlayerItemProps {
   item: MusicPlayerItem;
-  onAction?: (action: string, data?: any) => void;
+  onAction?: (action: string, data?: unknown) => void;
 }
 
 export default function MusicPlayerItemComponent({ item, onAction }: MusicPlayerItemProps) {

@@ -35,7 +35,11 @@ export function ControlCenterTrigger() {
         </button>
       </div>
       {/* Control Center Panel */}
-      <ControlCenter isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <ControlCenter 
+        variant="popup"
+        isOpen={isOpen} 
+        onClose={() => setIsOpen(false)} 
+      />
     </>
   );
 }

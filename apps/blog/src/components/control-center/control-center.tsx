@@ -11,12 +11,16 @@ import { ControlItem, ControlItemSize, ControlCenterConfig } from "./types";
 interface ControlCenterProps {
   variant?: "inline" | "popup";
   className?: string;
-  onAction?: (action: string, data?: any) => void;
+  isOpen?: boolean;
+  onClose?: () => void;
+  onAction?: (action: string, data?: unknown) => void;
 }
 
 export function ControlCenter({ 
   variant = "inline", 
-  className = "", 
+  className = "",
+  isOpen,
+  onClose,
   onAction 
 }: ControlCenterProps) {
   const { theme, setTheme } = useTheme();
@@ -38,7 +42,7 @@ export function ControlCenter({
       return item;
     });
     return configCopy;
-  }, [theme, setTheme]);
+  }, [theme, setTheme, variant]);
 
   // Sort items by order and filter enabled ones
   const sortedItems = useMemo(
@@ -80,17 +84,22 @@ export function ControlCenter({
   }, [sortedItems]);
 
   if (variant === "popup") {
+    if (!isOpen) return null;
+    
     return (
       <>
         {/* Legacy popup backdrop - only for popup variant */}
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-all duration-300"
-          onClick={() => onAction?.("close")}
+          onClick={() => {
+            onClose?.();
+            onAction?.("close");
+          }}
         />
         
         {/* Legacy popup panel */}
         <div className="fixed right-2 top-2 sm:right-4 sm:top-4 w-[calc(100vw-1rem)] max-w-[380px] sm:w-[380px] bg-popover border shadow-lg rounded-xl z-50">
-          <PopupContent config={config} layoutRows={layoutRows} onAction={onAction} />
+          <PopupContent config={config} layoutRows={layoutRows} onClose={onClose} onAction={onAction} />
         </div>
       </>
     );
@@ -139,11 +148,13 @@ function getItemSpan(size: ControlItemSize): number {
 function PopupContent({ 
   config, 
   layoutRows, 
+  onClose,
   onAction 
 }: { 
   config: ControlCenterConfig; 
   layoutRows: ControlItem[][]; 
-  onAction?: (action: string, data?: any) => void;
+  onClose?: () => void;
+  onAction?: (action: string, data?: unknown) => void;
 }) {
   return (
     <>
@@ -153,7 +164,10 @@ function PopupContent({
           Control Center
         </h2>
         <Button
-          onClick={() => onAction?.("close")}
+          onClick={() => {
+            onClose?.();
+            onAction?.("close");
+          }}
           variant="ghost"
           size="icon"
           className="h-8 w-8"

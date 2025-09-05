@@ -1,6 +1,4 @@
-import { 
-  Play, Pause, SkipForward, SkipBack, Volume2
-} from "lucide-react";
+// Control center configuration - icons imported in individual components
 import { ControlCenterConfig } from "./types";
 
 export const defaultControlCenterConfig: ControlCenterConfig = {
