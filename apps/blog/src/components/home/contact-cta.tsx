@@ -1,10 +1,8 @@
-import Link from "next/link";
-
 export default function ContactCTA() {
   return (
     <section className="max-w-2xl mx-auto text-center space-y-8">
       <div className="border-t pt-12">
-        <h3 className="text-2xl font-bold text-gray-900 mb-6">Let's Connect</h3>
+        <h3 className="text-2xl font-bold text-gray-900 mb-6">Let&apos;s Connect</h3>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <a 

@@ -3,8 +3,6 @@
 import { ReactNode } from "react";
 import ResponsiveHeader from "./responsive-header";
 import Footer from "./footer";
-import { ControlCenterTrigger } from "@/components/control-center/control-center-trigger";
-
 interface AppNavigationProps {
   children: ReactNode;
 }

@@ -1,13 +1,15 @@
-import Link from "next/link";
+import Image from "next/image";
 
 export default function HomeHero() {
   return (
     <section className="max-w-3xl mx-auto text-center space-y-8">
       {/* Avatar Image */}
       <div className="flex justify-center">
-        <img 
+        <Image 
           src="/images/avatar.png" 
           alt="Jaeil Lee" 
+          width={128}
+          height={128}
           className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
         />
       </div>

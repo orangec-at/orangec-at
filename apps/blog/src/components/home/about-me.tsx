@@ -1,5 +1,3 @@
-import CareerTimeline from "./career-timeline";
-
 export default function AboutMe() {
   return (
     <section className="max-w-2xl mx-auto text-center space-y-6">

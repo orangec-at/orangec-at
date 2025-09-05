@@ -7,8 +7,6 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ControlCenter } from "@/components/control-center/control-center";
 import { Settings } from "lucide-react";
-import { ControlCenterTrigger } from "@/components/control-center/control-center-trigger";
-
 interface ResponsiveHeaderProps {
   position: "top" | "bottom";
   enableScrollAnimation?: boolean;
@@ -61,37 +59,9 @@ export default function ResponsiveHeader({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isControlCenterOpen]);
 
-  const getMainHeaderClasses = () => {
-    const baseClasses =
-      "flex items-center fixed left-0 right-0 z-50 transition-all duration-500 ease-out";
-    const positionClasses = position === "top" ? "top-0" : "bottom-0";
-    const visibilityClasses = isMobile ? "md:hidden" : "hidden md:flex";
 
-    if (isMobile) {
-      // Mobile: bottom fixed, no animation
-      return `${baseClasses} ${positionClasses} ${visibilityClasses} justify-between mx-4 mb-4 px-6 py-4 bg-background/90 backdrop-blur-md shadow-lg border-t border rounded-full`;
-    }
 
-    // Desktop: top with scroll animation
-    if (isScrolled) {
-      return `${baseClasses} ${positionClasses} ${visibilityClasses} max-w-fit rounded-full mt-4 py-3 px-4 md:px-6 bg-background/80 backdrop-blur-md shadow-lg justify-center gap-2 ml-4`;
-    } else {
-      return `${baseClasses} ${positionClasses} ${visibilityClasses} max-w-fit mt-4 py-3 rounded-full px-4 md:px-6 bg-background/60 backdrop-blur-md shadow-lg border-t border justify-center gap-6 ml-4`;
-    }
-  };
 
-  const getControlCenterClasses = () => {
-    if (isMobile) return "hidden";
-
-    const baseClasses = "fixed z-50 transition-all duration-500 ease-out";
-    const positionClasses = position === "top" ? "top-0" : "bottom-0";
-
-    if (isScrolled) {
-      return `${baseClasses} ${positionClasses} right-4 mt-4 py-3 px-3 bg-background/80 backdrop-blur-md shadow-lg rounded-full`;
-    } else {
-      return `${baseClasses} ${positionClasses} right-4 mt-4 py-3 px-3 bg-background/60 backdrop-blur-md shadow-lg border-t border rounded-full`;
-    }
-  };
 
   const getIconSize = () => {
     if (isMobile) return { width: 28, height: 28 };
@@ -109,12 +79,12 @@ export default function ResponsiveHeader({
       {/* Header Container */}
       <div
         className={`fixed ${
-          position === "top" ? "top-0" : "bottom-0"
-        } left-0 right-0 z-50 ${
-          position === "top" ? "hidden md:flex" : "md:hidden"
-        } ${position === "top" ? "justify-center mt-4" : "mb-4 mx-4"}`}
+          !isMobile ? "top-0" : "bottom-0"
+        } left-0 right-0 z-50 ${!isMobile ? "hidden md:flex" : "md:hidden"} ${
+          !isMobile ? "justify-center mt-4" : "mb-4 mx-4"
+        }`}
       >
-        {position === "top" ? (
+        {!isMobile ? (
           <div className="flex items-center gap-2">
             {/* Desktop Main Header Group */}
             <header
@@ -284,7 +254,7 @@ export default function ResponsiveHeader({
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
-                      className={position === "top" ? "md:w-5 md:h-5" : ""}
+                      className={!isMobile ? "md:w-5 md:h-5" : ""}
                     >
                       <polyline points="15,18 9,12 15,6" />
                     </svg>
@@ -299,7 +269,7 @@ export default function ResponsiveHeader({
                     alt="Home"
                     {...getIconSize()}
                     className={`rounded-full ${
-                      position === "top"
+                      !isMobile
                         ? "md:w-8 md:h-8 transition-all duration-500 ease-out"
                         : ""
                     }`}
@@ -314,12 +284,10 @@ export default function ResponsiveHeader({
               >
                 <div
                   className={`flex gap-2 ${
-                    position === "top" && enableScrollAnimation
+                    !isMobile && enableScrollAnimation
                       ? "transition-all duration-500 ease-out"
                       : ""
-                  } ${
-                    position === "top" && isScrolled ? "text-sm" : "text-base"
-                  }`}
+                  } ${!isMobile && isScrolled ? "text-sm" : "text-base"}`}
                 >
                   {MENU_ITEMS.map((item) => {
                     const isActive = pathname === item.href;

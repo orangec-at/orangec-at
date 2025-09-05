@@ -1,5 +1,3 @@
-import { Badge } from "../ui/badge";
-
 export default function TechStack() {
   const techCategories = [
     {

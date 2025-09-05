@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import Image from "next/image";
 
 interface ProjectCardProps {
   project: Project;
@@ -16,7 +17,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Card className="w-full max-w-md mx-auto">
       {project.image && (
-        <img src={project.image} alt={project.title} className="rounded-t-md" />
+        <Image src={project.image} alt={project.title} width={400} height={200} className="rounded-t-md" />
       )}
       <CardHeader>
         <h3 className="text-xl font-bold">{project.title}</h3>
