@@ -24,29 +24,49 @@ export default function ResponsiveHeader({
   showSocialIcons = true,
 }: ResponsiveHeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVerySmallScreen, setIsVerySmallScreen] = useState(false);
 
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const isMobile = position === "bottom";
 
   useEffect(() => {
-    if (!enableScrollAnimation) return;
+    let handleScroll: (() => void) | null = null;
+    
+    // Handle scroll animation
+    if (enableScrollAnimation) {
+      let ticking = false;
 
-    let ticking = false;
+      handleScroll = () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const scrollPosition = window.scrollY;
+            setIsScrolled(scrollPosition > 30);
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
 
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const scrollPosition = window.scrollY;
-          setIsScrolled(scrollPosition > 30);
-          ticking = false;
-        });
-        ticking = true;
-      }
+      window.addEventListener("scroll", handleScroll, { passive: true });
+    }
+
+    // Handle screen size detection for very small screens
+    const handleResize = () => {
+      setIsVerySmallScreen(window.innerWidth <= 474);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    // Initial check
+    handleResize();
+    
+    window.addEventListener("resize", handleResize, { passive: true });
+    
+    return () => {
+      if (handleScroll && enableScrollAnimation) {
+        window.removeEventListener("scroll", handleScroll);
+      }
+      window.removeEventListener("resize", handleResize);
+    };
   }, [enableScrollAnimation]);
 
 
@@ -65,6 +85,7 @@ export default function ResponsiveHeader({
 
   const getSocialIconSize = () => (isMobile ? 20 : 20);
   const getBackButtonSize = () => (isMobile ? 20 : 18);
+  const getDropdownSide = (): "top" | "bottom" => position === "top" ? "bottom" : "top";
 
   return (
     <>
@@ -223,7 +244,7 @@ export default function ResponsiveHeader({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   className="p-0 border-0 bg-transparent shadow-none"
-                  side={position === "top" ? "bottom" : "top"}
+                  side={getDropdownSide()}
                   align="center"
                   sideOffset={12}
                 >
@@ -237,10 +258,12 @@ export default function ResponsiveHeader({
             </div>
           </div>
         ) : (
-          <div className="flex items-center justify-between w-full gap-2">
+          <div className={`flex items-center justify-between w-full ${isVerySmallScreen ? 'gap-1' : 'gap-2'}`}>
             {/* Mobile Main Group */}
             <div
-              className={`flex items-center flex-1 transition-all duration-500 ease-out rounded-full px-4 py-3 justify-between ${
+              className={`flex items-center flex-1 transition-all duration-500 ease-out rounded-full justify-between ${
+                isVerySmallScreen ? 'px-2 py-2' : 'px-4 py-3'
+              } ${
                 position === "bottom"
                   ? "bg-background/90 backdrop-blur-md shadow-lg border-t border"
                   : isScrolled
@@ -248,15 +271,17 @@ export default function ResponsiveHeader({
                   : "bg-background/60 backdrop-blur-md shadow-lg border-t border"
               }`}
             >
-              <div className="flex items-center gap-3 md:gap-4">
+              <div className={`flex items-center ${isVerySmallScreen ? 'gap-2' : 'gap-3 md:gap-4'}`}>
                 {!isHomePage && (
                   <button
                     onClick={() => window.history.back()}
-                    className="text-muted-foreground hover:text-foreground hover:bg-accent p-2 rounded-full transition-all duration-200"
+                    className={`text-muted-foreground hover:text-foreground hover:bg-accent rounded-full transition-all duration-200 ${
+                      isVerySmallScreen ? 'p-1' : 'p-2'
+                    }`}
                   >
                     <svg
-                      width={getBackButtonSize()}
-                      height={getBackButtonSize()}
+                      width={isVerySmallScreen ? 16 : getBackButtonSize()}
+                      height={isVerySmallScreen ? 16 : getBackButtonSize()}
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -274,7 +299,8 @@ export default function ResponsiveHeader({
                   <Image
                     src="/svgs/logo.svg"
                     alt="Home"
-                    {...getIconSize()}
+                    width={isVerySmallScreen ? 24 : getIconSize().width}
+                    height={isVerySmallScreen ? 24 : getIconSize().height}
                     className={`rounded-full ${
                       !isMobile
                         ? "md:w-8 md:h-8 transition-all duration-500 ease-out"
@@ -289,38 +315,71 @@ export default function ResponsiveHeader({
                   position === "bottom" ? "flex-1 justify-center" : ""
                 }`}
               >
-                <div
-                  className={`flex gap-2 ${
-                    !isMobile && enableScrollAnimation
-                      ? "transition-all duration-500 ease-out"
-                      : ""
-                  } ${!isMobile && isScrolled ? "text-sm" : "text-base"}`}
-                >
-                  {MENU_ITEMS.map((item) => {
-                    const isActive = pathname === item.href;
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={`transition-all duration-200 font-medium px-3 py-2 rounded-full ${
-                          position === "bottom" ? "text-sm" : ""
-                        } ${
-                          isActive
-                            ? "text-foreground font-semibold bg-accent"
-                            : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                        }`}
-                      >
-                        {item.label}
-                      </Link>
-                    );
-                  })}
-                </div>
+                {isVerySmallScreen ? (
+                  // Compact navigation for very small screens
+                  <div className="flex items-center overflow-x-auto mobile-nav-container">
+                    <div className={`flex gap-1 min-w-max ${
+                      !isMobile && enableScrollAnimation
+                        ? "transition-all duration-500 ease-out"
+                        : ""
+                    }`}>
+                      {MENU_ITEMS.map((item) => {
+                        const isActive = pathname === item.href;
+                        const IconComponent = item.icon;
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            className={`transition-all duration-200 font-medium p-2 rounded-full flex items-center justify-center touch-target-small ${
+                              isActive
+                                ? "text-foreground font-semibold bg-accent"
+                                : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                            }`}
+                            title={item.label}
+                          >
+                            <IconComponent className="h-4 w-4" />
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : (
+                  // Standard mobile navigation
+                  <div
+                    className={`flex gap-2 ${
+                      !isMobile && enableScrollAnimation
+                        ? "transition-all duration-500 ease-out"
+                        : ""
+                    } ${!isMobile && isScrolled ? "text-sm" : "text-base"}`}
+                  >
+                    {MENU_ITEMS.map((item) => {
+                      const isActive = pathname === item.href;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className={`transition-all duration-200 font-medium px-3 py-2 rounded-full touch-target ${
+                            position === "bottom" ? "text-sm" : ""
+                          } ${
+                            isActive
+                              ? "text-foreground font-semibold bg-accent"
+                              : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                          }`}
+                        >
+                          {item.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
               </nav>
             </div>
 
             {/* Mobile Control Center Group */}
             <div
-              className={`transition-all duration-500 ease-out rounded-full px-3 py-3 ${
+              className={`transition-all duration-500 ease-out rounded-full ${
+                isVerySmallScreen ? 'px-2 py-2' : 'px-3 py-3'
+              } ${
                 position === "bottom"
                   ? "bg-background/90 backdrop-blur-md shadow-lg border-t border"
                   : isScrolled
@@ -331,15 +390,17 @@ export default function ResponsiveHeader({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="flex items-center justify-center w-10 h-10 text-muted-foreground hover:text-foreground hover:scale-110 active:scale-95 transition-all duration-200 rounded-full"
+                    className={`flex items-center justify-center text-muted-foreground hover:text-foreground hover:scale-110 active:scale-95 transition-all duration-200 rounded-full ${
+                      isVerySmallScreen ? 'w-8 h-8' : 'w-10 h-10'
+                    }`}
                     title="Control Panel (⌘⇧C)"
                   >
-                    <Sliders className="h-5 w-5" />
+                    <Sliders className={`${isVerySmallScreen ? 'h-4 w-4' : 'h-5 w-5'}`} />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   className="p-0 border-0 bg-transparent shadow-none"
-                  side={position === "top" ? "bottom" : "top"}
+                  side={getDropdownSide()}
                   align="center"
                   sideOffset={12}
                 >

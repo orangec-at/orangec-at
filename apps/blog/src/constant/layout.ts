@@ -1,5 +1,5 @@
 export const APP_NAME = "OrangeCat's Blog";
-import { Home, BookOpen, Mail } from "lucide-react";
+import { Home, FolderOpen, FileText, Mail } from "lucide-react";
 
 export const MENU_ITEMS = [
   {
@@ -10,12 +10,12 @@ export const MENU_ITEMS = [
   {
     label: "Projects",
     href: "/projects",
-    icon: BookOpen,
+    icon: FolderOpen,
   },
   {
     label: "Blog",
     href: "/blog",
-    icon: BookOpen,
+    icon: FileText,
   },
   {
     label: "Contact",

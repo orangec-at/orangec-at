@@ -120,3 +120,37 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  /* Custom responsive header utilities */
+  .mobile-nav-container {
+    /* Enable horizontal scrolling for very small screens while hiding scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .mobile-nav-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Touch-friendly minimum sizes for accessibility */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Improved touch targets for small screens */
+  @media (max-width: 474px) {
+    .touch-target-small {
+      min-height: 40px;
+      min-width: 40px;
+    }
+  }
+  
+  /* Enhanced text sizing for small screens */
+  @media (max-width: 320px) {
+    .text-xs {
+      font-size: 0.7rem;
+    }
+  }
+}
