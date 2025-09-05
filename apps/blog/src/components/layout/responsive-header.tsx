@@ -6,7 +6,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ControlCenter } from "@/components/control-center/control-center";
-import { Settings } from "lucide-react";
+import { Sliders } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 interface ResponsiveHeaderProps {
   position: "top" | "bottom";
   enableScrollAnimation?: boolean;
@@ -19,7 +24,7 @@ export default function ResponsiveHeader({
   showSocialIcons = true,
 }: ResponsiveHeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isControlCenterOpen, setIsControlCenterOpen] = useState(false);
+
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const isMobile = position === "bottom";
@@ -44,20 +49,7 @@ export default function ResponsiveHeader({
     return () => window.removeEventListener("scroll", handleScroll);
   }, [enableScrollAnimation]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.metaKey && e.shiftKey && e.key === "c") {
-        e.preventDefault();
-        setIsControlCenterOpen(!isControlCenterOpen);
-      }
-      if (e.key === "Escape" && isControlCenterOpen) {
-        setIsControlCenterOpen(false);
-      }
-    };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isControlCenterOpen]);
 
 
 
@@ -220,13 +212,28 @@ export default function ResponsiveHeader({
                   : "bg-background/60 backdrop-blur-md shadow-lg border-t border"
               }`}
             >
-              <button
-                onClick={() => setIsControlCenterOpen(true)}
-                className="flex items-center justify-center w-10 h-10 text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200 rounded-full"
-                title="Control Center (⌘⇧C)"
-              >
-                <Settings className="h-5 w-5" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="flex items-center justify-center w-10 h-10 text-muted-foreground hover:text-foreground hover:scale-110 active:scale-95 transition-all duration-200 rounded-full"
+                    title="Control Panel (⌘⇧C)"
+                  >
+                    <Sliders className="h-5 w-5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  className="p-0 border-0 bg-transparent shadow-none"
+                  side={position === "top" ? "bottom" : "top"}
+                  align="center"
+                  sideOffset={12}
+                >
+                  <ControlCenter
+                    variant="inline"
+                    className="bg-background/95 backdrop-blur-md shadow-lg border rounded-xl p-4"
+                    onAction={(action, data) => console.log(action, data)}
+                  />
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         ) : (
@@ -321,22 +328,34 @@ export default function ResponsiveHeader({
                   : "bg-background/60 backdrop-blur-md shadow-lg border-t border"
               }`}
             >
-              <button
-                onClick={() => setIsControlCenterOpen(true)}
-                className="flex items-center justify-center w-10 h-10 text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200 rounded-full"
-                title="Control Center (⌘⇧C)"
-              >
-                <Settings className="h-5 w-5" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="flex items-center justify-center w-10 h-10 text-muted-foreground hover:text-foreground hover:scale-110 active:scale-95 transition-all duration-200 rounded-full"
+                    title="Control Panel (⌘⇧C)"
+                  >
+                    <Sliders className="h-5 w-5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  className="p-0 border-0 bg-transparent shadow-none"
+                  side={position === "top" ? "bottom" : "top"}
+                  align="center"
+                  sideOffset={12}
+                >
+                  <ControlCenter
+                    variant="inline"
+                    className="bg-background/95 backdrop-blur-md shadow-lg border rounded-xl p-4"
+                    onAction={(action, data) => console.log(action, data)}
+                  />
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         )}
       </div>
 
-      <ControlCenter
-        isOpen={isControlCenterOpen}
-        onClose={() => setIsControlCenterOpen(false)}
-      />
+
     </>
   );
 }
