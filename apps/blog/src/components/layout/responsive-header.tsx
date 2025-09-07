@@ -32,7 +32,7 @@ export default function ResponsiveHeader({
 
   useEffect(() => {
     let handleScroll: (() => void) | null = null;
-    
+
     // Handle scroll animation
     if (enableScrollAnimation) {
       let ticking = false;
@@ -58,9 +58,9 @@ export default function ResponsiveHeader({
 
     // Initial check
     handleResize();
-    
+
     window.addEventListener("resize", handleResize, { passive: true });
-    
+
     return () => {
       if (handleScroll && enableScrollAnimation) {
         window.removeEventListener("scroll", handleScroll);
@@ -68,12 +68,6 @@ export default function ResponsiveHeader({
       window.removeEventListener("resize", handleResize);
     };
   }, [enableScrollAnimation]);
-
-
-
-
-
-
 
   const getIconSize = () => {
     if (isMobile) return { width: 28, height: 28 };
@@ -85,7 +79,8 @@ export default function ResponsiveHeader({
 
   const getSocialIconSize = () => (isMobile ? 20 : 20);
   const getBackButtonSize = () => (isMobile ? 20 : 18);
-  const getDropdownSide = (): "top" | "bottom" => position === "top" ? "bottom" : "top";
+  const getDropdownSide = (): "top" | "bottom" =>
+    position === "top" ? "bottom" : "top";
 
   return (
     <>
@@ -157,7 +152,7 @@ export default function ResponsiveHeader({
                       <Link
                         key={item.href}
                         href={item.href}
-                        className={`transition-all duration-200 font-medium px-3 py-2 rounded-full ${
+                        className={`transition-all duration-200 font-medium px-3 py-3 rounded-full ${
                           isActive
                             ? "text-foreground font-semibold bg-accent"
                             : "text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -242,7 +237,7 @@ export default function ResponsiveHeader({
                     <Sliders className="h-5 w-5" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent 
+                <DropdownMenuContent
                   className="p-0 border-0 bg-transparent shadow-none"
                   side={getDropdownSide()}
                   align="center"
@@ -258,11 +253,15 @@ export default function ResponsiveHeader({
             </div>
           </div>
         ) : (
-          <div className={`flex items-center justify-between w-full ${isVerySmallScreen ? 'gap-1' : 'gap-2'}`}>
+          <div
+            className={`flex items-center justify-between w-full ${
+              isVerySmallScreen ? "gap-1" : "gap-2"
+            }`}
+          >
             {/* Mobile Main Group */}
             <div
               className={`flex items-center flex-1 transition-all duration-500 ease-out rounded-full justify-between ${
-                isVerySmallScreen ? 'px-2 py-2' : 'px-4 py-3'
+                isVerySmallScreen ? "px-3 py-2" : "px-4 py-3"
               } ${
                 position === "bottom"
                   ? "bg-background/90 backdrop-blur-md shadow-lg border-t border"
@@ -271,12 +270,16 @@ export default function ResponsiveHeader({
                   : "bg-background/60 backdrop-blur-md shadow-lg border-t border"
               }`}
             >
-              <div className={`flex items-center ${isVerySmallScreen ? 'gap-2' : 'gap-3 md:gap-4'}`}>
+              <div
+                className={`flex items-center ${
+                  isVerySmallScreen ? "gap-2" : "gap-3 md:gap-4"
+                }`}
+              >
                 {!isHomePage && (
                   <button
                     onClick={() => window.history.back()}
                     className={`text-muted-foreground hover:text-foreground hover:bg-accent rounded-full transition-all duration-200 ${
-                      isVerySmallScreen ? 'p-1' : 'p-2'
+                      isVerySmallScreen ? "p-1" : "p-2"
                     }`}
                   >
                     <svg
@@ -318,11 +321,13 @@ export default function ResponsiveHeader({
                 {isVerySmallScreen ? (
                   // Compact navigation for very small screens
                   <div className="flex items-center overflow-x-auto mobile-nav-container">
-                    <div className={`flex gap-1 min-w-max ${
-                      !isMobile && enableScrollAnimation
-                        ? "transition-all duration-500 ease-out"
-                        : ""
-                    }`}>
+                    <div
+                      className={`flex gap-1 min-w-max ${
+                        !isMobile && enableScrollAnimation
+                          ? "transition-all duration-500 ease-out"
+                          : ""
+                      }`}
+                    >
                       {MENU_ITEMS.map((item) => {
                         const isActive = pathname === item.href;
                         const IconComponent = item.icon;
@@ -358,7 +363,7 @@ export default function ResponsiveHeader({
                         <Link
                           key={item.href}
                           href={item.href}
-                          className={`transition-all duration-200 font-medium px-3 py-2 rounded-full touch-target ${
+                          className={`transition-all duration-200 font-medium px-3 py-3 rounded-full touch-target ${
                             position === "bottom" ? "text-sm" : ""
                           } ${
                             isActive
@@ -378,7 +383,7 @@ export default function ResponsiveHeader({
             {/* Mobile Control Center Group */}
             <div
               className={`transition-all duration-500 ease-out rounded-full ${
-                isVerySmallScreen ? 'px-2 py-2' : 'px-3 py-3'
+                isVerySmallScreen ? "px-2 py-2" : "px-3 py-3"
               } ${
                 position === "bottom"
                   ? "bg-background/90 backdrop-blur-md shadow-lg border-t border"
@@ -391,14 +396,16 @@ export default function ResponsiveHeader({
                 <DropdownMenuTrigger asChild>
                   <button
                     className={`flex items-center justify-center text-muted-foreground hover:text-foreground hover:scale-110 active:scale-95 transition-all duration-200 rounded-full ${
-                      isVerySmallScreen ? 'w-8 h-8' : 'w-10 h-10'
+                      isVerySmallScreen ? "w-8 h-8" : "w-10 h-10"
                     }`}
                     title="Control Panel (⌘⇧C)"
                   >
-                    <Sliders className={`${isVerySmallScreen ? 'h-4 w-4' : 'h-5 w-5'}`} />
+                    <Sliders
+                      className={`${isVerySmallScreen ? "h-4 w-4" : "h-5 w-5"}`}
+                    />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent 
+                <DropdownMenuContent
                   className="p-0 border-0 bg-transparent shadow-none"
                   side={getDropdownSide()}
                   align="center"
@@ -415,8 +422,6 @@ export default function ResponsiveHeader({
           </div>
         )}
       </div>
-
-
     </>
   );
 }

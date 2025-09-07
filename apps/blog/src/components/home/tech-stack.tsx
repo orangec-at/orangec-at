@@ -7,10 +7,13 @@ export default function TechStack() {
       color: "light",
       techs: [
         "React",
-        "Next.js",
         "TypeScript",
+        "Next.js",
+        "React Native",
         "TailwindCSS",
         "Styled-components",
+        "Zustand",
+        "React Query",
       ],
     },
     {
@@ -27,11 +30,14 @@ export default function TechStack() {
 
   const getColorClasses = (color: string) => {
     const colors = {
-      light: "bg-gray-100 text-gray-700",
-      medium: "bg-gray-200 text-gray-800", 
-      dark: "bg-gray-800 text-gray-100",
+      light: "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300",
+      medium: "bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200",
+      dark: "bg-gray-800 dark:bg-gray-300 text-gray-100 dark:text-gray-800",
     };
-    return colors[color as keyof typeof colors] || designTokens.components.badge.default;
+    return (
+      colors[color as keyof typeof colors] ||
+      designTokens.components.badge.default
+    );
   };
 
   return (
@@ -43,7 +49,7 @@ export default function TechStack() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {techCategories.map((category, index) => (
           <div key={index} className="text-center space-y-3">
-            <h3 className="font-semibold text-gray-800">{category.category}</h3>
+            <h3 className="font-semibold text-gray-800 dark:text-gray-200">{category.category}</h3>
             <div className="flex flex-wrap justify-center gap-2">
               {category.techs.map((tech) => (
                 <span

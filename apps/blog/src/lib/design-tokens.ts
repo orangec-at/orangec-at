@@ -9,42 +9,42 @@
 export const colors = {
   // Primary text colors
   text: {
-    primary: 'text-gray-900',
-    secondary: 'text-gray-600', 
-    muted: 'text-gray-500',
-    inverse: 'text-white',
+    primary: 'text-gray-900 dark:text-white',
+    secondary: 'text-gray-600 dark:text-gray-300', 
+    muted: 'text-gray-500 dark:text-gray-400',
+    inverse: 'text-white dark:text-gray-900',
   },
   
   // Background colors
   background: {
-    primary: 'bg-white',
-    secondary: 'bg-gray-50',
-    muted: 'bg-gray-100',
-    dark: 'bg-gray-900',
+    primary: 'bg-white dark:bg-gray-900',
+    secondary: 'bg-gray-50 dark:bg-gray-800',
+    muted: 'bg-gray-100 dark:bg-gray-700',
+    dark: 'bg-gray-900 dark:bg-white',
   },
   
   // Border colors
   border: {
-    default: 'border-gray-300',
-    light: 'border-gray-200',
-    dark: 'border-gray-400',
+    default: 'border-gray-300 dark:border-gray-600',
+    light: 'border-gray-200 dark:border-gray-700',
+    dark: 'border-gray-400 dark:border-gray-500',
   },
   
   // Interactive states
   interactive: {
-    primary: 'bg-gray-900 hover:bg-gray-800 text-white',
-    secondary: 'border border-gray-300 hover:bg-gray-50 text-gray-900',
-    ghost: 'hover:bg-gray-50 text-gray-900',
+    primary: 'bg-gray-900 dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 text-white dark:text-gray-900',
+    secondary: 'border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-900 dark:text-white',
+    ghost: 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-900 dark:text-white',
   }
 } as const;
 
 // Typography Scale
 export const typography = {
-  hero: 'text-hero font-bold text-gray-900',
-  section: 'text-section font-semibold text-gray-900', 
-  cardTitle: 'text-card-title font-medium text-gray-900',
-  body: 'text-base text-gray-600',
-  caption: 'text-sm text-gray-500',
+  hero: 'text-hero font-bold text-gray-900 dark:text-white',
+  section: 'text-section font-semibold text-gray-900 dark:text-white', 
+  cardTitle: 'text-card-title font-medium text-gray-900 dark:text-white',
+  body: 'text-base text-gray-600 dark:text-gray-300',
+  caption: 'text-sm text-gray-500 dark:text-gray-400',
 } as const;
 
 // Spacing System
@@ -57,17 +57,17 @@ export const spacing = {
 // Component Variants
 export const components = {
   button: {
-    primary: 'bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors',
-    secondary: 'border border-gray-300 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-900',
-    ghost: 'px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-900',
+    primary: 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors',
+    secondary: 'border border-gray-300 dark:border-gray-600 px-6 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-gray-900 dark:text-white',
+    ghost: 'px-6 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-gray-900 dark:text-white',
   },
   card: {
-    default: 'bg-white border border-gray-200 rounded-lg shadow-sm',
-    elevated: 'bg-white border border-gray-200 rounded-lg shadow-md',
+    default: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm',
+    elevated: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md',
   },
   badge: {
-    default: 'bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium',
-    outline: 'border border-gray-300 text-gray-700 px-3 py-1 rounded-full text-sm font-medium',
+    default: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm font-medium',
+    outline: 'border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-sm font-medium',
   }
 } as const;
 
