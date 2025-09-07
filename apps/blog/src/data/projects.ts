@@ -6,6 +6,9 @@ export interface Project {
   url?: string;
   github?: string;
   image?: string;
+  relatedBlogPosts?: string[]; // 블로그 포스트 slug 배열
+  keyFeatures?: string[]; // 주요 기능
+  challenges?: string[]; // 개발 과정의 도전과 해결책
 }
 
 export const PROJECTS: Project[] = [
@@ -25,6 +28,18 @@ export const PROJECTS: Project[] = [
     url: "https://apps.apple.com/us/app/yoga-journaling-drawhatha/id6689512757",
     github: "https://github.com/username/drawhatha",
     image: "/images/projects/drawhatha.png",
+    relatedBlogPosts: ["my-first-post", "nextjs-fullstack-development"], // 여러 개 테스트
+    keyFeatures: [
+      "요가 세션 기록 및 분석",
+      "개인 맞춤 통계 제공",
+      "오프라인 동기화",
+      "Apple HealthKit 연동"
+    ],
+    challenges: [
+      "React Native CLI에서 App Store 배포 과정 최적화",
+      "Supabase와 React Native 간 실시간 동기화 구현",
+      "iOS 심사 통과를 위한 앱 정책 준수"
+    ]
   },
   {
     id: "2",
@@ -35,6 +50,18 @@ export const PROJECTS: Project[] = [
     url: "https://yogaday.love",
     github: "https://github.com/username/yogaday",
     image: "/images/projects/yogaday.png",
+    relatedBlogPosts: ["nextjs-fullstack-development"], // 실제 존재하는 MDX 파일
+    keyFeatures: [
+      "실시간 클래스 예약 시스템",
+      "결제 및 환불 처리",
+      "강사-수강생 매칭 알고리즘",
+      "리뷰 및 평점 시스템"
+    ],
+    challenges: [
+      "Next.js 13+ App Router로 풀스택 애플리케이션 구축",
+      "Supabase Row Level Security로 데이터 보안 구현",
+      "결제 시스템과 예약 취소 로직 설계"
+    ]
   },
   {
     id: "3",
@@ -49,9 +76,21 @@ export const PROJECTS: Project[] = [
       "React Query",
       "Emotion",
     ],
-    url: "https://members.midasuser.com", // 실제 URL 있으면 교체
+    url: "https://members.midasuser.com",
     github: "",
     image: "/images/projects/midas.png",
+    relatedBlogPosts: ["my-first-post", "nextjs-fullstack-development"], // 여러 개 테스트
+    keyFeatures: [
+      "대용량 프로젝트 관리 대시보드",
+      "권한 기반 사용자 관리",
+      "실시간 협업 기능",
+      "관리자 백오피스 시스템"
+    ],
+    challenges: [
+      "대규모 팀 협업을 위한 상태 관리 아키텍처 설계",
+      "복잡한 권한 체계를 가진 기업용 UI/UX 구현",
+      "레거시 시스템과의 API 연동 및 데이터 마이그레이션"
+    ]
   },
   {
     id: "4",
