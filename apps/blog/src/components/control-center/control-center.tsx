@@ -1,12 +1,17 @@
 "use client";
 
-import { useMemo } from "react";
-import { X } from "lucide-react";
-import { useTheme } from "@/contexts/theme-context";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/contexts/theme-context";
+import { X } from "lucide-react";
+import { useLocale } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
+import { useMemo } from "react";
+import {
+  defaultControlCenterConfig,
+  inlineControlCenterConfig,
+} from "./config";
 import { ControlItemRenderer } from "./items";
-import { defaultControlCenterConfig, inlineControlCenterConfig } from "./config";
-import { ControlItem, ControlItemSize, ControlCenterConfig } from "./types";
+import { ControlCenterConfig, ControlItem, ControlItemSize } from "./types";
 
 interface ControlCenterProps {
   variant?: "inline" | "popup";
@@ -16,20 +21,32 @@ interface ControlCenterProps {
   onAction?: (action: string, data?: unknown) => void;
 }
 
-export function ControlCenter({ 
-  variant = "inline", 
+export function ControlCenter({
+  variant = "inline",
   className = "",
   isOpen,
   onClose,
-  onAction 
+  onAction,
 }: ControlCenterProps) {
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
+  
+  // Extract locale from URL path instead of useLocale() hook
+  const currentLocale = pathname.startsWith('/ko') ? 'ko' : 'en';
 
-  // Removed body overflow management for inline variant
+  const switchLanguage = (newLocale: string) => {
+    const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}/, "");
+    const newPath = `/${newLocale}${pathWithoutLocale}`;
+    router.push(newPath);
+  };
 
-  // Create config with injected theme functions
+  // Create config with injected functions
   const config = useMemo(() => {
-    const baseConfig = variant === "inline" ? inlineControlCenterConfig : defaultControlCenterConfig;
+    const baseConfig =
+      variant === "inline"
+        ? inlineControlCenterConfig
+        : defaultControlCenterConfig;
     const configCopy = { ...baseConfig };
     configCopy.items = configCopy.items.map((item) => {
       if (item.type === "theme") {
@@ -39,10 +56,17 @@ export function ControlCenter({
           onThemeChange: setTheme,
         };
       }
+      if (item.type === "language") {
+        return {
+          ...item,
+          currentLocale: currentLocale,
+          onLanguageChange: switchLanguage,
+        };
+      }
       return item;
     });
     return configCopy;
-  }, [theme, setTheme, variant]);
+  }, [theme, setTheme, currentLocale, switchLanguage, variant]);
 
   // Sort items by order and filter enabled ones
   const sortedItems = useMemo(
@@ -62,8 +86,8 @@ export function ControlCenter({
     sortedItems.forEach((item) => {
       const span = getItemSpan(item.size);
 
-      // If adding this item would exceed 6 columns, start a new row
-      if (currentRowSpan + span > 6) {
+      // If adding this item would exceed columns limit, start a new row
+      if (currentRowSpan + span > config.layout.columns) {
         if (currentRow.length > 0) {
           rows.push(currentRow);
         }
@@ -81,11 +105,11 @@ export function ControlCenter({
     }
 
     return rows;
-  }, [sortedItems]);
+  }, [sortedItems, config.layout.columns]);
 
   if (variant === "popup") {
     if (!isOpen) return null;
-    
+
     return (
       <>
         {/* Legacy popup backdrop - only for popup variant */}
@@ -96,10 +120,15 @@ export function ControlCenter({
             onAction?.("close");
           }}
         />
-        
+
         {/* Legacy popup panel */}
         <div className="fixed right-2 top-2 sm:right-4 sm:top-4 w-[calc(100vw-1rem)] max-w-[380px] sm:w-[380px] bg-popover border shadow-lg rounded-xl z-50">
-          <PopupContent config={config} layoutRows={layoutRows} onClose={onClose} onAction={onAction} />
+          <PopupContent
+            config={config}
+            layoutRows={layoutRows}
+            onClose={onClose}
+            onAction={onAction}
+          />
         </div>
       </>
     );
@@ -115,9 +144,9 @@ export function ControlCenter({
             className={`grid grid-cols-${config.layout.columns} gap-3`}
           >
             {row.map((item) => (
-              <ControlItemRenderer 
-                key={item.id} 
-                item={item} 
+              <ControlItemRenderer
+                key={item.id}
+                item={item}
                 onAction={onAction}
               />
             ))}
@@ -145,14 +174,14 @@ function getItemSpan(size: ControlItemSize): number {
 }
 
 // Legacy popup content component
-function PopupContent({ 
-  config, 
-  layoutRows, 
+function PopupContent({
+  config,
+  layoutRows,
   onClose,
-  onAction 
-}: { 
-  config: ControlCenterConfig; 
-  layoutRows: ControlItem[][]; 
+  onAction,
+}: {
+  config: ControlCenterConfig;
+  layoutRows: ControlItem[][];
   onClose?: () => void;
   onAction?: (action: string, data?: unknown) => void;
 }) {
@@ -185,7 +214,11 @@ function PopupContent({
               className={`grid grid-cols-${config.layout.columns} gap-2 sm:gap-3`}
             >
               {row.map((item) => (
-                <ControlItemRenderer key={item.id} item={item} onAction={onAction} />
+                <ControlItemRenderer
+                  key={item.id}
+                  item={item}
+                  onAction={onAction}
+                />
               ))}
             </div>
           ))}
