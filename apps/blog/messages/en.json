@@ -1,0 +1,57 @@
+{
+  "navigation": {
+    "home": "Home",
+    "blog": "Blog",
+    "projects": "Projects", 
+    "contact": "Contact"
+  },
+  "home": {
+    "hero": {
+      "title": "Hi, I'm a Product-minded Frontend Developer",
+      "subtitle": "Startup Founder | AI-powered Development Enthusiast", 
+      "description": "Currently building the yoga tech ecosystem with two live products while exploring part-time opportunities to share insights and contribute to innovative teams.",
+      "cta": "View Projects"
+    },
+    "about": {
+      "title": "About Me",
+      "description": "4.5 years of frontend development experience across various projects."
+    },
+    "projects": {
+      "title": "Current Projects",
+      "featured": "Featured Projects"
+    },
+    "techStack": {
+      "title": "Tech Stack",
+      "core": "Core Technologies",
+      "backend": "Backend Experience", 
+      "tools": "AI Tools"
+    },
+    "contact": {
+      "title": "Get In Touch",
+      "description": "Let's talk about projects and collaboration opportunities"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "readTime": "min read",
+    "category": "Category",
+    "tags": "Tags",
+    "author": "Author",
+    "publishedAt": "Published"
+  },
+  "projects": {
+    "title": "Projects",
+    "status": "Status", 
+    "tech": "Tech Stack",
+    "description": "Description"
+  },
+  "contact": {
+    "title": "Contact",
+    "form": {
+      "name": "Name",
+      "email": "Email", 
+      "message": "Message",
+      "send": "Send"
+    }
+  }
+}
