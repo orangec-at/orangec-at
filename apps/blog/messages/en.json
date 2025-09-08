@@ -14,7 +14,13 @@
     },
     "about": {
       "title": "About Me",
-      "description": "4.5 years of frontend development experience across various projects."
+      "description": "4.5 years of frontend development experience across various projects.",
+      "paragraphs": [
+        "I help startups and teams bring their ideas to life as actual products.",
+        "Through experience with various projects including SaaS platforms, data dashboards, and mobile apps, I can quickly design and develop user-friendly interfaces using React and Next.js.",
+        "I value not only coding but also smooth communication, working closely with planners, designers, and backend developers to deliver valuable features.",
+        "If your project requires fast execution and quality, I'm ready to collaborate."
+      ]
     },
     "projects": {
       "title": "Current Projects",
