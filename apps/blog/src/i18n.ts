@@ -1,13 +1,12 @@
+// i18n.ts (또는 src/i18n/request.ts 권장 위치)
 import { getRequestConfig } from "next-intl/server";
 
-// Can be imported from a shared config
-const locales = ["ko", "en"];
+const locales = ["ko", "en"] as const;
 
-export default getRequestConfig(async ({ locale }) => {
-  // Validate that the incoming `locale` parameter is valid
-  if (!locales.includes(locale as any)) {
-    // Fallback to default locale instead of using notFound()
-    locale = "en";
+export default getRequestConfig(async ({ requestLocale }) => {
+  let locale = await requestLocale; // 비동기 추출
+  if (!locale || !locales.includes(locale as any)) {
+    locale = "ko"; // 최종 백업
   }
 
   return {
