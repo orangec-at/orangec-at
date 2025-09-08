@@ -19,12 +19,26 @@ export const defaultControlCenterConfig: ControlCenterConfig = {
       onThemeChange: () => {}, // Will be injected by parent
     },
     {
+      id: "language",
+      type: "language",
+      size: "large",
+      title: "언어",
+      enabled: true,
+      order: 2,
+      currentLocale: "ko", // Will be injected by parent
+      availableLanguages: [
+        { code: "ko", name: "한국어", flag: "🇰🇷" },
+        { code: "en", name: "English", flag: "🇺🇸" },
+      ],
+      onLanguageChange: () => {}, // Will be injected by parent
+    },
+    {
       id: "music-player",
       type: "music-player",
       size: "wide",
       title: "음악재생",
       enabled: true,
-      order: 2,
+      order: 3,
       isPlaying: false,
       currentTrack: "재생 중인 음악이 없습니다",
       artist: "",
@@ -32,6 +46,20 @@ export const defaultControlCenterConfig: ControlCenterConfig = {
       onPause: () => console.log("Pause clicked"),
       onNext: () => console.log("Next clicked"),
       onPrevious: () => console.log("Previous clicked"),
+    },
+    {
+      id: "language",
+      type: "language",
+      size: "large",
+      title: "언어",
+      enabled: true,
+      order: 3,
+      currentLocale: "ko",
+      availableLanguages: [
+        { code: "ko", name: "한국어", flag: "🇰🇷" },
+        { code: "en", name: "English", flag: "🇺🇸" },
+      ],
+      onLanguageChange: () => {}, // Will be injected by parent
     },
   ],
 };
@@ -55,12 +83,26 @@ export const inlineControlCenterConfig: ControlCenterConfig = {
       onThemeChange: () => {}, // Will be injected by parent
     },
     {
+      id: "language",
+      type: "language",
+      size: "medium",
+      title: "언어",
+      enabled: true,
+      order: 2,
+      currentLocale: "ko", // Will be injected by parent
+      availableLanguages: [
+        { code: "ko", name: "한국어", flag: "🇰🇷" },
+        { code: "en", name: "English", flag: "🇺🇸" },
+      ],
+      onLanguageChange: () => {}, // Will be injected by parent
+    },
+    {
       id: "music-player",
       type: "music-player",
       size: "wide",
       title: "음악재생",
       enabled: true,
-      order: 2,
+      order: 3,
       isPlaying: false,
       currentTrack: "재생 중인 음악이 없습니다",
       artist: "",
