@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/theme-context";
 import { X } from "lucide-react";
 import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useMemo } from "react";
 import {
   defaultControlCenterConfig,
@@ -31,14 +31,10 @@ export function ControlCenter({
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
-  
-  // Extract locale from URL path instead of useLocale() hook
-  const currentLocale = pathname.startsWith('/ko') ? 'ko' : 'en';
+  const currentLocale = useLocale();
 
   const switchLanguage = (newLocale: string) => {
-    const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}/, "");
-    const newPath = `/${newLocale}${pathWithoutLocale}`;
-    router.push(newPath);
+    window.location.href = window.location.href.replace(/\/(ko|en)/, `/${newLocale}`);
   };
 
   // Create config with injected functions
