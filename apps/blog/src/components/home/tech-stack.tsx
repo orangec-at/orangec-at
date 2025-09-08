@@ -1,9 +1,13 @@
+"use client";
+
 import { designTokens } from "@/lib/design-tokens";
+import { useTranslations } from "next-intl";
 
 export default function TechStack() {
+  const t = useTranslations('home.techStack');
   const techCategories = [
     {
-      category: "Frontend",
+      category: t('core'),
       color: "light",
       techs: [
         "React",
@@ -17,7 +21,7 @@ export default function TechStack() {
       ],
     },
     {
-      category: "Backend",
+      category: t('backend'),
       color: "medium",
       techs: ["NestJS", "Prisma", "Node.js", "REST API"],
     },
@@ -43,7 +47,7 @@ export default function TechStack() {
   return (
     <section className="max-w-3xl mx-auto space-y-6">
       <h2 className={`${designTokens.typography.section} text-center`}>
-        Tech Stack
+        {t('title')}
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

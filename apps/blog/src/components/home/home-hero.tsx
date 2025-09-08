@@ -1,12 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import SplitText from "../ui/split-text";
-
-const TITLE = "Jaeil Lee | Frontend & Fullstack Developer";
-const JOB = "실제 운영 서비스를 만들고 키우는 Product Engineer";
-const DESC =
-  "1년+ 실제 운영 서비스 경험, 빠르고 안정적으로 웹 서비스를 구현합니다.";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function HomeHero() {
+  const t = useTranslations("home.hero");
+  const locale = useLocale();
+
+  console.log({ locale });
+
   return (
     <section className="max-w-3xl mx-auto text-center space-y-8">
       {/* Avatar Image */}
@@ -24,14 +27,14 @@ export default function HomeHero() {
       <div className="space-y-4">
         <div className="flex flex-col space-y-2">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-            {TITLE}
+            {t("title")}
           </h2>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            {JOB}
+            {t("subtitle")}
           </h2>
         </div>
         <SplitText
-          text={DESC}
+          text={t("description")}
           className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed"
           splitType="words"
           ease="elastic.out(1, 0.7)"
@@ -44,7 +47,7 @@ export default function HomeHero() {
           href="#projects"
           className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
         >
-          프로젝트 보기
+          {t("cta")}
         </a>
         <a
           href="/contact"
