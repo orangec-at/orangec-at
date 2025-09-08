@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import { ControlCenter } from "@/components/control-center/control-center";
 import { Sliders } from "lucide-react";
 import {
@@ -26,8 +27,10 @@ export default function ResponsiveHeader({
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVerySmallScreen, setIsVerySmallScreen] = useState(false);
 
+  const t = useTranslations();
+  const locale = useLocale();
   const pathname = usePathname();
-  const isHomePage = pathname === "/";
+  const isHomePage = pathname === `/${locale}` || pathname === "/";
   const isMobile = position === "bottom";
 
   useEffect(() => {
@@ -122,7 +125,7 @@ export default function ResponsiveHeader({
                   </button>
                 )}
                 <Link
-                  href="/"
+                  href={`/${locale}`}
                   className="transition-all duration-200 hover:scale-110 hover:opacity-80"
                 >
                   <Image
@@ -147,18 +150,21 @@ export default function ResponsiveHeader({
                   } ${isScrolled ? "text-sm" : "text-base"}`}
                 >
                   {MENU_ITEMS.map((item) => {
-                    const isActive = pathname === item.href;
+                    const itemHref = `/${locale}${
+                      item.href === "/" ? "" : item.href
+                    }`;
+                    const isActive = pathname === itemHref;
                     return (
                       <Link
                         key={item.href}
-                        href={item.href}
+                        href={itemHref}
                         className={`transition-all duration-200 font-medium px-3 py-3 rounded-full ${
                           isActive
                             ? "text-foreground font-semibold bg-accent"
                             : "text-muted-foreground hover:text-foreground hover:bg-accent"
                         }`}
                       >
-                        {item.label}
+                        {t(item.translationKey)}
                       </Link>
                     );
                   })}
@@ -296,7 +302,7 @@ export default function ResponsiveHeader({
                   </button>
                 )}
                 <Link
-                  href="/"
+                  href={`/${locale}`}
                   className="transition-all duration-200 hover:scale-110 hover:opacity-80"
                 >
                   <Image
@@ -329,18 +335,21 @@ export default function ResponsiveHeader({
                       }`}
                     >
                       {MENU_ITEMS.map((item) => {
-                        const isActive = pathname === item.href;
+                        const itemHref = `/${locale}${
+                          item.href === "/" ? "" : item.href
+                        }`;
+                        const isActive = pathname === itemHref;
                         const IconComponent = item.icon;
                         return (
                           <Link
                             key={item.href}
-                            href={item.href}
+                            href={itemHref}
                             className={`transition-all duration-200 font-medium p-2 rounded-full flex items-center justify-center touch-target-small ${
                               isActive
                                 ? "text-foreground font-semibold bg-accent"
                                 : "text-muted-foreground hover:text-foreground hover:bg-accent"
                             }`}
-                            title={item.label}
+                            title={t(item.translationKey)}
                           >
                             <IconComponent className="h-4 w-4" />
                           </Link>
@@ -358,11 +367,14 @@ export default function ResponsiveHeader({
                     } ${!isMobile && isScrolled ? "text-sm" : "text-base"}`}
                   >
                     {MENU_ITEMS.map((item) => {
-                      const isActive = pathname === item.href;
+                      const itemHref = `/${locale}${
+                        item.href === "/" ? "" : item.href
+                      }`;
+                      const isActive = pathname === itemHref;
                       return (
                         <Link
                           key={item.href}
-                          href={item.href}
+                          href={itemHref}
                           className={`transition-all duration-200 font-medium px-3 py-3 rounded-full touch-target ${
                             position === "bottom" ? "text-sm" : ""
                           } ${
@@ -371,7 +383,7 @@ export default function ResponsiveHeader({
                               : "text-muted-foreground hover:text-foreground hover:bg-accent"
                           }`}
                         >
-                          {item.label}
+                          {t(item.translationKey)}
                         </Link>
                       );
                     })}
