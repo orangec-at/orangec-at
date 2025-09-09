@@ -5,7 +5,7 @@ const locales = ["ko", "en"] as const;
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale; // 비동기 추출
-  if (!locale || !locales.includes(locale as any)) {
+  if (!locale || !locales.includes(locale as typeof locales[number])) {
     locale = "ko"; // 최종 백업
   }
 
