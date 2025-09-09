@@ -5,7 +5,6 @@ import matter from "gray-matter";
 import {
   MDXFrontmatter,
   validateAndParseFrontmatter,
-  safeParseFrontmatter,
 } from "../types/frontmatter";
 
 // 블로그 포스트 메타데이터 (slug 포함)
