@@ -73,16 +73,17 @@ export interface MDXPost {
 }
 
 // Zod 검증 및 파싱 함수
-export function validateAndParseFrontmatter(data: any): MDXFrontmatter {
+export function validateAndParseFrontmatter(data: unknown): MDXFrontmatter {
   try {
     return frontmatterSchema.parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
       console.error("Frontmatter validation errors:", error.issues);
       // 기본값으로 fallback
+      const fallbackData = data as Record<string, unknown>;
       return frontmatterSchema.parse({
-        title: data.title || "Untitled",
-        date: data.date || new Date().toISOString().split("T")[0],
+        title: fallbackData.title || "Untitled",
+        date: fallbackData.date || new Date().toISOString().split("T")[0],
       });
     }
     throw error;
@@ -90,7 +91,7 @@ export function validateAndParseFrontmatter(data: any): MDXFrontmatter {
 }
 
 // 안전한 파싱 (에러시 null 반환)
-export function safeParseFrontmatter(data: any): MDXFrontmatter | null {
+export function safeParseFrontmatter(data: unknown): MDXFrontmatter | null {
   const result = frontmatterSchema.safeParse(data);
   if (result.success) {
     return result.data;
