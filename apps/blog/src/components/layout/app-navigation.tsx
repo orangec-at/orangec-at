@@ -19,7 +19,9 @@ export default function AppNavigation({ children }: AppNavigationProps) {
         />
       </div>
       {/* Main Content */}
-      <main className="flex-1 pt-4 pb-20 md:pt-24 md:pb-0">{children}</main>
+      <main className="flex-1 pt-4 pb-20 md:pt-24 md:pb-0 max-w-4xl mx-auto min-h-screen bg-background">
+        {children}
+      </main>
 
       {/* Desktop Footer */}
       <div className="hidden md:block">

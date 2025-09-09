@@ -12,8 +12,6 @@ interface LanguageItemComponentProps {
 
 export function LanguageItemComponent({ item, onAction }: LanguageItemComponentProps) {
   if (!item.enabled) return null;
-
-  const currentLanguage = item.availableLanguages.find(lang => lang.code === item.currentLocale);
   
   const getLanguageLabel = () => {
     switch (item.currentLocale) {

@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/theme-context";
 import { X } from "lucide-react";
 import { useLocale } from "next-intl";
-import { useRouter, usePathname } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import {
   defaultControlCenterConfig,
   inlineControlCenterConfig,
@@ -29,13 +28,11 @@ export function ControlCenter({
   onAction,
 }: ControlCenterProps) {
   const { theme, setTheme } = useTheme();
-  const router = useRouter();
-  const pathname = usePathname();
   const currentLocale = useLocale();
 
-  const switchLanguage = (newLocale: string) => {
+  const switchLanguage = useCallback((newLocale: string) => {
     window.location.href = window.location.href.replace(/\/(ko|en)/, `/${newLocale}`);
-  };
+  }, []);
 
   // Create config with injected functions
   const config = useMemo(() => {

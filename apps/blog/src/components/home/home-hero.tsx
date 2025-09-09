@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import SplitText from "../ui/split-text";
+import Link from "next/link";
+import { SplitText } from "../ui/split-text";
 import { useTranslations, useLocale } from "next-intl";
 
 export default function HomeHero() {
@@ -49,12 +50,12 @@ export default function HomeHero() {
         >
           {t("cta")}
         </a>
-        <a
+        <Link
           href="/contact"
           className="border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white dark:text-white px-6 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           Contact Me
-        </a>
+        </Link>
       </div>
     </section>
   );
