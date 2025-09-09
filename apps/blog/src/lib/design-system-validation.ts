@@ -118,9 +118,11 @@ export const RECOMMENDED_PATTERNS = {
   sectionHeading: 'text-1.875rem font-semibold text-gray-900',
 } as const;
 
-export default {
+const designSystemValidation = {
   validateClassName,
   auditComponentColors,
   APPROVED_COLORS,
   RECOMMENDED_PATTERNS
 };
+
+export default designSystemValidation;
