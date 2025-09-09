@@ -1,18 +1,12 @@
 "use client";
 
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
-import { Button } from "@/components/ui/button";
-import SplitText from "@/components/ui/split-text";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { BlogPostMeta, getRelatedProjects } from "@/lib/blog-utils";
+import { Project } from "@/data/projects";
 import Link from "next/link";
+import React from "react";
+import { mdxUi } from "@/components/ui/mdx";
+import { Button } from "@/components/ui";
 
 const components = {
   // HTML 요소 스타일링
@@ -41,16 +35,7 @@ const components = {
       {...props}
     />
   ),
-
-  // UI 컴포넌트들
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Badge,
-  SplitText,
+  ...mdxUi,
 };
 
 export default function BlogPostClient({
@@ -114,7 +99,7 @@ export default function BlogPostClient({
               이 글에서 다룬 기술들이 실제로 적용된 프로젝트들을 확인해보세요.
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
-              {relatedProjects.map((project: any) => (
+              {relatedProjects.map((project: Project) => (
                 <div
                   key={project.id}
                   className="p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
