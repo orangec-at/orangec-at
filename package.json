@@ -1,5 +1,16 @@
 {
-  "dependencies": {
-    "@playwright/test": "^1.55.0"
+  "name": "orangec-at",
+  "version": "1.0.0",
+  "repository": "https://github.com/orangec-at/orangec-at.git",
+  "author": "orangec-at <radio941016@gmail.com>",
+  "workspaces": {
+    "packages": [
+      "apps/**",
+      "packages/**"
+    ]
+  },
+  "packageManager": "yarn@4.9.4",
+  "scripts": {
+    "blog": "yarn workspace @orangec-at/blog"
   }
 }
