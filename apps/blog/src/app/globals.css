@@ -116,12 +116,57 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
+  
+  html, body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
+  /* 모든 요소가 뷰포트를 넘지 않도록 */
+  * {
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+  
+  /* 긴 텍스트나 URL이 가로 스크롤을 발생시키지 않도록 */
+  p, div, span, a, li, td, th {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 }
 
 @layer utilities {
+  /* 가로 스크롤 방지를 위한 유틸리티 */
+  .prevent-horizontal-scroll {
+    overflow-x: hidden;
+    max-width: 100vw;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  /* 코드 블록 전용 스크롤 처리 */
+  .code-scroll-container {
+    overflow-x: auto;
+    max-width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+  }
+  
+  .code-scroll-container::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .code-scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .code-scroll-container::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 3px;
+  }
+  
   /* Custom responsive header utilities */
   .mobile-nav-container {
     /* Enable horizontal scrolling for very small screens while hiding scrollbar */
@@ -151,6 +196,19 @@
   @media (max-width: 320px) {
     .text-xs {
       font-size: 0.7rem;
+    }
+  }
+  
+  /* 모바일에서 긴 단어나 URL 처리 */
+  @media (max-width: 768px) {
+    .break-mobile {
+      word-break: break-all;
+      overflow-wrap: anywhere;
+    }
+    
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
   }
 }
