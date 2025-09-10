@@ -1,0 +1,92 @@
+---
+title: "React Native 앱 개발기: 아이디어부터 앱스토어까지"
+date: "2025-09-04"
+tags: ["react-native", "ios", "app-store", "dev-diary"]
+description: "요가 저널링 앱 Drawhatha를 React Native로 개발하고 앱스토어에 출시하기까지의 여정을 공유합니다."
+author: "Jaeil Lee"
+category: "dev-diary"
+readTime: "8분"
+relatedProjects: ["1"] # Drawhatha 프로젝트 ID
+featured: true
+---
+
+# React Native 앱 개발기: 아이디어부터 앱스토어까지
+
+## 시작하게 된 계기
+
+요가를 꾸준히 하면서 "내 수련 과정을 기록하고 분석할 수 있는 앱이 있으면 좋겠다"는 생각이 들었습니다. 시중의 앱들을 찾아봤지만 제가 원하는 기능을 가진 앱을 찾기 어려웠고, 그래서 직접 만들기로 결심했습니다.
+
+## 기술 스택 선택
+
+### React Native CLI vs Expo
+
+처음에는 Expo를 고려했지만, 네이티브 기능(HealthKit 연동 등)의 자유도를 위해 **React Native CLI**를 선택했습니다.
+
+```javascript
+// HealthKit 연동 예시
+import { AppleHealthKit } from "react-native-health";
+
+const permissions = {
+  read: [
+    AppleHealthKit.Constants.Permissions.Steps,
+    AppleHealthKit.Constants.Permissions.HeartRate,
+  ],
+};
+```
+
+### 백엔드: Supabase
+
+- 빠른 개발을 위한 BaaS 선택
+- PostgreSQL 기반의 안정적인 데이터베이스
+- Row Level Security로 사용자 데이터 보안
+
+## 개발 과정에서 마주한 도전들
+
+### 1. 앱스토어 심사 과정
+
+첫 번째 제출에서 **2.1 Performance** 가이드라인으로 반려됐습니다.
+
+**문제**: 앱 크래시와 성능 이슈
+**해결**:
+
+- Flipper 제거로 빌드 크기 최적화
+- 메모리 누수 문제 해결
+- 에러 바운더리 구현
+
+### 2. 오프라인 동기화
+
+사용자가 인터넷 연결 없이도 기록할 수 있어야 했습니다.
+
+```typescript
+// 오프라인 상태 관리
+const useOfflineSync = () => {
+  const [isOnline, setIsOnline] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      setIsOnline(state.isConnected ?? false);
+      if (state.isConnected) {
+        syncPendingData();
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+};
+```
+
+## 결과와 배운 점
+
+**1년 운영 결과**:
+
+- 꾸준한 사용자 증가
+- 앱스토어 평점 4.5/5.0 유지
+- 월간 활성 사용자(MAU) 지속 성장
+
+**기술적으로 배운 점**:
+
+- React Native의 네이티브 모듈 활용
+- 앱스토어 심사 가이드라인 준수의 중요성
+- 사용자 피드백 기반의 점진적 개선
+
+이런 경험을 바탕으로 여러분의 앱 아이디어도 성공적으로 구현할 수 있습니다.

@@ -1,0 +1,65 @@
+---
+title: "10 Useful JavaScript Tips I Use Daily"
+date: "2025-09-07"
+tags: ["javascript", "tips", "development", "es6"]
+description: "A collection of JavaScript tips that I frequently use in everyday development."
+author: "Jaeil Lee"
+category: "tutorial"
+readTime: "3min"
+# relatedProjects: [] # No project association (can be omitted)
+featured: false
+---
+
+# 10 Useful JavaScript Tips I Use Daily
+
+Here are some generally useful JavaScript tips that aren't tied to any specific project.
+
+## 1. Remove Duplicates from Array
+
+```javascript
+// Using Set
+const uniqueArray = [...new Set(array)];
+
+// Using filter + indexOf
+const uniqueArray2 = array.filter(
+  (item, index) => array.indexOf(item) === index
+);
+```
+
+## 2. Deep Copy Objects
+
+```javascript
+// JSON method (limited)
+const deepCopy = JSON.parse(JSON.stringify(obj));
+
+// structuredClone (modern browsers)
+const deepCopy2 = structuredClone(obj);
+```
+
+## 3. Get Last Element of Array
+
+```javascript
+const lastItem = array[array.length - 1];
+// or
+const lastItem2 = array.at(-1); // modern approach
+```
+
+## 4. Merge Objects
+
+```javascript
+const merged = { ...obj1, ...obj2 };
+// or
+const merged2 = Object.assign({}, obj1, obj2);
+```
+
+## 5. Conditional Object Properties
+
+```javascript
+const obj = {
+  name: "John",
+  ...(condition && { age: 30 }),
+  ...(anotherCondition && { city: "Seoul" }),
+};
+```
+
+This way, you can freely write general development tips, tutorials, retrospectives, etc. that aren't associated with specific projects!

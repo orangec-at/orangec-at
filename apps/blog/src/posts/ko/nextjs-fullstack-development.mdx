@@ -1,0 +1,182 @@
+---
+title: "Next.js 풀스택으로 SaaS 플랫폼 구축하기"
+date: "2025-09-04"
+tags: ["Next.js", "Supabase", "풀스택", "SaaS"]
+description: "Yogaday 플랫폼을 Next.js App Router와 Supabase로 구축하면서 배운 풀스택 개발 노하우를 공유합니다."
+author: "Jaeil Lee"
+category: "기술리뷰"
+readTime: "12분"
+relatedProjects: ["2"] # Yogaday 프로젝트 ID
+featured: true
+
+---
+
+# Next.js 풀스택으로 SaaS 플랫폼 구축하기
+
+## 프로젝트 개요: Yogaday
+
+요가 강사와 수강생을 연결하는 원데이 클래스 플랫폼 **Yogaday**를 Next.js 13+ App Router로 구축한 경험을 공유합니다.
+
+## 아키텍처 설계
+
+### 기술 스택 선택 이유
+
+```typescript
+// Next.js App Router + Supabase 조합
+const techStack = {
+  frontend: "Next.js 14 + TypeScript",
+  backend: "Supabase (PostgreSQL + Auth)",
+  styling: "TailwindCSS",
+  deployment: "Vercel",
+};
+```
+
+### 폴더 구조
+
+```
+src/
+├── app/
+│   ├── (auth)/          # 인증 관련 페이지
+│   ├── (dashboard)/     # 대시보드
+│   └── api/             # API 라우트
+├── components/
+├── lib/
+│   ├── supabase/        # Supabase 클라이언트
+│   └── utils/
+└── types/
+```
+
+## 핵심 기능 구현
+
+### 1. 실시간 예약 시스템
+
+```typescript
+// 실시간 예약 상태 업데이트
+const useReservations = (classId: string) => {
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("reservations")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "reservations",
+          filter: `class_id=eq.${classId}`,
+        },
+        (payload) => {
+          // 실시간 예약 상태 반영
+          handleReservationUpdate(payload);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [classId]);
+};
+```
+
+### 2. Row Level Security 설정
+
+사용자는 자신의 데이터만 접근할 수 있도록 RLS 정책을 설정했습니다.
+
+```sql
+-- 예약 테이블 RLS 정책
+CREATE POLICY "Users can view own reservations"
+ON reservations FOR SELECT
+USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can create reservations"
+ON reservations FOR INSERT
+WITH CHECK (auth.uid() = user_id);
+```
+
+### 3. 결제 시스템 통합
+
+```typescript
+// 결제 처리 API 라우트
+export async function POST(request: Request) {
+  try {
+    const { classId, userId } = await request.json();
+
+    // 1. 클래스 정보 확인
+    const classInfo = await getClassInfo(classId);
+
+    // 2. 결제 처리 (토스페이먼츠)
+    const payment = await processPayment({
+      amount: classInfo.price,
+      orderId: generateOrderId(),
+    });
+
+    // 3. 예약 생성
+    const reservation = await createReservation({
+      classId,
+      userId,
+      paymentId: payment.paymentKey,
+    });
+
+    return NextResponse.json({ success: true, reservation });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+```
+
+## 성능 최적화
+
+### 1. 데이터베이스 쿼리 최적화
+
+```typescript
+// 조인을 활용한 효율적인 데이터 조회
+const getClassesWithInstructor = async () => {
+  const { data } = await supabase
+    .from("classes")
+    .select(
+      `
+      *,
+      instructor:profiles(name, avatar_url),
+      reservations(count)
+    `
+    )
+    .eq("status", "active")
+    .order("start_time", { ascending: true });
+
+  return data;
+};
+```
+
+### 2. 이미지 최적화
+
+```typescript
+// Next.js Image 컴포넌트 + Supabase Storage
+<Image
+  src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${instructor.avatar}`}
+  alt={instructor.name}
+  width={200}
+  height={200}
+  className="rounded-full"
+  priority={featured}
+/>
+```
+
+## 배운 점과 개선사항
+
+### 성공 요인
+
+1. **App Router 활용**: 서버 컴포넌트로 초기 로딩 속도 개선
+2. **타입 안전성**: TypeScript + Supabase 자동 타입 생성
+3. **실시간 기능**: Supabase Realtime으로 사용자 경험 향상
+
+### 아쉬운 점과 개선 계획
+
+- **테스트 커버리지**: E2E 테스트 추가 필요
+- **에러 처리**: 더 세분화된 에러 핸들링
+- **성능 모니터링**: 실사용자 데이터 기반 최적화
+
+## 마무리
+
+6개월간 운영하면서 안정적인 서비스 제공이 가능했습니다. Next.js + Supabase 조합은 빠른 개발과 확장성을 동시에 만족시키는 훌륭한 선택이었습니다.
