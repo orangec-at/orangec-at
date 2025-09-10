@@ -1,28 +1,80 @@
 import { z } from "zod";
 
 // 카테고리 및 태그 상수 (Zod enum 사용)
+// 카테고리 key 상수
 export const BLOG_CATEGORIES = [
-  "개발일기",
-  "기술리뷰",
-  "프로젝트",
-  "튜토리얼",
-  "회고",
-  "기술가이드",
+  "dev-diary",
+  "tech-review",
+  "project",
+  "tutorial",
+  "retrospective",
+  "tech-guide",
 ] as const;
 
+// 태그 key 상수
 export const COMMON_TAGS = [
-  "React",
-  "React Native",
-  "TypeScript",
-  "Next.js",
-  "Node.js",
-  "iOS",
-  "Android",
-  "앱스토어",
-  "개발일기",
-  "Supabase",
-  "TailwindCSS",
+  "react",
+  "react-native",
+  "typescript",
+  "nextjs",
+  "nodejs",
+  "ios",
+  "android",
+  "app-store",
+  "dev-diary",
+  "supabase",
+  "tailwindcss",
+  "javascript",
+  "tips",
+  "development",
+  "es6",
 ] as const;
+// 카테고리 번역 맵핑
+export const CATEGORY_TRANSLATIONS = {
+  "dev-diary": { ko: "개발일기", en: "Dev Diary" },
+  "tech-review": { ko: "기술리뷰", en: "Tech Review" },
+  project: { ko: "프로젝트", en: "Project" },
+  tutorial: { ko: "튜토리얼", en: "Tutorial" },
+  retrospective: { ko: "회고", en: "Retrospective" },
+  "tech-guide": { ko: "기술가이드", en: "Tech Guide" },
+} as const;
+
+// 태그 번역 맵핑
+// 태그 번역 맵핑
+export const TAG_TRANSLATIONS = {
+  react: { ko: "React", en: "React" },
+  "react-native": { ko: "React Native", en: "React Native" },
+  typescript: { ko: "TypeScript", en: "TypeScript" },
+  nextjs: { ko: "Next.js", en: "Next.js" },
+  nodejs: { ko: "Node.js", en: "Node.js" },
+  ios: { ko: "iOS", en: "iOS" },
+  android: { ko: "Android", en: "Android" },
+  "app-store": { ko: "앱스토어", en: "App Store" },
+  "dev-diary": { ko: "개발일기", en: "Dev Diary" },
+  supabase: { ko: "Supabase", en: "Supabase" },
+  tailwindcss: { ko: "TailwindCSS", en: "TailwindCSS" },
+  javascript: { ko: "JavaScript", en: "JavaScript" },
+  tips: { ko: "팁", en: "Tips" },
+  development: { ko: "개발", en: "Development" },
+  es6: { ko: "ES6", en: "ES6" },
+} as const;
+// 번역 헬퍼 함수들
+export function translateCategory(
+  categoryKey: BlogCategory,
+  locale: string = "ko"
+): string {
+  const translation = CATEGORY_TRANSLATIONS[categoryKey];
+  return translation
+    ? translation[locale as keyof typeof translation] || categoryKey
+    : categoryKey;
+}
+
+export function translateTag(tagKey: string, locale: string = "ko"): string {
+  const translation = TAG_TRANSLATIONS[tagKey as keyof typeof TAG_TRANSLATIONS];
+  return translation
+    ? translation[locale as keyof typeof translation] || tagKey
+    : tagKey;
+}
 
 // SEO 메타데이터 스키마
 const seoSchema = z
@@ -51,7 +103,10 @@ export const frontmatterSchema = z.object({
   category: z.enum(BLOG_CATEGORIES).optional(),
   readTime: z
     .string()
-    .regex(/^\d+분$/, "읽기 시간 형식은 '5분' 형태여야 합니다")
+    .regex(
+      /^(\d+분|\d+min)$/,
+      "읽기 시간 형식은 '5분' 또는 '5min' 형태여야 합니다"
+    )
     .optional(),
   relatedProjects: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
