@@ -1,67 +1,51 @@
 import BlogClient from "./client";
-import fs from "fs";
-import path from "path";
-import { MDXFrontmatter, BlogCategory } from "@/types/frontmatter";
+import { getBlogPostsByLocale } from "@/lib/blog-utils.server";
 
-export default function BlogPage() {
-  const postsDir = path.join(process.cwd(), "src/posts");
-  const filenames = fs.readdirSync(postsDir);
+// 블로그 목록 페이지 메타데이터
+export async function generateMetadata({ params }: { params: { locale: string } }) {
+  const { locale } = params;
+  
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+  const canonicalUrl = `${baseUrl}/${locale === "ko" ? "" : `${locale}/`}blog`;
+  
+  const title = locale === "ko" ? "블로그" : "Blog";
+  const description = locale === "ko" 
+    ? "개발 경험과 기술 인사이트를 공유하는 블로그입니다."
+    : "A blog sharing development experiences and technical insights.";
 
-  const posts: (MDXFrontmatter & { slug: string })[] = filenames
-    .map((filename) => {
-      const file = fs.readFileSync(path.join(postsDir, filename), "utf-8");
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        ko: `${baseUrl}/blog`,
+        en: `${baseUrl}/en/blog`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: "Orange C At",
+      locale: locale === "ko" ? "ko_KR" : "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+  };
+}
 
-      // frontmatter 파싱 (YAML frontmatter + 주석 처리된 메타데이터)
-      const frontmatterMatch = file.match(/^---\n([\s\S]*?)\n---/);
-      const frontmatterText = frontmatterMatch ? frontmatterMatch[1] : "";
-
-      // 기본 필드들 파싱
-      const titleMatch = frontmatterText.match(/title:\s*["']?([^"'\n]+)["']?/);
-      const dateMatch = frontmatterText.match(/date:\s*["']?([^"'\n]+)["']?/);
-      const descriptionMatch = frontmatterText.match(
-        /description:\s*["']?([^"'\n]+)["']?/
-      );
-      const authorMatch = frontmatterText.match(
-        /author:\s*["']?([^"'\n]+)["']?/
-      );
-      const categoryMatch = frontmatterText.match(
-        /category:\s*["']?([^"'\n]+)["']?/
-      );
-      const thumbnailMatch = frontmatterText.match(
-        /thumbnail:\s*["']?([^"'\n]+)["']?/
-      );
-      const readTimeMatch = frontmatterText.match(
-        /readTime:\s*["']?([^"'\n]+)["']?/
-      );
-      const featuredMatch = frontmatterText.match(/featured:\s*(true|false)/);
-
-      // 태그 파싱 (배열 형태)
-      const tagsMatch = frontmatterText.match(/tags:\s*\[([^\]]*)\]/);
-      const tags = tagsMatch
-        ? tagsMatch[1].split(",").map((tag) => tag.trim().replace(/["']/g, ""))
-        : [];
-
-      const slug = filename.replace(/\.mdx?$/, "");
-
-      return {
-        title: titleMatch ? titleMatch[1] : "Untitled",
-        date: dateMatch ? dateMatch[1] : new Date().toISOString().split("T")[0],
-        slug,
-        description: descriptionMatch ? descriptionMatch[1] : undefined,
-        author: authorMatch ? authorMatch[1] : "Jaeil Lee",
-        category: categoryMatch
-          ? (categoryMatch[1] as BlogCategory)
-          : undefined,
-        thumbnail: thumbnailMatch ? thumbnailMatch[1] : undefined,
-        readTime: readTimeMatch ? readTimeMatch[1] : undefined,
-        tags: tags.filter((tag) => tag.length > 0),
-        featured: featuredMatch ? featuredMatch[1] === "true" : false,
-        draft: false,
-        relatedProjects: [],
-        seo: undefined,
-      };
-    })
-    .filter((post) => !post.draft); // draft가 아닌 포스트만
+export default async function BlogPage({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const { locale } = await params;
+  const posts = await getBlogPostsByLocale(locale);
 
   return <BlogClient posts={posts} />;
 }
