@@ -28,7 +28,7 @@ export default function BlogCard({
 }: BlogCardProps) {
   return (
     <Link href={`/blog/${slug}`}>
-      <article className="group relative overflow-hidden rounded-2xl bg-white shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+      <article className="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
         {/* 이미지 섹션 - 항상 표시 */}
         <div className="relative aspect-[16/9] overflow-hidden">
           {thumbnail ? (
@@ -75,12 +75,12 @@ export default function BlogCard({
 
         {/* 컨텐츠 섹션 */}
         <div className="p-5">
-          <h3 className="mb-3 text-lg font-bold text-gray-900 leading-tight transition-colors duration-300 group-hover:text-blue-600 line-clamp-2">
+          <h3 className="mb-3 text-lg font-bold text-gray-900 dark:text-white leading-tight transition-colors duration-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-2">
             {title}
           </h3>
 
           {description && (
-            <p className="mb-4 text-sm text-gray-600 line-clamp-3 leading-relaxed">
+            <p className="mb-4 text-sm text-gray-600 dark:text-gray-300 line-clamp-3 leading-relaxed">
               {description}
             </p>
           )}
@@ -91,13 +91,13 @@ export default function BlogCard({
               {tags.slice(0, 3).map((tag, index) => (
                 <span
                   key={index}
-                  className="inline-flex rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600"
+                  className="inline-flex rounded-md bg-gray-100 dark:bg-gray-700 px-2 py-1 text-xs text-gray-600 dark:text-gray-300"
                 >
                   #{tag}
                 </span>
               ))}
               {tags.length > 3 && (
-                <span className="inline-flex rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-500">
+                <span className="inline-flex rounded-md bg-gray-100 dark:bg-gray-700 px-2 py-1 text-xs text-gray-500 dark:text-gray-400">
                   +{tags.length - 3}
                 </span>
               )}
@@ -105,16 +105,16 @@ export default function BlogCard({
           )}
 
           {/* 작성자와 날짜 정보 */}
-          <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+          <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700">
             <div className="flex items-center gap-3">
               <div className="text-sm">
-                <time className="text-gray-500">{date}</time>
+                <time className="text-gray-500 dark:text-gray-400">{date}</time>
               </div>
             </div>
 
             {/* 북마크 아이콘 */}
             <button
-              className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+              className="rounded-full p-1.5 text-gray-400 dark:text-gray-500 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-300"
               onClick={(e) => {
                 e.preventDefault();
                 // 북마크 기능 구현
