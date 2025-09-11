@@ -2,8 +2,8 @@ import BlogClient from "./client";
 import { getBlogPostsByLocale } from "@/lib/blog-utils.server";
 
 // 블로그 목록 페이지 메타데이터
-export async function generateMetadata({ params }: { params: { locale: string } }) {
-  const { locale } = params;
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
   const canonicalUrl = `${baseUrl}/${locale === "ko" ? "" : `${locale}/`}blog`;
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: { params: { locale: string } 
 export default async function BlogPage({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
   const posts = await getBlogPostsByLocale(locale);
