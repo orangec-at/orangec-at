@@ -2,13 +2,13 @@
   "navigation": {
     "home": "Home",
     "blog": "Blog",
-    "projects": "Projects", 
+    "projects": "Projects",
     "contact": "Contact"
   },
   "home": {
     "hero": {
       "title": "Hi, I'm a Product-minded Frontend Developer",
-      "subtitle": "Startup Founder | AI-powered Development Enthusiast", 
+      "subtitle": "Startup Founder | AI-powered Development Enthusiast",
       "description": "Currently building the yoga tech ecosystem with two live products while exploring part-time opportunities to share insights and contribute to innovative teams.",
       "cta": "View Projects"
     },
@@ -29,7 +29,7 @@
     "techStack": {
       "title": "Tech Stack",
       "core": "Core Technologies",
-      "backend": "Backend Experience", 
+      "backend": "Backend Experience",
       "tools": "AI Tools"
     },
     "contact": {
@@ -47,15 +47,40 @@
   },
   "projects": {
     "title": "Projects",
-    "status": "Status", 
+    "status": "Status",
     "tech": "Tech Stack",
     "description": "Description"
   },
   "contact": {
     "title": "Contact",
+    "hero": {
+      "title": "Contact Me",
+      "description": "Interested in working together? Reach out via email or social links below."
+    },
+    "profile": {
+      "name": "Jaeil Lee",
+      "title": "Product Engineer",
+      "handle": "orangec-at",
+      "status": "Available",
+      "contactText": "Contact Me"
+    },
+    "features": {
+      "projects": {
+        "title": "🚀 Projects",
+        "description": "Building innovative solutions with modern tech stack"
+      },
+      "talk": {
+        "title": "💬 Let's Talk",
+        "description": "Always open to discussing new opportunities"
+      },
+      "response": {
+        "title": "⚡ Quick Response",
+        "description": "Usually reply within 24 hours"
+      }
+    },
     "form": {
       "name": "Name",
-      "email": "Email", 
+      "email": "Email",
       "message": "Message",
       "send": "Send"
     }
