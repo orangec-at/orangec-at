@@ -3,7 +3,7 @@
 import ContactForm from "@/components/contact/contact-form";
 import ContactHero from "@/components/contact/contact-hero";
 import SocialLinks from "@/components/contact/social-links";
-import DotGrid from "@/components/ui/DotGrid";
+
 import ProfileCard from "@/components/ui/ProfileCard";
 import SpotlightCard from "@/components/ui/SpotlightCard";
 import { useTranslations } from "next-intl";

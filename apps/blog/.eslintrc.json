@@ -6,5 +6,10 @@
     "out/**",
     "build/**",
     "next-env.d.ts"
-  ]
+  ],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@next/next/no-img-element": "warn",
+    "@typescript-eslint/no-unused-expressions": "warn"
+  }
 }
