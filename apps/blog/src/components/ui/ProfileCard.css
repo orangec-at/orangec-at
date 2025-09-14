@@ -43,7 +43,7 @@
   perspective: 500px;
   transform: translate3d(0, 0, 0.1px);
   position: relative;
-  touch-action: none;
+  touch-action: auto;
 }
 
 .pc-card-wrapper::before {
@@ -284,13 +284,14 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  backdrop-filter: blur(30px);
-  mask: linear-gradient(
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0) 0%,
     rgba(0, 0, 0, 0) 60%,
-    rgba(0, 0, 0, 1) 90%,
-    rgba(0, 0, 0, 1) 100%
+    rgba(0, 0, 0, 0.3) 90%,
+    rgba(0, 0, 0, 0.5) 100%
   );
   pointer-events: none;
 }
@@ -304,9 +305,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 15px;
   padding: 12px 14px;
   pointer-events: auto;
@@ -355,14 +357,16 @@
 }
 
 .pc-contact-btn {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   padding: 8px 16px;
   font-size: 14px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
   cursor: pointer;
   transition: all 0.2s ease;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
@@ -586,5 +590,48 @@
     padding: 4px 8px;
     font-size: 9px;
     border-radius: 50px;
+  }
+}
+
+/* iOS Safari 호환성 개선 */
+@supports not (backdrop-filter: blur(10px)) {
+  .pc-user-info {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .pc-contact-btn {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .pc-avatar-content::before {
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 60%,
+      rgba(0, 0, 0, 0.5) 90%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+  }
+}
+
+/* 모바일 성능 최적화 */
+@media (max-width: 768px) {
+  .pc-card {
+    will-change: transform;
+  }
+  
+  .pc-shine {
+    animation: none;
+    background-image: none;
+    filter: none;
+  }
+  
+  .pc-card {
+    animation: none;
+    background-size: 100% 100%;
+    background-image: 
+      radial-gradient(35% 52% at 55% 20%, #00ffaac4 0%, #073aff00 100%),
+      radial-gradient(100% 100% at 50% 50%, #00c1ffff 1%, #073aff00 76%),
+      conic-gradient(from 124deg at 50% 50%, #c137ffff 0%, #07c6ffff 40%, #07c6ffff 60%, #c137ffff 100%);
   }
 }

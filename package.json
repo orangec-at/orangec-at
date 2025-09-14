@@ -11,6 +11,12 @@
   },
   "packageManager": "yarn@4.9.4",
   "scripts": {
-    "blog": "yarn workspace @orangec-at/blog"
+    "blog": "yarn workspace @orangec-at/blog",
+    "build:vc": "vercel build --prod",
+    "deploy:prd": "vercel deploy --prod",
+    "deploy:pre": "vercel deploy --prebuilt --prod",
+    "vercel:pull": "vercel pull --yes",
+    "vercel:dev": "vercel dev --yes",
+    "clean:vercel": "rm -rf .vercel/output"
   }
 }
