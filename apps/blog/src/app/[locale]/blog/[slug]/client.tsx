@@ -106,9 +106,9 @@ export default function BlogPostClient({
           <MDXRemote {...mdxSource} components={mdxComponents} lazy />
         </article>
 
-        <RelatedProjectsSection projects={relatedProjects} locale={locale} />
+        <RelatedProjectsSection projects={relatedProjects} />
 
-        <BlogCTASection locale={locale} />
+        <BlogCTASection />
       </div>
     </div>
   );

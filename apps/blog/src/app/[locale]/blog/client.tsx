@@ -3,12 +3,14 @@
 import BlogCard from "@/components/blog/blog-card";
 import { MDXFrontmatter } from "@/types/frontmatter";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface BlogClientProps {
   posts: (MDXFrontmatter & { slug: string })[];
 }
 
 export default function BlogClient({ posts }: BlogClientProps) {
+  const t = useTranslations("blog");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedTag, setSelectedTag] = useState<string>("all");
@@ -46,9 +48,9 @@ export default function BlogClient({ posts }: BlogClientProps) {
     <div className="px-4 py-8 md:px-16 md:py-12 space-y-8">
       {/* 헤더 */}
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Blog</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t("title")}</h1>
         <p className="text-gray-600 dark:text-gray-300">
-          개발 여정과 기술적 인사이트를 공유합니다
+          {t("subtitle")}
         </p>
       </div>
 
@@ -58,7 +60,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
         <div className="relative">
           <input
             type="text"
-            placeholder="포스트 검색..."
+            placeholder={t("searchPlaceholder")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-3 pl-10 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -86,7 +88,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
             onChange={(e) => setSelectedCategory(e.target.value)}
             className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
           >
-            <option value="all">모든 카테고리</option>
+            <option value="all">{t("allCategories")}</option>
             {categories.map((category) => (
               <option key={category} value={category}>
                 {category}
@@ -100,7 +102,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
             onChange={(e) => setSelectedTag(e.target.value)}
             className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
           >
-            <option value="all">모든 태그</option>
+            <option value="all">{t("allTags")}</option>
             {tags.map((tag) => (
               <option key={tag} value={tag}>
                 #{tag}
@@ -120,7 +122,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
               }}
               className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
-              필터 초기화
+              {t("resetFilters")}
             </button>
           )}
         </div>
@@ -128,7 +130,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
 
       {/* 결과 카운트 */}
       <div className="text-sm text-gray-600 dark:text-gray-400">
-        총 {filteredPosts.length}개의 포스트
+        {t("postCount", { count: filteredPosts.length })}
       </div>
 
       {/* 포스트 그리드 */}
@@ -169,9 +171,9 @@ export default function BlogClient({ posts }: BlogClientProps) {
             </svg>
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-            포스트를 찾을 수 없습니다
+            {t("noPostsFound")}
           </h3>
-          <p className="text-gray-600 dark:text-gray-300">검색어나 필터를 조정해보세요.</p>
+          <p className="text-gray-600 dark:text-gray-300">{t("adjustSearch")}</p>
         </div>
       )}
     </div>
