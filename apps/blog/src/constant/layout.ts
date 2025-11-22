@@ -1,5 +1,5 @@
 export const APP_NAME = "OrangeCat's Blog";
-import { Home, FolderOpen, FileText, Mail } from "lucide-react";
+import { Home, FolderOpen, FileText, Mail, FileUser } from "lucide-react";
 
 // Navigation items with translation keys
 export const MENU_ITEMS = [
@@ -17,6 +17,11 @@ export const MENU_ITEMS = [
     translationKey: "navigation.blog",
     href: "/blog", 
     icon: FileText,
+  },
+  {
+    translationKey: "navigation.resume",
+    href: "/resume",
+    icon: FileUser,
   },
   {
     translationKey: "navigation.contact",

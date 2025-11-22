@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
 import { LanguageItem } from "../types";
+import { useTranslations } from "next-intl";
 
 interface LanguageItemComponentProps {
   item: LanguageItem;
@@ -11,13 +12,18 @@ interface LanguageItemComponentProps {
 }
 
 export function LanguageItemComponent({ item, onAction }: LanguageItemComponentProps) {
+  const t = useTranslations("controlCenter");
+
   if (!item.enabled) return null;
-  
+
   const getLanguageLabel = () => {
     switch (item.currentLocale) {
-      case "ko": return "한국어 모드";
-      case "en": return "영어 모드";
-      default: return "언어 설정";
+      case "ko":
+        return t("koreanMode");
+      case "en":
+        return t("englishMode");
+      default:
+        return t("languageSettings");
     }
   };
 
@@ -28,7 +34,7 @@ export function LanguageItemComponent({ item, onAction }: LanguageItemComponentP
         <div className="flex items-center gap-3">
           <Globe className="h-5 w-5" />
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-medium text-card-foreground">{item.title}</div>
+            <div className="text-sm font-medium text-card-foreground">{t("language")}</div>
             <div className="text-xs text-muted-foreground truncate">{getLanguageLabel()}</div>
           </div>
         </div>
