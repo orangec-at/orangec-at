@@ -13,13 +13,12 @@ export async function generateMetadata({
 }: HomePageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "home" });
+  const tm = await getTranslations({ locale, namespace: "metadata" });
 
   const isKorean = locale === "ko";
 
   return {
-    title: isKorean
-      ? "이재일 - 프론트엔드 & 풀스택 개발자"
-      : "Jaeil Lee - Frontend & Fullstack Developer",
+    title: tm("title"),
     description: t("hero.description"),
     keywords: [
       "Frontend Developer",
@@ -32,9 +31,7 @@ export async function generateMetadata({
     ],
     authors: [{ name: "Jaeil Lee" }],
     openGraph: {
-      title: isKorean
-        ? "이재일 - 프론트엔드 & 풀스택 개발자"
-        : "Jaeil Lee - Frontend & Fullstack Developer",
+      title: tm("title"),
       description: t("hero.description"),
       type: "website",
       locale: isKorean ? "ko_KR" : "en_US",
@@ -45,17 +42,13 @@ export async function generateMetadata({
           url: "/og-image.jpg",
           width: 1200,
           height: 630,
-          alt: isKorean
-            ? "이재일 - 프론트엔드 개발자 포트폴리오"
-            : "Jaeil Lee - Frontend Developer Portfolio",
+          alt: tm("description"),
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: isKorean
-        ? "이재일 - 프론트엔드 개발자 & 디자이너"
-        : "Jaeil Lee - Frontend Developer & Designer",
+      title: tm("ogTitle"),
       description: t("hero.description"),
     },
     robots: {

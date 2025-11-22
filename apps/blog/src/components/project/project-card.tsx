@@ -1,3 +1,5 @@
+"use client";
+
 import { Project } from "@/data/projects";
 import {
   Card,
@@ -9,12 +11,14 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Image from "next/image";
 import { designTokens } from "@/lib/design-tokens";
+import { useTranslations } from "next-intl";
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
+  const t = useTranslations("projects");
   return (
     <Card className="w-full max-w-md mx-auto">
       {project.image && (
@@ -34,11 +38,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Link 
+        <Link
           href={`/projects/${project.id}`}
           className="text-gray-600 hover:text-gray-900 underline transition-colors font-medium"
         >
-          자세히 보기
+          {t("viewMore")}
         </Link>
       </CardFooter>
     </Card>
