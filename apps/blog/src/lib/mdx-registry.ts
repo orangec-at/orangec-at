@@ -24,6 +24,9 @@ import {
   TdValue,
   TheadRow,
   ResumeSection,
+  ResumeExperienceContentTable,
+  ResumeProjectContentTable,
+  ResumeEducationContentTable,
 } from "@/components/resume";
 
 // UI 컴포넌트
@@ -213,6 +216,85 @@ export const MDX_COMPONENT_REGISTRY: Record<string, MDXComponentDefinition> = {
 </ResumeSection>
 
 `,
+    },
+  },
+
+  ResumeExperienceContentTable: {
+    component: ResumeExperienceContentTable,
+    meta: {
+      id: "resume-experience-content-table",
+      name: "Resume Experience Content Table",
+      nameKo: "경력 콘텐츠 테이블",
+      icon: "Table",
+      category: "resume",
+      template: `<ResumeExperienceContentTable
+  data={[
+    {
+      company: "회사명",
+      role: "역할",
+      period: "2023.01 - 현재",
+      summary: "간단한 설명",
+      achievements: ["주요 성과 1", "주요 성과 2"],
+      techStack: ["React", "Next.js"],
+    },
+  ]}
+/>
+
+`,
+      description: "ContentTable 기반 경력 섹션",
+    },
+  },
+
+  ResumeProjectContentTable: {
+    component: ResumeProjectContentTable,
+    meta: {
+      id: "resume-project-content-table",
+      name: "Resume Project Content Table",
+      nameKo: "프로젝트 콘텐츠 테이블",
+      icon: "Table",
+      category: "resume",
+      template: `<ResumeProjectContentTable
+  data={[
+    {
+      name: "프로젝트명",
+      period: "2024.01 - 2024.06",
+      role: "프론트엔드 개발",
+      context: "개인/회사 프로젝트",
+      summary: "간단한 설명",
+      achievements: ["성과 1", "성과 2"],
+      techStack: ["React", "TypeScript"],
+      linkLabel: "링크 텍스트",
+      linkUrl: "https://example.com",
+    },
+  ]}
+/>
+
+`,
+      description: "ContentTable 기반 프로젝트 섹션",
+    },
+  },
+
+  ResumeEducationContentTable: {
+    component: ResumeEducationContentTable,
+    meta: {
+      id: "resume-education-content-table",
+      name: "Resume Education Content Table",
+      nameKo: "학력 콘텐츠 테이블",
+      icon: "Table",
+      category: "resume",
+      template: `<ResumeEducationContentTable
+  data={[
+    {
+      school: "학교/과정명",
+      period: "2017.03 - 2021.02",
+      major: "전공",
+      note: "비고",
+    },
+  ]}
+/>
+
+`,
+      description: "ContentTable 기반 학력 섹션",
     },
   },
 
@@ -925,6 +1007,9 @@ export function getComponentBlocks(): ComponentMeta[] {
     "ResumeTable",
     "ResumeTableWithHeader",
     "ResumeSection",
+    "ResumeExperienceContentTable",
+    "ResumeProjectContentTable",
+    "ResumeEducationContentTable",
     // 기존 UI 컴포넌트
     "Button",
     "Badge",

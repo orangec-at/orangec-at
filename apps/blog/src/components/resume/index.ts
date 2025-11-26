@@ -3,6 +3,11 @@ export { ResumeTable, Tr, Th, TdLabel, TdValue, TheadRow } from "./resume-table"
 
 // Layout
 export { ResumeSection } from "./resume-section";
+export {
+  ResumeExperienceContentTable,
+  ResumeProjectContentTable,
+  ResumeEducationContentTable,
+} from "./content-table-sections";
 
 // Domain sections
 export {
