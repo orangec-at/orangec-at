@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "title": "Jaeil Lee - Frontend & Full-stack Developer",
+    "description": "Jaeil Lee - Frontend Developer Portfolio",
+    "ogTitle": "Jaeil Lee - Frontend Developer & Designer"
+  },
+  "navigation": {
+    "home": "Home",
+    "blog": "Blog",
+    "projects": "Projects",
+    "resume": "Resume",
+    "contact": "Contact"
+  },
+  "footer": {
+    "copyright": "© {year} OrangeCat''s Blog. All rights reserved."
+  }
+}

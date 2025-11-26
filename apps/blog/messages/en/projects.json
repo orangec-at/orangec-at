@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "title": "Projects",
+    "status": "Status",
+    "tech": "Tech Stack",
+    "description": "Description",
+    "viewMore": "View More",
+    "viewDetails": "View Project Details"
+  }
+}

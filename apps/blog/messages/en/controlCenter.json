@@ -1,0 +1,19 @@
+{
+  "controlCenter": {
+    "theme": "Theme",
+    "language": "Language",
+    "korean": "Korean",
+    "english": "English",
+    "musicPlayer": "Music Player",
+    "noMusic": "No music playing",
+    "koreanMode": "Korean Mode",
+    "englishMode": "English Mode",
+    "languageSettings": "Language Settings",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
+    "systemMode": "System Mode",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  }
+}

@@ -4,13 +4,35 @@ import { getRequestConfig } from "next-intl/server";
 const locales = ["ko", "en"] as const;
 
 export default getRequestConfig(async ({ requestLocale }) => {
-  let locale = await requestLocale; // 비동기 추출
+  let locale = await requestLocale;
   if (!locale || !locales.includes(locale as typeof locales[number])) {
-    locale = "ko"; // 최종 백업
+    locale = "ko";
+  }
+
+  // 네임스페이스별 파일 로드 후 병합
+  const namespaces = [
+    "common",
+    "home", 
+    "blog",
+    "projects",
+    "contact",
+    "resume",
+    "controlCenter",
+  ];
+
+  const messages: Record<string, unknown> = {};
+
+  for (const ns of namespaces) {
+    try {
+      const nsMessages = (await import(`../messages/${locale}/${ns}.json`)).default;
+      Object.assign(messages, nsMessages);
+    } catch {
+      // 파일이 없으면 무시
+    }
   }
 
   return {
     locale,
-    messages: (await import(`../messages/${locale}.json`)).default,
+    messages,
   };
-});
+})
