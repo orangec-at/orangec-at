@@ -1,26 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
-import { Badge } from "./badge";
-import { Button } from "./button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./card";
-import { SplitText } from "./split-text";
-export const mdxUi = {
-  Button,
-  Badge,
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  SplitText,
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
-} as const;
+/**
+ * @deprecated 이 파일은 호환성을 위해 유지됩니다.
+ * 새 코드에서는 @/lib/mdx-registry를 직접 사용하세요.
+ */
+export { mdxCustomComponents as mdxUi } from "@/lib/mdx-registry";

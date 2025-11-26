@@ -1,6 +1,6 @@
 import React from "react";
 import { CodeBlock, InlineCode } from "@/components/ui/code-block";
-import { mdxUi } from "@/components/ui/mdx";
+import { mdxCustomComponents } from "@/lib/mdx-registry";
 
 // MDX 컴포넌트 타입 정의
 interface MDXComponentProps {
@@ -123,5 +123,6 @@ export const mdxComponents = {
   em: (props: React.HTMLAttributes<HTMLElement>) => (
     <em className="italic text-gray-800 dark:text-gray-200" {...props} />
   ),
-  ...mdxUi,
+  // 레지스트리에서 모든 커스텀 컴포넌트 가져오기
+  ...mdxCustomComponents,
 };

@@ -10,6 +10,7 @@ const withMDXConfig = withMDX({
 
 const nextConfig: NextConfig = {
   pageExtensions: ["ts", "tsx", "md", "mdx"],
+  transpilePackages: ["@orangec-at/design"],
 };
 
 export default withNextIntl(withMDXConfig(nextConfig));

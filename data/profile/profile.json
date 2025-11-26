@@ -1,0 +1,167 @@
+{
+  "basics": {
+    "name": "이재일",
+    "email": "{{ENV_EMAIL}}",
+    "phone": "{{ENV_PHONE}}",
+    "links": {
+      "github": "{{ENV_GITHUB}}",
+      "portfolio": "{{ENV_PORTFOLIO}}",
+      "blog": "{{ENV_BLOG}}"
+    }
+  },
+  "gaps": [
+    {
+      "start": "YYYY.MM",
+      "end": "YYYY.MM",
+      "reason": "가족 돌봄/건강/이직 준비 등 구체적 사유",
+      "activities": [
+        "Next.js/React Query 사이드 프로젝트",
+        "테스트/CI 연습",
+        "건강 회복"
+      ],
+      "status": "ready (현재 풀타임 가능)"
+    }
+  ],
+  "skills": {
+    "primary": ["React", "Next.js", "TypeScript", "React Query"],
+    "secondary": ["Zustand", "Redux", "React Native", "Nest.js"],
+    "tools": ["Tailwind", "styled-components", "Jest", "RTL", "Cypress", "Docker", "AWS"]
+  },
+  "projects": [
+    {
+      "id": "controlla-battery-passport",
+      "name": "배터리 여권 플랫폼",
+      "period": "2025.09-2025.11",
+      "role": "Frontend (프리랜서)",
+      "stack": [
+        "Next.js 15 (App Router)",
+        "React 19",
+        "TypeScript 5",
+        "Zustand",
+        "React Query",
+        "React Hook Form",
+        "Zod",
+        "Tailwind CSS 4",
+        "pnpm"
+      ],
+      "tags": ["admin", "ops", "data-heavy", "auth", "forms", "performance"],
+      "domain": ["운영", "컴플라이언스", "배터리 여권"],
+      "achievements": [
+        "초기 사용자 포털 구조 설계·구현, Next.js(App Router)+TypeScript 기반 데이터 정제/라우팅",
+        "React Query+Zustand 상태 전략, SSR/CSR 혼합으로 대용량 데이터 UX 안정화",
+        "OAuth2(Google/KaKao/Naver) 간편 로그인 연동, JWT/Refresh 파이프라인과 자연스러운 연계로 접근성·보안 확보",
+        "폼 검증 체계(React Hook Form+Zod)와 데이터 신뢰성 가드 마련",
+        "배터리 이력 검색/신청/확인 3단계 Stepper UI 설계, BIN별 API 캐시로 제조사 소속 루트 탐색 70% 이상 단축",
+        "민감 데이터 조회 시 토큰 교체/재시도 로직을 React Query mutation에 통합, 세션 단절 없는 열람 경험 유지",
+        "협업 온보딩을 위한 README/패키지 스크립트/ESLint·Prettier 규칙 정비"
+      ],
+      "links": [""],
+      "status": "in-progress"
+    },
+    {
+      "id": "admin-outsourcing",
+      "name": "자원/권한 관리 어드민",
+      "period": "2024.09-현재 (2025.01.08 기준 진행중)",
+      "role": "퍼블리싱 및 프론트엔드 리드",
+      "stack": ["Next.js", "React Query", "TypeScript", "Tailwind", "Docker"],
+      "tags": ["admin", "ops", "permissions", "logging"],
+      "domain": ["운영", "컴플라이언스"],
+      "achievements": [
+        "공통 Form/Table 컴포넌트화로 신규 화면 개발 리드타임 단축 {METRIC_TODO}",
+        "권한 가드/감사 로그 표준화, 역할별 라우팅/액션 제한 정리",
+        "React Query 캐싱/프리패칭 전략으로 리스트/상세 전환 체감 속도 개선 {METRIC_TODO}",
+        "백엔드·디자인과 요구/스키마 협의, 도커 기반 배포 파이프라인 협업"
+      ],
+      "links": [""],
+      "status": "in-progress"
+    },
+    {
+      "id": "midas-admin",
+      "name": "마이다스아이티 관리자",
+      "period": "YYYY.MM-YYYY.MM",
+      "role": "Frontend",
+      "stack": ["Next.js", "TypeScript", "React Query"],
+      "tags": ["admin", "dashboard", "storybook"],
+      "domain": ["운영"],
+      "achievements": [
+        "테이블/필터/배치액션 컴포넌트화",
+        "API 에러/페이징 표준화로 QA 이슈 감소",
+        "{METRIC_TODO}"
+      ],
+      "links": [""],
+      "status": "done"
+    },
+    {
+      "id": "pcurate-dashboard",
+      "name": "피큐레잇 대시보드",
+      "period": "YYYY.MM-YYYY.MM",
+      "role": "Frontend",
+      "stack": ["React", "React Query", "Zustand"],
+      "tags": ["dashboard", "performance", "ci-cd"],
+      "domain": ["운영"],
+      "achievements": [
+        "데이터/뷰 상태 분리, 캐싱 정책 최적화",
+        "초기 로드/인터랙션 성능 개선",
+        "배포 리드타임 단축 {METRIC_TODO}"
+      ],
+      "links": [""],
+      "status": "done"
+    },
+    {
+      "id": "securenet-admin",
+      "name": "시큐어넷 운영 어드민",
+      "period": "YYYY.MM-YYYY.MM",
+      "role": "Frontend",
+      "stack": ["React", "TypeScript", "react-hook-form"],
+      "tags": ["admin", "compliance", "forms"],
+      "domain": ["운영", "컴플라이언스"],
+      "achievements": [
+        "접근 제어/로그 노출 강화",
+        "폼 검증/에러 가이드로 입력 오류 감소 {METRIC_TODO}"
+      ],
+      "links": [""],
+      "status": "done"
+    },
+    {
+      "id": "drawhatha",
+      "name": "DrawHatha (요가 트래킹)",
+      "period": "YYYY.MM-YYYY.MM",
+      "role": "기획·FE/BE",
+      "stack": ["React Native", "React Query", "Nest.js", "PostgreSQL", "Docker"],
+      "tags": ["mobile", "admin", "api"],
+      "domain": ["콘텐츠", "운영"],
+      "achievements": [
+        "세션 데이터 캐싱/동기화",
+        "어드민 + API 동시 구축",
+        "빌드/배포 자동화 {METRIC_TODO}"
+      ],
+      "links": [""],
+      "status": "done"
+    },
+    {
+      "id": "yogaday",
+      "name": "YogaDay (원데이 클래스)",
+      "period": "YYYY.MM-YYYY.MM",
+      "role": "Frontend",
+      "stack": ["Next.js", "React Query"],
+      "tags": ["booking", "seo", "performance"],
+      "domain": ["커머스"],
+      "achievements": [
+        "예약/결제 플로우 UI",
+        "SEO/이미지/코드 스플리팅 최적화 {METRIC_TODO}"
+      ],
+      "links": [""],
+      "status": "deprecated"
+    }
+  ],
+  "traits": ["collaboration", "code-review", "ownership", "tdd", "pair-programming"],
+  "education": [
+    {
+      "school": "학교명",
+      "major": "전공",
+      "period": "YYYY - YYYY"
+    }
+  ],
+  "certs": [],
+  "languages": []
+}

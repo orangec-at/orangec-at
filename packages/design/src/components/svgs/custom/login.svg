@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" fill="none">
+  <mask id="path-1-inside-1_1518_1939" fill="currentColor">
+    <path d="M8 0H15C15.5523 0 16 0.447715 16 1V15C16 15.5523 15.5523 16 15 16H8V0Z"/>
+  </mask>
+  <path d="M8 -1.4H15C16.3255 -1.4 17.4 -0.325483 17.4 1L14.6 1.4H8V-1.4ZM17.4 15C17.4 16.3255 16.3255 17.4 15 17.4H8V14.6H14.6L17.4 15ZM8 16V0V16ZM15 -1.4C16.3255 -1.4 17.4 -0.325483 17.4 1V15C17.4 16.3255 16.3255 17.4 15 17.4L14.6 14.6V1.4L15 -1.4Z" fill="currentColor" mask="url(#path-1-inside-1_1518_1939)"/>
+  <path d="M0 8H12" stroke="currentColor" stroke-width="1.4"/>
+  <path d="M8.5 4.5L12 8L8.5 11.5" stroke="currentColor" stroke-width="1.2"/>
+</svg>
