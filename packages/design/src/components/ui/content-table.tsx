@@ -77,11 +77,13 @@ export function ContentTable<T>({
                       : "text-center"
                   )}
                 >
-                  <KRDSBody variant={"m-400"}>
-                    {column.render
-                      ? column.render(row[column.key], row)
-                      : (String(row[column.key] ?? "-") as React.ReactNode)}
-                  </KRDSBody>
+                  {column.render ? (
+                    column.render(row[column.key], row)
+                  ) : (
+                    <KRDSBody variant={"m-400"} asChild>
+                      <span>{String(row[column.key] ?? "-")}</span>
+                    </KRDSBody>
+                  )}
                 </td>
               ))}
             </tr>
