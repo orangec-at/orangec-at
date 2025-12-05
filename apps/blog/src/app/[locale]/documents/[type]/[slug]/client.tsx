@@ -1,7 +1,6 @@
 "use client";
 
 import { mdxComponents } from "@/components/blog/mdx-components";
-import DocumentEditor from "@/components/documents/document-editor";
 import { Badge, Button } from "@/components/ui";
 import {
   DocumentMeta,
@@ -14,12 +13,11 @@ import {
   Building2,
   Calendar,
   Download,
-  Edit,
   Briefcase,
 } from "lucide-react";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 interface DocumentDetailClientProps {
   mdxSource: MDXRemoteSerializeResult;
@@ -35,18 +33,14 @@ export default function DocumentDetailClient({
   locale,
 }: DocumentDetailClientProps) {
   const contentRef = useRef<HTMLDivElement>(null);
-  const [isEditorOpen, setIsEditorOpen] = useState(false);
 
   const handlePrint = () => {
     window.print();
   };
 
-  const isDraft = meta.status === "draft";
-
   const t = {
     back: locale === "ko" ? "목록으로" : "Back to List",
     exportPdf: locale === "ko" ? "PDF 내보내기" : "Export PDF",
-    edit: locale === "ko" ? "편집" : "Edit",
     company: locale === "ko" ? "대상 회사" : "Company",
     position: locale === "ko" ? "지원 포지션" : "Position",
     created: locale === "ko" ? "작성일" : "Created",
@@ -55,15 +49,6 @@ export default function DocumentDetailClient({
 
   return (
     <>
-      {/* Editor Modal */}
-      {isEditorOpen && (
-        <DocumentEditor
-          meta={meta}
-          initialContent={rawContent}
-          locale={locale}
-          onClose={() => setIsEditorOpen(false)}
-        />
-      )}
 
       <div className="min-h-screen bg-background print:bg-white">
         {/* Toolbar - 프린트 시 숨김 */}
@@ -77,16 +62,6 @@ export default function DocumentDetailClient({
                 </Link>
               </Button>
               <div className="flex items-center gap-2">
-                {isDraft && (
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => setIsEditorOpen(true)}
-                  >
-                    <Edit className="w-4 h-4 mr-2" />
-                    {t.edit}
-                  </Button>
-                )}
                 <Button variant="outline" size="sm" onClick={handlePrint}>
                   <Download className="w-4 h-4 mr-2" />
                   {t.exportPdf}
@@ -99,7 +74,7 @@ export default function DocumentDetailClient({
         {/* Content */}
         <div
           ref={contentRef}
-          className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-5xl print:max-w-full print:p-0 print:m-0"
+          className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-5xl print:mx-auto print:p-0 print:m-0 document-print-container"
         >
           {/* Header */}
           <div className="mb-8 pb-6 border-b border-gray-200 dark:border-gray-700 print:border-b-2 print:border-gray-300">
