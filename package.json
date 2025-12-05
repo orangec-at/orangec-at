@@ -7,12 +7,20 @@
   "scripts": {
     "blog": "pnpm --filter @orangec-at/blog",
     "design": "pnpm --filter @orangec-at/design",
+    "editor": "pnpm --filter @orangec-at/mdx-editor",
     "build:vc": "vercel build --prod",
     "deploy:prd": "vercel deploy --prod",
     "deploy:pre": "vercel deploy --prebuilt --prod",
     "vercel:pull": "vercel pull --yes",
     "vercel:dev": "vercel dev --yes",
-    "clean:vercel": "rm -rf .vercel/output"
+    "clean:vercel": "rm -rf .vercel/output",
+    "vault:daily": "./scripts/vault/new-daily.sh",
+    "vault:weekly": "./scripts/vault/new-weekly.sh",
+    "vault:project": "./scripts/vault/new-project.sh",
+    "vault:knowledge": "./scripts/vault/new-knowledge.sh",
+    "vault:search": "./scripts/vault/search.sh",
+    "todo": "./scripts/vault/new-todo.sh",
+    "morning": "./scripts/vault/morning-routine.sh"
   },
   "devDependencies": {
     "@swc/core": "^1.15.3",

@@ -653,3 +653,40 @@
     transform: translateX(-1px);
   }
 }
+
+/* ----------------------------------------
+ * Print styles for resume/cover pages
+ * -------------------------------------- */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* 컨텐츠 폭을 A4 폭에 맞게 고정 */
+  .document-print-container {
+    width: 100%;
+    max-width: 210mm;
+    padding: 0;
+  }
+
+  /* 불필요한 배경/테두리 제거 */
+  .document-print-container,
+  .document-print-container * {
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  /* 페이지 나눔 가이드 */
+  .page-break-container {
+    break-after: page;
+    page-break-after: always;
+  }
+}
