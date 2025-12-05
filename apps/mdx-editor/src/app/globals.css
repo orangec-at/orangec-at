@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Print styles for PDF export */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  /* Hide non-printable elements */
+  [data-editor-sidebar],
+  [data-editor-toolbar],
+  [data-editor-code],
+  .print\\:hidden {
+    display: none !important;
+  }
+
+  /* Preview takes full width when printing */
+  [data-editor-preview] {
+    width: 100% !important;
+    overflow: visible !important;
+    border: none !important;
+  }
+
+  /* Prevent page breaks in certain elements */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    page-break-after: avoid;
+  }
+
+  p,
+  li {
+    page-break-inside: avoid;
+  }
+}
