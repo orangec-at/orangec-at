@@ -118,7 +118,7 @@ export async function getAllPostSlugs(): Promise<
         const slug = filename.replace(/\.mdx$/, "");
         allSlugs.push({ slug, locale });
       });
-    } catch (error) {
+    } catch {
       console.warn(`No posts directory for locale ${locale}`);
     }
   }

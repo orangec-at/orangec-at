@@ -3,7 +3,6 @@ import { promises as fs } from "fs";
 import matter from "gray-matter";
 import path from "path";
 import {
-  DocumentFrontmatter,
   DocumentMeta,
   DocumentStatus,
   DocumentType,
@@ -17,13 +16,6 @@ const DOCUMENTS_DIR = "documents";
 const TYPE_FOLDER_MAP: Record<DocumentType, string> = {
   resume: "resumes",
   "cover-letter": "cover-letters",
-  portfolio: "portfolio",
-};
-
-// 폴더명을 문서 타입으로 변환
-const FOLDER_TYPE_MAP: Record<string, DocumentType> = {
-  resumes: "resume",
-  "cover-letters": "cover-letter",
   portfolio: "portfolio",
 };
 

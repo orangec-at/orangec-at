@@ -84,7 +84,7 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
   let source: string;
   try {
     source = await fs.readFile(filePath, "utf-8");
-  } catch (error) {
+  } catch {
     // 해당 언어의 포스트가 없으면 404
     console.error(`Post not found: ${slug} for locale ${locale}`);
     throw new Error(`Post not found: ${slug} for locale ${locale}`);

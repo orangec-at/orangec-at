@@ -11,7 +11,7 @@ import {
   translateDocumentStatus,
   translateDocumentType,
 } from "@/types/document-frontmatter";
-import { FileText, FolderOpen, Plus, Filter } from "lucide-react";
+import { FileText, FolderOpen, Filter } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
