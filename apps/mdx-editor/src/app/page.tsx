@@ -6,12 +6,14 @@ import { useState } from "react";
 // Default frontmatter for new documents
 const DEFAULT_META = {
   title: "New Document",
-  type: "document" as const,
+  type: "resume" as const,
   status: "draft" as const,
   createdAt: new Date().toISOString().split("T")[0],
   updatedAt: new Date().toISOString().split("T")[0],
   tags: [],
   locale: "ko" as const,
+  slug: "new-document",
+  filePath: "new-document.mdx",
 };
 
 // Default content template

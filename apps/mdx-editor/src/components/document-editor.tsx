@@ -1,7 +1,7 @@
 "use client";
 
-import { mdxComponents } from "@/components/mdx-components";
 import { Button } from "@orangec-at/design";
+import { mdxComponents } from "@/components/mdx-components";
 import {
   BLOCK_CATEGORIES,
   type BlockCategory,
@@ -110,7 +110,8 @@ function beautifyContent(input: string): string {
 
     // 닫는 태그 감지 (들여쓰기 전에 스택 업데이트)
     const closingTags = trimmed.match(/<\/([A-Za-z]+)>/g) || [];
-    const openingTagsInLine = trimmed.match(/<([A-Z][a-zA-Z]*)[^/>]*(?:>|$)/g) || [];
+    const openingTagsInLine =
+      trimmed.match(/<([A-Z][a-zA-Z]*)[^/>]*(?:>|$)/g) || [];
     const selfClosingInLine = trimmed.match(/<[A-Z][a-zA-Z]*[^>]*\/>/g) || [];
 
     // 닫는 태그로 시작하면 먼저 스택에서 제거
@@ -135,9 +136,16 @@ function beautifyContent(input: string): string {
     for (const openTag of openingTagsInLine) {
       const tagName = openTag.match(/<([A-Z][a-zA-Z]*)/)?.[1];
       // 같은 줄에 닫히지 않고, 자기 닫는 태그가 아닌 경우
-      const isSelfClosing = selfClosingInLine.some(sc => sc.includes(`<${tagName}`));
+      const isSelfClosing = selfClosingInLine.some((sc) =>
+        sc.includes(`<${tagName}`)
+      );
       const isClosedInLine = trimmed.includes(`</${tagName}>`);
-      if (tagName && !isSelfClosing && !isClosedInLine && openTag.endsWith(">")) {
+      if (
+        tagName &&
+        !isSelfClosing &&
+        !isClosedInLine &&
+        openTag.endsWith(">")
+      ) {
         tagStack.push(tagName);
       }
     }
@@ -176,10 +184,13 @@ export default function DocumentEditor({
 }: DocumentEditorProps) {
   const [content, setContent] = useState(initialContent);
   const [isSaving, setIsSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saved" | "error">("idle");
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saved" | "error">(
+    "idle"
+  );
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [previewOpen, setPreviewOpen] = useState(true);
-  const [previewSource, setPreviewSource] = useState<MDXRemoteSerializeResult | null>(null);
+  const [previewSource, setPreviewSource] =
+    useState<MDXRemoteSerializeResult | null>(null);
   const [isCompiling, setIsCompiling] = useState(false);
   const [editorWidth, setEditorWidth] = useState(50); // percentage
   const [isDragging, setIsDragging] = useState(false);
@@ -201,7 +212,10 @@ export default function DocumentEditor({
     }
 
     // 현재 위치 이후의 히스토리 삭제
-    historyRef.current = historyRef.current.slice(0, historyIndexRef.current + 1);
+    historyRef.current = historyRef.current.slice(
+      0,
+      historyIndexRef.current + 1
+    );
     historyRef.current.push(newContent);
     historyIndexRef.current = historyRef.current.length - 1;
 
@@ -489,7 +503,12 @@ ${formattedContent}`,
 
         {/* Block List */}
         <div className="flex-1 overflow-y-auto p-1">
-          {(Object.entries(BLOCK_CATEGORIES) as [BlockCategory, { name: string; nameKo: string }][]).map(([categoryKey, category]) => (
+          {(
+            Object.entries(BLOCK_CATEGORIES) as [
+              BlockCategory,
+              { name: string; nameKo: string }
+            ][]
+          ).map(([categoryKey, category]) => (
             <div key={categoryKey} className="mb-2">
               {sidebarOpen && (
                 <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wider px-2 mb-1">
@@ -501,7 +520,13 @@ ${formattedContent}`,
                   <button
                     key={block.id}
                     onClick={() => insertBlock(block)}
-                    title={sidebarOpen ? undefined : (locale === "ko" ? block.nameKo : block.name)}
+                    title={
+                      sidebarOpen
+                        ? undefined
+                        : locale === "ko"
+                        ? block.nameKo
+                        : block.name
+                    }
                     className={`w-full flex items-center rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
                       sidebarOpen
                         ? "gap-2 px-2 py-1.5 text-xs text-left"
@@ -598,14 +623,24 @@ ${formattedContent}`,
               )}
               {isSaving ? t.saving : t.save}
             </Button>
-            <Button variant="ghost" size="sm" onClick={onClose} className="print:hidden">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="print:hidden"
+            >
               <X className="w-4 h-4" />
             </Button>
           </div>
         </div>
 
         {/* Editor + Preview Split */}
-        <div ref={containerRef} className={`flex-1 flex overflow-hidden ${isDragging ? "select-none" : ""} print:block`}>
+        <div
+          ref={containerRef}
+          className={`flex-1 flex overflow-hidden ${
+            isDragging ? "select-none" : ""
+          } print:block`}
+        >
           {/* Code Editor */}
           <div
             data-editor-code
@@ -665,7 +700,9 @@ ${formattedContent}`,
                   </article>
                 ) : (
                   <div className="text-gray-400 text-sm print:hidden">
-                    {isCompiling ? t.compiling : "미리보기가 여기에 표시됩니다."}
+                    {isCompiling
+                      ? t.compiling
+                      : "미리보기가 여기에 표시됩니다."}
                   </div>
                 )}
               </div>

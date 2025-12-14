@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@orangec-at/design"],
+  transpilePackages: ["@/"],
 };
 
 export default nextConfig;
