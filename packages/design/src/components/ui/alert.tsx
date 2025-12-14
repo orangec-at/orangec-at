@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { bodyVariants } from "@/components/ui/typography";
+import { Button } from "@orangec-at/design/components/ui/button";
+import { bodyVariants } from "@orangec-at/design/components/ui/typography";
 import {
   Dialog,
   DialogContent,
@@ -56,14 +56,14 @@ export default function Alert({
           {showCancel && (
             <Button
               onClick={handleCancel}
-              size="medium"
+              size="default"
               variant="secondary"
               className="flex-1"
             >
               {cancelText}
             </Button>
           )}
-          <Button onClick={handleConfirm} size="medium" className="flex-1">
+          <Button onClick={handleConfirm} size="default" className="flex-1">
             {confirmText}
           </Button>
         </DialogFooter>

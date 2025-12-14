@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Pagination,
@@ -8,9 +8,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination';
+} from "@orangec-at/design/components/ui/pagination";
 
-import {buildPageItems} from './pagination-utils';
+import { buildPageItems } from "./pagination-utils";
 
 interface TablePaginationProps {
   totalPages: number;
@@ -40,11 +40,11 @@ export function TablePagination({
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault();
                   onPrevious();
                 }}
-                className={!canPrevious ? 'pointer-events-none opacity-50' : ''}
+                className={!canPrevious ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
 
@@ -60,7 +60,7 @@ export function TablePagination({
               });
 
               return pageItems.map((item, idx) =>
-                item === 'ellipsis' ? (
+                item === "ellipsis" ? (
                   <PaginationItem key={`ellipsis-${idx}`}>
                     <PaginationEllipsis />
                   </PaginationItem>
@@ -68,26 +68,27 @@ export function TablePagination({
                   <PaginationItem key={item}>
                     <PaginationLink
                       href="#"
-                      onClick={e => {
+                      onClick={(e) => {
                         e.preventDefault();
                         onPageChange(item + 1); // Convert back to 1-based index
                       }}
-                      isActive={item === current}>
+                      isActive={item === current}
+                    >
                       {item + 1}
                     </PaginationLink>
                   </PaginationItem>
-                ),
+                )
               );
             })()}
 
             <PaginationItem>
               <PaginationNext
                 href="#"
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault();
                   onNext();
                 }}
-                className={!canNext ? 'pointer-events-none opacity-50' : ''}
+                className={!canNext ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
           </PaginationContent>

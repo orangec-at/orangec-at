@@ -1,7 +1,7 @@
 import React from "react";
-import { Label } from "@/components/ui/typography";
-import { cn } from "@/lib/utils";
-import { ValidationError } from "@/components/ui/validation-error";
+import { Label } from "@orangec-at/design/components/ui/typography";
+import { cn } from "@orangec-at/design/lib/utils";
+import { ValidationError } from "@orangec-at/design/components/ui/validation-error";
 
 interface FormFieldProps {
   label: string;

@@ -1,7 +1,7 @@
 import React from "react";
-import { Label } from "@/components/ui/typography";
-import { cn } from "@/lib/utils";
-import { SystemDanger } from "@/components/svgs";
+import { Label } from "@orangec-at/design/components/ui/typography";
+import { cn } from "@orangec-at/design/lib/utils";
+import { SystemDanger } from "@orangec-at/design/components/svgs";
 
 interface ValidationErrorProps {
   message: string;

@@ -1,7 +1,7 @@
-import {Button} from '@/components/ui/button';
-import {Checkbox} from '@/components/ui/checkbox';
-import {bodyVariants} from '@/components/ui/typography';
-import {cn} from '@/lib/utils';
+import { Button } from "@orangec-at/design/components/ui/button";
+import { Checkbox } from "@orangec-at/design/components/ui/checkbox";
+import { bodyVariants } from "@orangec-at/design/components/ui/typography";
+import { cn } from "@orangec-at/design/lib/utils";
 
 interface AgreementItemProps {
   id: string;
@@ -21,10 +21,10 @@ export function AgreementItem({
   onCheckedChange,
   onViewContent,
 }: AgreementItemProps) {
-  const popupTitle = isMobile ? '보기' : '내용 보기';
+  const popupTitle = isMobile ? "보기" : "내용 보기";
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       onCheckedChange(!checked);
     }
@@ -39,7 +39,8 @@ export function AgreementItem({
         tabIndex={0}
         role="button"
         aria-pressed={checked}
-        aria-label={`${label} ${required ? '(필수)' : '(선택)'}`}>
+        aria-label={`${label} ${required ? "(필수)" : "(선택)"}`}
+      >
         <Checkbox
           className="size-[24px]"
           checked={checked}
@@ -47,8 +48,14 @@ export function AgreementItem({
           select="reversal"
           tabIndex={-1}
         />
-        <span className={cn(isMobile ? bodyVariants({variant: 'm-400'}) : bodyVariants({variant: 'l-400'}))}>
-          {label}{' '}
+        <span
+          className={cn(
+            isMobile
+              ? bodyVariants({ variant: "m-400" })
+              : bodyVariants({ variant: "l-400" })
+          )}
+        >
+          {label}{" "}
           {required ? (
             <span className="text-(--krds-danger-60)">(필수)</span>
           ) : (
@@ -57,7 +64,11 @@ export function AgreementItem({
         </span>
       </div>
       {onViewContent && (
-        <Button variant="link" onClick={onViewContent} title={`${label} 내용 보기`}>
+        <Button
+          variant="link"
+          onClick={onViewContent}
+          title={`${label} 내용 보기`}
+        >
           {popupTitle}
         </Button>
       )}

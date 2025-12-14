@@ -1,4 +1,4 @@
-# @orangec-at/design
+# @orangec-at/design/
 
 OrangeCat 블로그 프로젝트를 위한 디자인 시스템 패키지입니다.
 DPP Design System을 기반으로 구축되었습니다.
@@ -16,7 +16,7 @@ pnpm install
 ### 기본 import
 
 ```tsx
-import { Button, KRDSHeading, KRDSBody, Badge } from "@orangec-at/design";
+import { Button, KRDSHeading, KRDSBody, Badge } from "@orangec-at/design/";
 ```
 
 ### Typography 컴포넌트
@@ -24,7 +24,7 @@ import { Button, KRDSHeading, KRDSBody, Badge } from "@orangec-at/design";
 #### KRDS Typography (권장)
 
 ```tsx
-import { KRDSHeading, KRDSBody, KRDSLabel } from "@orangec-at/design";
+import { KRDSHeading, KRDSBody, KRDSLabel } from "@orangec-at/design/";
 
 // Headings
 <KRDSHeading variant="xlarge">Extra Large Heading</KRDSHeading>
@@ -46,7 +46,7 @@ import { KRDSHeading, KRDSBody, KRDSLabel } from "@orangec-at/design";
 #### 기타 Typography
 
 ```tsx
-import { Display, Heading, Title, Body, Detail, Label } from "@orangec-at/design";
+import { Display, Heading, Title, Body, Detail, Label } from "@orangec-at/design/";
 
 <Display variant="l-700">Display Large</Display>
 <Heading variant="m-700">Heading Medium</Heading>
@@ -59,7 +59,7 @@ import { Display, Heading, Title, Body, Detail, Label } from "@orangec-at/design
 ### Button 컴포넌트
 
 ```tsx
-import { Button } from "@orangec-at/design";
+import { Button } from "@orangec-at/design/";
 
 // Variants
 <Button variant="default">Default</Button>
@@ -86,7 +86,7 @@ import { Button } from "@orangec-at/design";
 ### Badge 컴포넌트
 
 ```tsx
-import { Badge } from "@orangec-at/design";
+import { Badge } from "@orangec-at/design/";
 
 <Badge>Default</Badge>
 <Badge variant="secondary">Secondary</Badge>
@@ -97,7 +97,7 @@ import { Badge } from "@orangec-at/design";
 ### Form 컴포넌트
 
 ```tsx
-import { Input, Textarea, Checkbox, RadioGroup, Select } from "@orangec-at/design";
+import { Input, Textarea, Checkbox, RadioGroup, Select } from "@orangec-at/design/";
 
 // Input
 <Input type="text" placeholder="Enter text" />
@@ -124,7 +124,13 @@ import { Input, Textarea, Checkbox, RadioGroup, Select } from "@orangec-at/desig
 ### Dialog 컴포넌트
 
 ```tsx
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@orangec-at/design";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@orangec-at/design/";
 
 <Dialog>
   <DialogTrigger asChild>
@@ -136,42 +142,44 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from 
     </DialogHeader>
     <p>Dialog content goes here</p>
   </DialogContent>
-</Dialog>
+</Dialog>;
 ```
 
 ### Accordion 컴포넌트
 
 ```tsx
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@orangec-at/design";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@orangec-at/design/";
 
 <Accordion type="single" collapsible>
   <AccordionItem value="item-1">
     <AccordionTrigger>Section 1</AccordionTrigger>
-    <AccordionContent>
-      Content for section 1
-    </AccordionContent>
+    <AccordionContent>Content for section 1</AccordionContent>
   </AccordionItem>
   <AccordionItem value="item-2">
     <AccordionTrigger>Section 2</AccordionTrigger>
-    <AccordionContent>
-      Content for section 2
-    </AccordionContent>
+    <AccordionContent>Content for section 2</AccordionContent>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ### 유틸리티 함수
 
 ```tsx
-import { cn } from "@orangec-at/design";
+import { cn } from "@orangec-at/design/";
 
 // Tailwind 클래스를 조건부로 병합
-<div className={cn("base-class", condition && "conditional-class")} />
+<div className={cn("base-class", condition && "conditional-class")} />;
 ```
 
 ## 사용 가능한 컴포넌트
 
 ### UI Components
+
 - Accordion
 - Alert
 - Badge
@@ -208,6 +216,7 @@ import { cn } from "@orangec-at/design";
 - Validation Error
 
 ### Typography Components
+
 - Display
 - Heading
 - Hero
@@ -234,7 +243,7 @@ import { cn } from "@orangec-at/design";
 
 ```bash
 # 타입 체크
-pnpm --filter @orangec-at/design typecheck
+pnpm --filter @orangec-at/design/ typecheck
 ```
 
 ## 라이선스

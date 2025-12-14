@@ -1,5 +1,5 @@
-import { Body as KRDSBody } from "@/components/ui/typography";
-import { cn } from "@/lib/utils";
+import { Body as KRDSBody } from "@orangec-at/design/components/ui/typography";
+import { cn } from "@orangec-at/design/lib/utils";
 
 export interface ContentTableColumn<T> {
   key: keyof T;

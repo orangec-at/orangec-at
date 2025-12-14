@@ -1,8 +1,8 @@
 import React from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Chip } from "@/components/ui/chip";
-import { Label } from "@/components/ui/typography";
-import { cn } from "@/lib/utils";
+import { Checkbox } from "@orangec-at/design/components/ui/checkbox";
+import { Chip } from "@orangec-at/design/components/ui/chip";
+import { Label } from "@orangec-at/design/components/ui/typography";
+import { cn } from "@orangec-at/design/lib/utils";
 
 interface CategorySelectorProps {
   title: string;

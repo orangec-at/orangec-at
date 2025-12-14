@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, {createContext, useContext, useState, useCallback} from 'react';
-import Alert from '@/components/ui/alert';
+import React, { createContext, useContext, useState, useCallback } from "react";
+import Alert from "@orangec-at/design/components/ui/alert";
 
 interface AlertContextType {
   showAlert: (message: string, onConfirm?: () => void) => void;
@@ -14,20 +14,25 @@ interface AlertProviderProps {
   children: React.ReactNode;
 }
 
-export function AlertProvider({children}: AlertProviderProps) {
+export function AlertProvider({ children }: AlertProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState('');
-  const [confirmCallback, setConfirmCallback] = useState<(() => void) | undefined>(undefined);
+  const [message, setMessage] = useState("");
+  const [confirmCallback, setConfirmCallback] = useState<
+    (() => void) | undefined
+  >(undefined);
 
-  const showAlert = useCallback((alertMessage: string, onConfirm?: () => void) => {
-    setMessage(alertMessage);
-    setConfirmCallback(() => onConfirm);
-    setIsOpen(true);
-  }, []);
+  const showAlert = useCallback(
+    (alertMessage: string, onConfirm?: () => void) => {
+      setMessage(alertMessage);
+      setConfirmCallback(() => onConfirm);
+      setIsOpen(true);
+    },
+    []
+  );
 
   const hideAlert = useCallback(() => {
     setIsOpen(false);
-    setMessage('');
+    setMessage("");
     setConfirmCallback(undefined);
   }, []);
 
@@ -44,7 +49,12 @@ export function AlertProvider({children}: AlertProviderProps) {
   return (
     <AlertContext.Provider value={value}>
       {children}
-      <Alert open={isOpen} onOpenChange={setIsOpen} title={message} onConfirm={handleConfirm} />
+      <Alert
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        title={message}
+        onConfirm={handleConfirm}
+      />
     </AlertContext.Provider>
   );
 }
@@ -57,7 +67,7 @@ export function useAlert(): AlertContextType {
   const context = useContext(AlertContext);
 
   if (context === undefined) {
-    throw new Error('useAlert must be used within an AlertProvider');
+    throw new Error("useAlert must be used within an AlertProvider");
   }
 
   return context;

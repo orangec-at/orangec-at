@@ -6,15 +6,15 @@ import { ko } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { cn } from "@orangec-at/design/lib/utils";
+import { Button } from "@orangec-at/design/components/ui/button";
+import { Calendar as CalendarComponent } from "@orangec-at/design/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Label } from "@/components/ui/typography";
+} from "@orangec-at/design/components/ui/popover";
+import { Label } from "@orangec-at/design/components/ui/typography";
 
 interface DatePickerProps {
   placeholder?: string;

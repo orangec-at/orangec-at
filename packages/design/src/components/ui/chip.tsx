@@ -1,6 +1,6 @@
 import { Check } from "lucide-react";
-import { labelVariants } from "@/components/ui/typography";
-import { cn } from "@/lib/utils";
+import { labelVariants } from "@orangec-at/design/components/ui/typography";
+import { cn } from "@orangec-at/design/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 

@@ -8,17 +8,20 @@ import {
 import * as React from "react";
 import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker";
 
-import { ArrowDropDown } from "@/components/svgs";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { ArrowDropDown } from "@orangec-at/design/components/svgs";
+import {
+  Button,
+  buttonVariants,
+} from "@orangec-at/design/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectTrigger,
-} from "@/components/ui/select";
-import { KRDSLabel, Label } from "@/components/ui/typography";
-import { cn } from "@/lib/utils";
+} from "@orangec-at/design/components/ui/select";
+import { Label } from "@orangec-at/design/components/ui/typography";
+import { cn } from "@orangec-at/design/lib/utils";
 
 // Types for dropdown props
 interface DropdownProps {

@@ -1,6 +1,6 @@
 "use client";
 
-import Alert from "@/components/ui/alert";
+import Alert from "@orangec-at/design/components/ui/alert";
 import {
   KRDSHeading,
   KRDSBody,
@@ -21,7 +21,7 @@ import {
   TabsContent,
   ContentTable,
   DataTable,
-} from "@/index";
+} from "@orangec-at/design/index";
 import { ColumnDef } from "@tanstack/react-table";
 
 // DataTable 테스트 데이터 타입

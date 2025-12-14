@@ -2,8 +2,12 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/lib/utils";
-import { Body, Label as KRDSLabel, Label } from "@/components/ui/typography";
+import { cn } from "@orangec-at/design/lib/utils";
+import {
+  Body,
+  Label as KRDSLabel,
+  Label,
+} from "@orangec-at/design/components/ui/typography";
 
 const buttonVariants = cva(
   `hover:cursor-pointer
@@ -46,6 +50,33 @@ const buttonVariants = cva(
   }
 );
 
+export interface ButtonProps extends React.ComponentProps<"button"> {
+  variant?:
+    | "default"
+    | "secondary"
+    | "tertiary"
+    | "primary"
+    | "destructive"
+    | "outline"
+    | "ghost"
+    | "link"
+    | null;
+  size?:
+    | "default"
+    | "sm"
+    | "lg"
+    | "icon"
+    | "xsmall"
+    | "small"
+    | "medium"
+    | "large"
+    | "xlarge"
+    | null;
+  asChild?: boolean;
+  icon?: React.ReactNode;
+  iconPosition?: "left" | "right";
+}
+
 function Button({
   className,
   variant,
@@ -55,12 +86,7 @@ function Button({
   icon,
   iconPosition = "left",
   ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-    icon?: React.ReactNode;
-    iconPosition?: "left" | "right";
-  }) {
+}: ButtonProps) {
   const Comp = asChild ? Slot : "button";
 
   // 텍스트 자식을 자동으로 Label로 감싸기

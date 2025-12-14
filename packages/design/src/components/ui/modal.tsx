@@ -1,9 +1,13 @@
 "use client";
 
-import { Close } from "@/components/svgs";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { headingVariants } from "@/components/ui/typography";
-import { cn } from "@/lib/utils";
+import { Close } from "@orangec-at/design/components/svgs";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@orangec-at/design/components/ui/dialog";
+import { headingVariants } from "@orangec-at/design/components/ui/typography";
+import { cn } from "@orangec-at/design/lib/utils";
 import * as React from "react";
 
 // 모달 크기 타입

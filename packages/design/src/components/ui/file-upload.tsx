@@ -1,16 +1,16 @@
 "use client";
 
-import { Spinner } from "@/components/svgs";
-import { Button } from "@/components/ui/button";
-import { inputVariants } from "@/components/ui/input";
+import { Spinner } from "@orangec-at/design/components/svgs";
+import { Button } from "@orangec-at/design/components/ui/button";
+import { inputVariants } from "@orangec-at/design/components/ui/input";
 import {
   Body as KRDSBody,
   Label as KRDSLabel,
-} from "@/components/ui/typography";
+} from "@orangec-at/design/components/ui/typography";
 
-import { useAlert } from "@/contexts/AlertContext";
-import { cn } from "@/lib/utils";
-import { Upload, CheckCircle, DeleteIcon, Download } from "lucide-react";
+import { useAlert } from "@orangec-at/design/contexts/AlertContext";
+import { cn } from "@orangec-at/design/lib/utils";
+import { CheckCircle, DeleteIcon, Download, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 
 interface FileUploadProps {

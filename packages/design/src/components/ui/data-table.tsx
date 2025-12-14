@@ -1,9 +1,16 @@
-'use client';
+"use client";
 
-import * as React from 'react';
+import * as React from "react";
 
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
-import {TablePagination} from '@/components/ui/table-pagination';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@orangec-at/design/components/ui/table";
+import { TablePagination } from "@orangec-at/design/components/ui/table-pagination";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -15,8 +22,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-import {titleVariants, KRDSBody} from '@/components/ui/typography';
+} from "@tanstack/react-table";
+import {
+  titleVariants,
+  KRDSBody,
+} from "@orangec-at/design/components/ui/typography";
 
 // 검색 필드 설정
 export interface SearchField<TData> {
@@ -71,8 +81,8 @@ export const defaultDataTableConfig = {
   enableRowSelection: false,
   enablePagination: true,
   pageSize: 10,
-  emptyMessage: '결과가 없습니다.',
-  loadingMessage: '로딩 중...',
+  emptyMessage: "결과가 없습니다.",
+  loadingMessage: "로딩 중...",
   sortableColumns: [] as string[],
 };
 
@@ -84,14 +94,17 @@ export function DataTable<TData, TValue>({
   isLoading = false,
 }: DataTableProps<TData, TValue>) {
   // 기본 설정과 사용자 설정 병합
-  const mergedConfig = {...defaultDataTableConfig, ...config};
+  const mergedConfig = { ...defaultDataTableConfig, ...config };
 
   // React Table 상태
   const [rowSelection, setRowSelection] = React.useState({});
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
 
   // 서버 사이드 페이지네이션 계산값 메모이제이션
   const serverPaginationInfo = React.useMemo(() => {
@@ -110,13 +123,20 @@ export function DataTable<TData, TValue>({
       canPrevious: currentPage > 0,
       canNext: currentPage < totalPages - 1,
     };
-  }, [mergedConfig.enableServerPagination, mergedConfig.totalCount, mergedConfig.pageSize, mergedConfig.currentPage]);
+  }, [
+    mergedConfig.enableServerPagination,
+    mergedConfig.totalCount,
+    mergedConfig.pageSize,
+    mergedConfig.currentPage,
+  ]);
 
   // 정렬 가능한 컬럼 설정
   const modifiedColumns = React.useMemo(() => {
-    return columns.map(column => ({
+    return columns.map((column) => ({
       ...column,
-      enableSorting: column.id ? (mergedConfig.sortableColumns?.includes(column.id as string) ?? false) : false,
+      enableSorting: column.id
+        ? mergedConfig.sortableColumns?.includes(column.id as string) ?? false
+        : false,
     }));
   }, [columns, mergedConfig.sortableColumns]);
 
@@ -127,7 +147,9 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: mergedConfig.enableServerPagination ? undefined : getPaginationRowModel(),
+    getPaginationRowModel: mergedConfig.enableServerPagination
+      ? undefined
+      : getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
@@ -152,12 +174,20 @@ export function DataTable<TData, TValue>({
       <div className="mb-[var(--padding-8)]">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
+                {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className={titleVariants({variant: 'xs-700'})}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    <TableHead
+                      key={header.id}
+                      className={titleVariants({ variant: "xs-700" })}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}
@@ -167,32 +197,48 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   {mergedConfig.loadingMessage}
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map(row => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+                  data-state={row.getIsSelected() && "selected"}
                   onClick={() => onRowClick?.(row.original)}
                   onKeyDown={(e) => {
-                    if (onRowClick && (e.key === 'Enter' || e.key === ' ')) {
+                    if (onRowClick && (e.key === "Enter" || e.key === " ")) {
                       e.preventDefault();
                       onRowClick(row.original);
                     }
                   }}
                   tabIndex={onRowClick ? 0 : undefined}
-                  className={onRowClick ? 'cursor-pointer hover:bg-muted/50 focus-ring' : ''}>
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  className={
+                    onRowClick
+                      ? "cursor-pointer hover:bg-muted/50 focus-ring"
+                      : ""
+                  }
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   {mergedConfig.emptyMessage}
                 </TableCell>
               </TableRow>
@@ -202,28 +248,36 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* 페이지네이션 */}
-      {mergedConfig.enablePagination && !mergedConfig.enableServerPagination && (
-        <TablePagination
-          totalPages={table.getPageCount()}
-          currentPage={table.getState().pagination.pageIndex + 1}
-          onPageChange={page => table.setPageIndex(page - 1)}
-          onPrevious={() => table.previousPage()}
-          onNext={() => table.nextPage()}
-          canPrevious={table.getCanPreviousPage()}
-          canNext={table.getCanNextPage()}
-        />
-      )}
+      {mergedConfig.enablePagination &&
+        !mergedConfig.enableServerPagination && (
+          <TablePagination
+            totalPages={table.getPageCount()}
+            currentPage={table.getState().pagination.pageIndex + 1}
+            onPageChange={(page) => table.setPageIndex(page - 1)}
+            onPrevious={() => table.previousPage()}
+            onNext={() => table.nextPage()}
+            canPrevious={table.getCanPreviousPage()}
+            canNext={table.getCanNextPage()}
+          />
+        )}
 
       {/* 서버 사이드 페이지네이션 */}
       {serverPaginationInfo && mergedConfig.onPageChange && (
         <TablePagination
           totalPages={serverPaginationInfo.totalPages}
           currentPage={serverPaginationInfo.currentPage + 1}
-          onPageChange={page => mergedConfig.onPageChange?.(page - 1)}
-          onPrevious={() => mergedConfig.onPageChange?.(Math.max(0, serverPaginationInfo.currentPage - 1))}
+          onPageChange={(page) => mergedConfig.onPageChange?.(page - 1)}
+          onPrevious={() =>
+            mergedConfig.onPageChange?.(
+              Math.max(0, serverPaginationInfo.currentPage - 1)
+            )
+          }
           onNext={() =>
             mergedConfig.onPageChange?.(
-              Math.min(serverPaginationInfo.totalPages - 1, serverPaginationInfo.currentPage + 1),
+              Math.min(
+                serverPaginationInfo.totalPages - 1,
+                serverPaginationInfo.currentPage + 1
+              )
             )
           }
           canPrevious={serverPaginationInfo.canPrevious}
