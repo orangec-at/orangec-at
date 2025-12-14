@@ -25,5 +25,7 @@ export default async function DocumentsPage({ params }: DocumentsPageProps) {
     getDocumentStats(),
   ]);
 
-  return <DocumentsClient documents={documents} stats={stats} locale={locale} />;
+  return (
+    <DocumentsClient documents={documents} stats={stats} locale={locale} />
+  );
 }

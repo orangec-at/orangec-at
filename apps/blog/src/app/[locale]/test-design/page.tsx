@@ -1,5 +1,4 @@
 "use client";
-
 import { ContentTable } from "@orangec-at/design";
 
 interface Project {

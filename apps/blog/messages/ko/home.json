@@ -26,6 +26,49 @@
       "backend": "백엔드 경험",
       "tools": "AI 도구"
     },
+    "services": {
+      "title": "서비스",
+      "subtitle": "제품 개발을 가속화할 고품질 Done-For-You 솔루션",
+      "website": {
+        "title": "스타트업 웹사이트 제작",
+        "description": "스타트업에 최적화된 전문 Next.js 웹사이트",
+        "price": "$3,000 - $5,000",
+        "features": [
+          "Next.js 15 + 디자인 시스템",
+          "블로그 + SEO 최적화",
+          "반응형 + 다국어 (한/영)",
+          "Vercel 배포 + 2주 유지보수"
+        ]
+      },
+      "designSystem": {
+        "title": "디자인 시스템 구축",
+        "description": "프로덕트를 위한 엔터프라이즈급 컴포넌트 라이브러리",
+        "price": "$5,000 - $8,000",
+        "features": [
+          "40+ Radix UI 컴포넌트",
+          "Storybook 문서화",
+          "TypeScript + WCAG 접근성",
+          "Private NPM 배포"
+        ]
+      },
+      "coaching": {
+        "title": "커리어 코칭",
+        "description": "미국 테크 기업 지원 한국 개발자를 위한 1:1 코칭",
+        "price": "$2,000 (6주)",
+        "features": [
+          "이력서 & 포트폴리오 리뷰 (주 1회)",
+          "GitHub 프로필 최적화",
+          "Next.js 프로젝트 가이드",
+          "기술 + 영어 면접 준비"
+        ]
+      },
+      "cta": {
+        "title": "함께 일할 준비가 되셨나요?",
+        "description": "이번 달 2명의 클라이언트를 받습니다. 30분 무료 디스커버리 콜로 프로젝트를 논의해보세요.",
+        "primary": "디스커버리 콜 예약",
+        "secondary": "포트폴리오 보기"
+      }
+    },
     "contact": {
       "title": "연락하기",
       "description": "프로젝트나 협업에 대해 이야기해보세요"

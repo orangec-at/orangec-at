@@ -7,7 +7,15 @@
     "description": "건설용 구조엔지니어링 소프트웨어의 구독모델 전환을 위한 웹서비스 개발",
     "team": "20인 규모 웹개발팀",
     "role": "프로젝트 메인 프론트엔드 개발자",
-    "tags": ["enterprise", "SaaS", "admin", "frontend", "react", "nextjs", "monorepo"],
+    "tags": [
+      "enterprise",
+      "SaaS",
+      "admin",
+      "frontend",
+      "react",
+      "nextjs",
+      "monorepo"
+    ],
     "achievements": [
       "건축설계 제품군을 보완하는 클라우드 기반 협업 솔루션 개발",
       "Adobe Creative Cloud 벤치마킹하여 건축설계 관련 협업 플랫폼 구축",
@@ -26,15 +34,22 @@
       "Yarn Workspace"
     ]
   },
-  "pqrait": {
-    "id": "pqrait",
+  "Pikurate": {
+    "id": "Pikurate",
     "company": "(주) 피큐레잇",
     "position": "연구원 | 프로덕트팀",
     "period": "2022.03 - 2022.09",
     "description": "북마크 기능을 메인으로 한 SNS 성 앱서비스 개발 및 사내 웹서비스 개발",
     "team": "15인 규모 스타트업",
     "role": "핵심 프론트엔드 개발자",
-    "tags": ["startup", "mvp", "frontend", "react-native", "mobile", "marketing"],
+    "tags": [
+      "startup",
+      "mvp",
+      "frontend",
+      "react-native",
+      "mobile",
+      "marketing"
+    ],
     "achievements": [
       "MVP 단계에서 합류하여 제품 초기 개발에 기여",
       "마케팅 퍼널 트래킹을 위한 사내 신규 웹서비스 개발",

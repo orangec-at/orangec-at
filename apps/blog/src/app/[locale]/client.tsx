@@ -4,6 +4,7 @@ import AboutMe from "@/components/home/about-me";
 import ContactCTA from "@/components/home/contact-cta";
 import FeaturedProjects from "@/components/home/featured-projects";
 import HomeHero from "@/components/home/home-hero";
+import ServicesSection from "@/components/home/services-section";
 import TechStack from "@/components/home/tech-stack";
 
 export default function HomeClient() {
@@ -12,16 +13,19 @@ export default function HomeClient() {
       {/* 1. Hero Section */}
       <HomeHero />
 
-      {/* 2. Featured Projects */}
+      {/* 2. Services */}
+      <ServicesSection />
+
+      {/* 3. Featured Projects */}
       <FeaturedProjects />
 
-      {/* 3. Tech Stack */}
+      {/* 4. Tech Stack */}
       <TechStack />
 
-      {/* 4. About Me */}
+      {/* 5. About Me */}
       <AboutMe />
 
-      {/* 5. Contact CTA */}
+      {/* 6. Contact CTA */}
       <ContactCTA />
     </div>
   );

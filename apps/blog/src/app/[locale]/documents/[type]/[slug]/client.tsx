@@ -49,7 +49,6 @@ export default function DocumentDetailClient({
 
   return (
     <>
-
       <div className="min-h-screen bg-background print:bg-white">
         {/* Toolbar - 프린트 시 숨김 */}
         <div className="print:hidden sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">

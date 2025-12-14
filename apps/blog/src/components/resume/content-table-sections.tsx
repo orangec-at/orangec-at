@@ -88,16 +88,16 @@ const experienceColumns: ContentTableColumn<ResumeExperienceItem>[] = [
     header: "주요 내용",
     width: "w-2/4",
     align: "left",
-    render: (value, row) => (
+    render: (_, row) => (
       <div className="space-y-2">
         {row.summary ? (
           <p className="leading-relaxed text-gray-900 dark:text-gray-100">
             {row.summary}
           </p>
         ) : null}
-        {value?.length ? (
+        {row.achievements?.length ? (
           <ul className="list-disc space-y-1 pl-4 text-gray-900 dark:text-gray-100">
-            {value.map((item) => (
+            {row.achievements.map((item) => (
               <li key={item} className="leading-relaxed">
                 {item}
               </li>
@@ -158,16 +158,16 @@ const projectColumns: ContentTableColumn<ResumeProjectItem>[] = [
     header: "주요 성과",
     width: "w-7/12",
     align: "left",
-    render: (value, row) => (
+    render: (_, row) => (
       <div className="space-y-2">
         {row.summary ? (
           <p className="leading-relaxed text-gray-900 dark:text-gray-100">
             {row.summary}
           </p>
         ) : null}
-        {value?.length ? (
+        {row.achievements?.length ? (
           <ul className="list-disc space-y-1 pl-4 text-gray-900 dark:text-gray-100">
-            {value.map((item) => (
+            {row.achievements.map((item) => (
               <li key={item} className="leading-relaxed">
                 {item}
               </li>
@@ -199,7 +199,9 @@ const educationColumns: ContentTableColumn<ResumeEducationItem>[] = [
           {row.school}
         </p>
         {row.major ? (
-          <p className="text-xs text-gray-600 dark:text-gray-300">{row.major}</p>
+          <p className="text-xs text-gray-600 dark:text-gray-300">
+            {row.major}
+          </p>
         ) : null}
       </div>
     ),

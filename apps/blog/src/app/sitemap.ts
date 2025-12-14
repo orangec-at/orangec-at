@@ -3,10 +3,10 @@ import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
-  
+
   // 모든 포스트 slug 가져오기
   const allPostSlugs = await getAllPostSlugs();
-  
+
   // 정적 페이지들
   const staticPages = [
     {
@@ -61,10 +61,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 블로그 포스트들
   const blogPages = allPostSlugs.map(({ slug, locale }) => {
-    const url = locale === "ko" 
-      ? `${baseUrl}/blog/${slug}`
-      : `${baseUrl}/en/blog/${slug}`;
-    
+    const url =
+      locale === "ko"
+        ? `${baseUrl}/blog/${slug}`
+        : `${baseUrl}/en/blog/${slug}`;
+
     return {
       url,
       lastModified: new Date(),

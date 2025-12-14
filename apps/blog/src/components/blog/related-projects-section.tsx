@@ -24,10 +24,17 @@ export function RelatedProjectsSection({
 
   return (
     <div className="mt-12 sm:mt-16 p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
-      <Title variant="xl-700" as="h3" className="text-gray-900 dark:text-white mb-3 sm:mb-4">
+      <Title
+        variant="xl-700"
+        as="h3"
+        className="text-gray-900 dark:text-white mb-3 sm:mb-4"
+      >
         {t("relatedProjects")}
       </Title>
-      <Body variant="m-400" className="text-gray-600 dark:text-gray-400 mb-4 sm:mb-6">
+      <Body
+        variant="m-400"
+        className="text-gray-600 dark:text-gray-400 mb-4 sm:mb-6"
+      >
         {t("relatedProjectsDescription")}
       </Body>
       <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
@@ -36,10 +43,17 @@ export function RelatedProjectsSection({
             key={project.id}
             className="p-4 sm:p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
           >
-            <Title variant="s-700" as="h4" className="text-gray-900 dark:text-white mb-2">
+            <Title
+              variant="s-700"
+              as="h4"
+              className="text-gray-900 dark:text-white mb-2"
+            >
               {project.title}
             </Title>
-            <Body variant="s-400" className="text-gray-600 dark:text-gray-400 mb-3 sm:mb-4 line-clamp-2">
+            <Body
+              variant="s-400"
+              className="text-gray-600 dark:text-gray-400 mb-3 sm:mb-4 line-clamp-2"
+            >
               {project.description}
             </Body>
             <div className="flex flex-wrap gap-1 sm:gap-2 mb-3 sm:mb-4">
@@ -53,12 +67,7 @@ export function RelatedProjectsSection({
                 </Detail>
               ))}
             </div>
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="w-full"
-            >
+            <Button asChild variant="outline" size="sm" className="w-full">
               <Link href={`/${locale}/projects/${project.id}`}>
                 {tp("viewDetails")}
               </Link>

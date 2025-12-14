@@ -13,7 +13,7 @@ control-center/
 ├── items/                # 개별 아이템 컴포넌트들
 │   ├── index.tsx
 │   ├── connectivity-item.tsx
-│   ├── media-item.tsx  
+│   ├── media-item.tsx
 │   ├── theme-item.tsx
 │   ├── quick-action-item.tsx
 │   ├── slider-item.tsx
@@ -47,7 +47,7 @@ export const defaultControlCenterConfig: ControlCenterConfig = {
     {
       id: "my-custom-action",
       type: "quick-action",
-      size: "small", 
+      size: "small",
       title: "Custom Action",
       enabled: true,
       order: 10,
@@ -62,12 +62,13 @@ export const defaultControlCenterConfig: ControlCenterConfig = {
 ## 아이템 타입
 
 ### 1. Connectivity Item (연결성)
+
 여러 개의 연결 상태를 그룹으로 표시합니다.
 
 ```tsx
 {
   id: "connectivity",
-  type: "connectivity", 
+  type: "connectivity",
   size: "large", // 4 columns
   items: [
     {
@@ -82,6 +83,7 @@ export const defaultControlCenterConfig: ControlCenterConfig = {
 ```
 
 ### 2. Media Item (미디어)
+
 현재 재생 중인 미디어를 표시합니다.
 
 ```tsx
@@ -96,11 +98,12 @@ export const defaultControlCenterConfig: ControlCenterConfig = {
 ```
 
 ### 3. Theme Item (테마)
+
 다크/라이트 모드를 전환합니다.
 
 ```tsx
 {
-  id: "theme", 
+  id: "theme",
   type: "theme",
   size: "large", // 4 columns
   currentTheme: "system",
@@ -109,6 +112,7 @@ export const defaultControlCenterConfig: ControlCenterConfig = {
 ```
 
 ### 4. Quick Action Item (빠른 동작)
+
 단일 동작 버튼입니다.
 
 ```tsx
@@ -123,12 +127,13 @@ export const defaultControlCenterConfig: ControlCenterConfig = {
 ```
 
 ### 5. Slider Item (슬라이더)
+
 값을 표시하거나 조절하는 슬라이더입니다.
 
 ```tsx
 {
   id: "volume",
-  type: "slider", 
+  type: "slider",
   size: "medium", // 2 columns
   icon: <Volume />,
   value: 65,
@@ -140,6 +145,7 @@ export const defaultControlCenterConfig: ControlCenterConfig = {
 ```
 
 ### 6. Info Item (정보)
+
 단순 텍스트 정보를 표시합니다.
 
 ```tsx

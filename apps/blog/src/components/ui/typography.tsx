@@ -234,7 +234,12 @@ interface DetailProps
   as?: "span" | "p" | "div";
 }
 
-function Detail({ className, variant, as: Component = "span", ...props }: DetailProps) {
+function Detail({
+  className,
+  variant,
+  as: Component = "span",
+  ...props
+}: DetailProps) {
   return (
     <Component
       className={cn(detailVariants({ variant, className }))}
@@ -289,7 +294,12 @@ interface CodeProps
   as?: "code" | "pre" | "span";
 }
 
-function Code({ className, variant, as: Component = "code", ...props }: CodeProps) {
+function Code({
+  className,
+  variant,
+  as: Component = "code",
+  ...props
+}: CodeProps) {
   return (
     <Component
       className={cn(codeVariants({ variant, className }))}

@@ -51,9 +51,7 @@ const projectColumns: ColumnDef<Project>[] = [
 export default function TestTablePage() {
   return (
     <div className="min-h-screen p-8 bg-gray-50 dark:bg-gray-900">
-      <h1 className="text-3xl font-bold mb-8">
-        DataTable Test (Blog App)
-      </h1>
+      <h1 className="text-3xl font-bold mb-8">DataTable Test (Blog App)</h1>
 
       <div className="space-y-8">
         {/* JSON 데이터 통계 */}

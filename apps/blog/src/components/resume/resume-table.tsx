@@ -9,7 +9,9 @@ interface ResumeTableProps {
 
 export function ResumeTable({ children, className }: ResumeTableProps) {
   return (
-    <div className={cn("border border-gray-300 dark:border-gray-700", className)}>
+    <div
+      className={cn("border border-gray-300 dark:border-gray-700", className)}
+    >
       <table className="w-full text-sm">{children}</table>
     </div>
   );
@@ -64,7 +66,12 @@ interface TdLabelProps extends TdHTMLAttributes<HTMLTableCellElement> {
   className?: string;
 }
 
-export function TdLabel({ children, isLast = false, className, ...props }: TdLabelProps) {
+export function TdLabel({
+  children,
+  isLast = false,
+  className,
+  ...props
+}: TdLabelProps) {
   return (
     <td
       className={cn(
@@ -86,7 +93,12 @@ interface TdValueProps extends TdHTMLAttributes<HTMLTableCellElement> {
   className?: string;
 }
 
-export function TdValue({ children, isLast = false, className, ...props }: TdValueProps) {
+export function TdValue({
+  children,
+  isLast = false,
+  className,
+  ...props
+}: TdValueProps) {
   return (
     <td
       className={cn(

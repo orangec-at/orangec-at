@@ -26,6 +26,49 @@
       "backend": "Backend Experience",
       "tools": "AI Tools"
     },
+    "services": {
+      "title": "Services",
+      "subtitle": "High-quality Done-For-You solutions to accelerate your product development",
+      "website": {
+        "title": "Startup Website Development",
+        "description": "Professional Next.js website tailored for your startup",
+        "price": "$3,000 - $5,000",
+        "features": [
+          "Next.js 15 + Design System",
+          "Blog + SEO optimization",
+          "Responsive + i18n (Korean/English)",
+          "Vercel deployment + 2 weeks support"
+        ]
+      },
+      "designSystem": {
+        "title": "Design System Development",
+        "description": "Enterprise-grade component library for your product",
+        "price": "$5,000 - $8,000",
+        "features": [
+          "40+ Radix UI components",
+          "Storybook documentation",
+          "TypeScript + WCAG accessibility",
+          "Private NPM deployment"
+        ]
+      },
+      "coaching": {
+        "title": "Career Coaching",
+        "description": "1:1 coaching for Korean developers targeting US tech companies",
+        "price": "$2,000 (6 weeks)",
+        "features": [
+          "Resume & portfolio review (weekly)",
+          "GitHub profile optimization",
+          "Next.js project guidance",
+          "Technical + English interview prep"
+        ]
+      },
+      "cta": {
+        "title": "Ready to Work Together?",
+        "description": "Taking 2 clients this month. Book a free 30-minute discovery call to discuss your project.",
+        "primary": "Book Discovery Call",
+        "secondary": "View Portfolio"
+      }
+    },
     "contact": {
       "title": "Get In Touch",
       "description": "Let's talk about projects and collaboration opportunities"

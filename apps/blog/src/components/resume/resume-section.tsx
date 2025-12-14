@@ -8,7 +8,11 @@ interface ResumeSectionProps {
   className?: string;
 }
 
-export function ResumeSection({ title, children, className }: ResumeSectionProps) {
+export function ResumeSection({
+  title,
+  children,
+  className,
+}: ResumeSectionProps) {
   return (
     <section className={cn("mb-10", className)}>
       <Title

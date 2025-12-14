@@ -22,10 +22,19 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Card className="w-full max-w-md mx-auto">
       {project.image && (
-        <Image src={project.image} alt={project.title} width={400} height={200} className="rounded-t-md" />
+        <Image
+          src={project.image}
+          alt={project.title}
+          width={400}
+          height={200}
+          className="rounded-t-md"
+        />
       )}
       <CardHeader>
-        <Link href={`/projects/${project.id}`} className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+        <Link
+          href={`/projects/${project.id}`}
+          className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+        >
           <Title variant="l-700" className="text-gray-900 dark:text-white">
             {project.title}
           </Title>

@@ -11,7 +11,10 @@ interface LanguageItemComponentProps {
   onAction?: (action: string, data?: unknown) => void;
 }
 
-export function LanguageItemComponent({ item, onAction }: LanguageItemComponentProps) {
+export function LanguageItemComponent({
+  item,
+  onAction,
+}: LanguageItemComponentProps) {
   const t = useTranslations("controlCenter");
 
   if (!item.enabled) return null;
@@ -34,23 +37,32 @@ export function LanguageItemComponent({ item, onAction }: LanguageItemComponentP
         <div className="flex items-center gap-3">
           <Globe className="h-5 w-5" />
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-medium text-card-foreground">{t("language")}</div>
-            <div className="text-xs text-muted-foreground truncate">{getLanguageLabel()}</div>
+            <div className="text-sm font-medium text-card-foreground">
+              {t("language")}
+            </div>
+            <div className="text-xs text-muted-foreground truncate">
+              {getLanguageLabel()}
+            </div>
           </div>
         </div>
-        
+
         {/* Language Button Row */}
         <div className="flex gap-2 justify-center">
           {item.availableLanguages.map((language) => (
             <Button
               key={language.code}
               onClick={() => {
-                if (language.code !== item.currentLocale && item.onLanguageChange) {
+                if (
+                  language.code !== item.currentLocale &&
+                  item.onLanguageChange
+                ) {
                   item.onLanguageChange(language.code);
                   onAction?.("language_changed", { locale: language.code });
                 }
               }}
-              variant={item.currentLocale === language.code ? "default" : "ghost"}
+              variant={
+                item.currentLocale === language.code ? "default" : "ghost"
+              }
               size="sm"
               className="h-9 px-3 hover:scale-105 active:scale-95 transition-transform duration-150 flex items-center gap-2"
             >

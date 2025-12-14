@@ -42,7 +42,9 @@ export function ControlCenterDemo() {
         <CardContent className="space-y-4">
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <h3 className="font-semibold text-foreground">✨ Enhanced Hover Effects</h3>
+              <h3 className="font-semibold text-foreground">
+                ✨ Enhanced Hover Effects
+              </h3>
               <ul className="text-sm text-muted-foreground space-y-1">
                 <li>• Scale transforms instead of background highlights</li>
                 <li>• Subtle brightness adjustments for feedback</li>
@@ -50,9 +52,11 @@ export function ControlCenterDemo() {
                 <li>• Active states with scale-down effect</li>
               </ul>
             </div>
-            
+
             <div className="space-y-2">
-              <h3 className="font-semibold text-foreground">🎯 Better Icon Choice</h3>
+              <h3 className="font-semibold text-foreground">
+                🎯 Better Icon Choice
+              </h3>
               <ul className="text-sm text-muted-foreground space-y-1">
                 <li>• Sliders icon instead of Settings gear</li>
                 <li>• More appropriate for control panel context</li>
@@ -60,9 +64,11 @@ export function ControlCenterDemo() {
                 <li>• Better semantic meaning for web UI</li>
               </ul>
             </div>
-            
+
             <div className="space-y-2">
-              <h3 className="font-semibold text-foreground">🌐 Web-Native Layout</h3>
+              <h3 className="font-semibold text-foreground">
+                🌐 Web-Native Layout
+              </h3>
               <ul className="text-sm text-muted-foreground space-y-1">
                 <li>• Inline component instead of popup overlay</li>
                 <li>• Flexible grid system (8 columns vs 6)</li>
@@ -70,9 +76,11 @@ export function ControlCenterDemo() {
                 <li>• Responsive and embeddable anywhere</li>
               </ul>
             </div>
-            
+
             <div className="space-y-2">
-              <h3 className="font-semibold text-foreground">🎨 Professional Styling</h3>
+              <h3 className="font-semibold text-foreground">
+                🎨 Professional Styling
+              </h3>
               <ul className="text-sm text-muted-foreground space-y-1">
                 <li>• Reduced mobile-inspired aesthetics</li>
                 <li>• Conventional web UI patterns</li>

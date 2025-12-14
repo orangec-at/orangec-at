@@ -31,7 +31,9 @@ export default function DocumentsClient({
   locale,
 }: DocumentsClientProps) {
   const [filterType, setFilterType] = useState<DocumentType | "all">("all");
-  const [filterStatus, setFilterStatus] = useState<DocumentStatus | "all">("all");
+  const [filterStatus, setFilterStatus] = useState<DocumentStatus | "all">(
+    "all"
+  );
 
   const filteredDocuments = documents.filter((doc) => {
     if (filterType !== "all" && doc.type !== filterType) return false;
@@ -108,7 +110,9 @@ export default function DocumentsClient({
             <Filter className="w-4 h-4 text-gray-500" />
             <select
               value={filterType}
-              onChange={(e) => setFilterType(e.target.value as DocumentType | "all")}
+              onChange={(e) =>
+                setFilterType(e.target.value as DocumentType | "all")
+              }
               className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm"
             >
               <option value="all">{t.allTypes}</option>
@@ -121,7 +125,9 @@ export default function DocumentsClient({
           </div>
           <select
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value as DocumentStatus | "all")}
+            onChange={(e) =>
+              setFilterStatus(e.target.value as DocumentStatus | "all")
+            }
             className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm"
           >
             <option value="all">{t.allStatus}</option>
