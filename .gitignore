@@ -3,8 +3,6 @@
 node_modules/
 
 # Development tools and IDE configurations
-.claude/
-.serena/
 .vscode/
 .idea/
 
@@ -55,3 +53,13 @@ package-lock.json
 .env*.local
 
 .yarn
+
+# Personal vault (private notes, journal, knowledge base)
+# /vault/
+# !vault/templates/
+# !vault/README.md
+
+# AI Sub Folders
+# .claude/ # For common setup
+.serena/
+.superdesign/

@@ -41,8 +41,12 @@ export function ThemeItemComponent({ item }: ThemeItemProps) {
         <div className="flex items-center gap-3">
           {getThemeIcon()}
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-medium text-card-foreground">{t("theme")}</div>
-            <div className="text-xs text-muted-foreground truncate">{getThemeLabel()}</div>
+            <div className="text-sm font-medium text-card-foreground">
+              {t("theme")}
+            </div>
+            <div className="text-xs text-muted-foreground truncate">
+              {getThemeLabel()}
+            </div>
           </div>
         </div>
 

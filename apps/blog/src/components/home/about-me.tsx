@@ -1,15 +1,20 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { Heading, Body } from "../ui/typography";
 
 export default function AboutMe() {
   const t = useTranslations('home.about');
   return (
     <section className="max-w-2xl mx-auto text-center space-y-6">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-white">{t('title')}</h2>
-      <div className="space-y-4 text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+      <Heading variant="s-700" className="text-gray-900 dark:text-white">
+        {t('title')}
+      </Heading>
+      <div className="space-y-4">
         {t.raw('paragraphs').map((text: string, index: number) => (
-          <p key={index}>{text}</p>
+          <Body key={index} variant="l-400" className="text-gray-700 dark:text-gray-300">
+            {text}
+          </Body>
         ))}
       </div>
     </section>

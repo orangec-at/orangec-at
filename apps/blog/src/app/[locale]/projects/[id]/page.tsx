@@ -1,12 +1,12 @@
-import { notFound } from 'next/navigation';
-import { PROJECTS } from '@/data/projects';
-import { Button } from '@/components/ui/button';
-import { designTokens } from '@/lib/design-tokens';
-import { getBlogPostsMeta } from '@/lib/blog-utils.server';
-import { getRelatedBlogSlugs } from '@/data/connections';
-import Link from 'next/link';
-import { ArrowLeft, ExternalLink, Github } from 'lucide-react';
-import Image from 'next/image';
+import { notFound } from "next/navigation";
+import { PROJECTS } from "@/data/projects";
+import { Button } from "@/components/ui/button";
+import { designTokens } from "@/lib/design-tokens";
+import { getBlogPostsMeta } from "@/lib/blog-utils.server";
+import { getRelatedBlogSlugs } from "@/data/connections";
+import Link from "next/link";
+import { ArrowLeft, ExternalLink, Github } from "lucide-react";
+import Image from "next/image";
 
 interface ProjectDetailPageProps {
   params: Promise<{
@@ -15,7 +15,9 @@ interface ProjectDetailPageProps {
   }>;
 }
 
-export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
+export default async function ProjectDetailPage({
+  params,
+}: ProjectDetailPageProps) {
   const { id, locale } = await params;
   const project = PROJECTS.find((p) => p.id === id);
 
@@ -25,9 +27,8 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
 
   // connections.ts에서 관련 블로그 포스트 가져오기
   const relatedBlogSlugs = getRelatedBlogSlugs(id);
-  const blogPostsMeta = relatedBlogSlugs.length > 0 
-    ? await getBlogPostsMeta(relatedBlogSlugs)
-    : [];
+  const blogPostsMeta =
+    relatedBlogSlugs.length > 0 ? await getBlogPostsMeta(relatedBlogSlugs) : [];
 
   return (
     <div className="min-h-screen bg-white">
@@ -46,16 +47,12 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
           <h1 className={`${designTokens.typography.hero} mb-4`}>
             {project.title}
           </h1>
-          
+
           {/* Project Links */}
           <div className="flex gap-4 mb-6">
             {project.url && (
               <Button asChild>
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={project.url} target="_blank" rel="noopener noreferrer">
                   <ExternalLink size={16} />
                   라이브 사이트
                 </a>
@@ -77,7 +74,9 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
 
           {/* Tech Stack */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">기술 스택</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+              기술 스택
+            </h3>
             <div className="flex flex-wrap gap-2">
               {project.techStack.map((tech) => (
                 <span
@@ -108,7 +107,9 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
 
         {/* Project Description */}
         <div className="prose max-w-none">
-          <h2 className={`${designTokens.typography.section} mb-4`}>프로젝트 소개</h2>
+          <h2 className={`${designTokens.typography.section} mb-4`}>
+            프로젝트 소개
+          </h2>
           <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-8">
             {project.description}
           </p>
@@ -116,7 +117,11 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
           {/* Key Features & Challenges */}
           <div className="grid md:grid-cols-2 gap-8 mt-12">
             <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-              <h3 className={`${designTokens.typography.cardTitle} mb-3 text-gray-900 dark:text-white`}>주요 기능</h3>
+              <h3
+                className={`${designTokens.typography.cardTitle} mb-3 text-gray-900 dark:text-white`}
+              >
+                주요 기능
+              </h3>
               <div className="text-gray-700 dark:text-gray-300">
                 {project.keyFeatures ? (
                   <ul className="space-y-2">
@@ -134,7 +139,11 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
             </div>
 
             <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-              <h3 className={`${designTokens.typography.cardTitle} mb-3 text-gray-900 dark:text-white`}>기술적 도전</h3>
+              <h3
+                className={`${designTokens.typography.cardTitle} mb-3 text-gray-900 dark:text-white`}
+              >
+                기술적 도전
+              </h3>
               <div className="text-gray-700 dark:text-gray-300">
                 {project.challenges ? (
                   <ul className="space-y-2">
@@ -146,7 +155,10 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                     ))}
                   </ul>
                 ) : (
-                  <p>프로젝트 개발 과정에서의 주요 도전과 해결책을 설명할 수 있습니다.</p>
+                  <p>
+                    프로젝트 개발 과정에서의 주요 도전과 해결책을 설명할 수
+                    있습니다.
+                  </p>
                 )}
               </div>
             </div>
@@ -155,11 +167,14 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
           {/* Related Blog Posts */}
           {blogPostsMeta.length > 0 && (
             <div className="mt-12 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-500">
-              <h3 className={`${designTokens.typography.cardTitle} mb-4 text-gray-900 dark:text-white`}>
+              <h3
+                className={`${designTokens.typography.cardTitle} mb-4 text-gray-900 dark:text-white`}
+              >
                 📚 관련 블로그 글
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-4">
-                이 프로젝트의 개발 과정과 기술적 인사이트를 더 자세히 알아보세요.
+                이 프로젝트의 개발 과정과 기술적 인사이트를 더 자세히
+                알아보세요.
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {blogPostsMeta.map((post) => (
@@ -172,10 +187,15 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                     </h4>
                     {post.date && (
                       <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                        {new Date(post.date).toLocaleDateString('ko-KR')}
+                        {new Date(post.date).toLocaleDateString("ko-KR")}
                       </p>
                     )}
-                    <Button asChild variant="outline" size="sm" className="w-full">
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                    >
                       <Link href={`/${locale}/blog/${post.slug}`}>
                         📖 읽어보기
                       </Link>
@@ -192,15 +212,18 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
               이런 프로젝트가 필요하신가요?
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
-              {project.title}과 같은 서비스 개발을 원하신다면 언제든 연락주세요. 
+              {project.title}과 같은 서비스 개발을 원하신다면 언제든 연락주세요.
               <br />
-              <strong>3개월 내 MVP 출시</strong>부터 <strong>장기 운영 및 확장</strong>까지 함께합니다.
+              <strong>3개월 내 MVP 출시</strong>부터{" "}
+              <strong>장기 운영 및 확장</strong>까지 함께합니다.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-orange-500 hover:bg-orange-600">
-                <Link href={`/${locale}/contact`}>
-                  💬 프로젝트 상담받기
-                </Link>
+              <Button
+                asChild
+                size="lg"
+                className="bg-orange-500 hover:bg-orange-600"
+              >
+                <Link href={`/${locale}/contact`}>💬 프로젝트 상담받기</Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <Link href="mailto:your-email@example.com">

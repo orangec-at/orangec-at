@@ -1,0 +1,36 @@
+{
+  "contact": {
+    "title": "Contact",
+    "hero": {
+      "title": "Contact Me",
+      "description": "Interested in working together? Reach out via email or social links below."
+    },
+    "profile": {
+      "name": "Jaeil Lee",
+      "title": "Product Engineer",
+      "handle": "orangec-at",
+      "status": "Available",
+      "contactText": "Contact Me"
+    },
+    "features": {
+      "projects": {
+        "title": "🚀 Projects",
+        "description": "Building innovative solutions with modern tech stack"
+      },
+      "talk": {
+        "title": "💬 Let's Talk",
+        "description": "Always open to discussing new opportunities"
+      },
+      "response": {
+        "title": "⚡ Quick Response",
+        "description": "Usually reply within 24 hours"
+      }
+    },
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "send": "Send"
+    }
+  }
+}

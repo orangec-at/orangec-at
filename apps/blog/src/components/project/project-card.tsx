@@ -8,9 +8,9 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Title, Body, TypographyLink } from "@/components/ui/typography";
 import Link from "next/link";
 import Image from "next/image";
-import { designTokens } from "@/lib/design-tokens";
 import { useTranslations } from "next-intl";
 
 interface ProjectCardProps {
@@ -22,15 +22,28 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Card className="w-full max-w-md mx-auto">
       {project.image && (
-        <Image src={project.image} alt={project.title} width={400} height={200} className="rounded-t-md" />
+        <Image
+          src={project.image}
+          alt={project.title}
+          width={400}
+          height={200}
+          className="rounded-t-md"
+        />
       )}
       <CardHeader>
-        <Link href={`/projects/${project.id}`} className="hover:text-gray-700 transition-colors">
-          <h3 className={designTokens.typography.cardTitle}>{project.title}</h3>
+        <Link
+          href={`/projects/${project.id}`}
+          className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+        >
+          <Title variant="l-700" className="text-gray-900 dark:text-white">
+            {project.title}
+          </Title>
         </Link>
       </CardHeader>
       <CardContent>
-        <p className={designTokens.typography.body}>{project.description}</p>
+        <Body variant="m-400" className="text-gray-600 dark:text-gray-300">
+          {project.description}
+        </Body>
         <div className="flex flex-wrap gap-2 mt-2">
           {project.techStack.map((tech) => (
             <Badge key={tech}>{tech}</Badge>
@@ -38,12 +51,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Link
+        <TypographyLink
           href={`/projects/${project.id}`}
-          className="text-gray-600 hover:text-gray-900 underline transition-colors font-medium"
+          variant="m-400"
+          className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
         >
           {t("viewMore")}
-        </Link>
+        </TypographyLink>
       </CardFooter>
     </Card>
   );

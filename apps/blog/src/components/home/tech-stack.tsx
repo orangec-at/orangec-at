@@ -1,7 +1,7 @@
 "use client";
 
-import { designTokens } from "@/lib/design-tokens";
 import { useTranslations } from "next-intl";
+import { Heading, Title, Detail } from "../ui/typography";
 
 export default function TechStack() {
   const t = useTranslations('home.techStack');
@@ -38,32 +38,30 @@ export default function TechStack() {
       medium: "bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200",
       dark: "bg-gray-800 dark:bg-gray-300 text-gray-100 dark:text-gray-800",
     };
-    return (
-      colors[color as keyof typeof colors] ||
-      designTokens.components.badge.default
-    );
+    return colors[color as keyof typeof colors] || colors.light;
   };
 
   return (
     <section className="max-w-3xl mx-auto space-y-6">
-      <h2 className={`${designTokens.typography.section} text-center`}>
+      <Heading variant="s-700" className="text-center text-gray-900 dark:text-white">
         {t('title')}
-      </h2>
+      </Heading>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {techCategories.map((category, index) => (
           <div key={index} className="text-center space-y-3">
-            <h3 className="font-semibold text-gray-800 dark:text-gray-200">{category.category}</h3>
+            <Title variant="s-700" as="h3" className="text-gray-800 dark:text-gray-200">
+              {category.category}
+            </Title>
             <div className="flex flex-wrap justify-center gap-2">
               {category.techs.map((tech) => (
-                <span
+                <Detail
                   key={tech}
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${getColorClasses(
-                    category.color
-                  )}`}
+                  variant="s-400"
+                  className={`px-3 py-1 rounded-full ${getColorClasses(category.color)}`}
                 >
                   {tech}
-                </span>
+                </Detail>
               ))}
             </div>
           </div>

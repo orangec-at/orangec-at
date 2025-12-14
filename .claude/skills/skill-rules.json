@@ -1,0 +1,247 @@
+{
+  "skills": [
+    {
+      "skillName": "reference-library",
+      "description": "Vault reference system for loading career history, JD analysis, and knowledge base",
+      "priority": "critical",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "resume",
+          "이력서",
+          "cover letter",
+          "커버레터",
+          "jd",
+          "job description",
+          "vault",
+          "reference",
+          "project history",
+          "경력",
+          "프로젝트"
+        ],
+        "intentPatterns": [
+          "(write|create|update).*?(resume|이력서|cv)",
+          "(write|create|update).*?(cover.*?letter|커버.*?레터)",
+          "(analyze|분석).*?(jd|job.*?description)",
+          "(load|read|check).*?(vault|reference|history)",
+          "(match|find|search).*?(project|경력|experience)"
+        ],
+        "filePaths": [
+          "apps/blog/documents/resumes/**/*.mdx",
+          "apps/blog/documents/cover-letters/**/*.mdx",
+          "vault/career/**/*.md",
+          "vault/career/**/*.json",
+          "vault/knowledge/**/*.md"
+        ],
+        "fileContentPatterns": [
+          "vault/career/applications",
+          "vault/career/history",
+          "jd\\.json",
+          "PROJECT_SUMMARY"
+        ]
+      }
+    },
+    {
+      "skillName": "writing-assistant",
+      "description": "AI-powered writing assistance for resumes, cover letters, and blog posts using vault references",
+      "priority": "high",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "write resume",
+          "이력서 작성",
+          "write cover letter",
+          "커버레터 작성",
+          "write blog",
+          "블로그 작성",
+          "compose",
+          "draft"
+        ],
+        "intentPatterns": [
+          "(write|작성|draft|compose).*?(resume|이력서)",
+          "(write|작성|draft|compose).*?(cover.*?letter|커버.*?레터)",
+          "(write|작성|draft|compose).*?(blog.*?post|article|글)",
+          "(tailor|맞춤|customize).*?(resume|이력서).*?(company|회사)",
+          "(highlight|강조).*?(achievement|성과|project)"
+        ],
+        "filePaths": [
+          "apps/blog/documents/resumes/**/*.mdx",
+          "apps/blog/documents/cover-letters/**/*.mdx",
+          "apps/blog/src/posts/**/*.mdx"
+        ]
+      }
+    },
+    {
+      "skillName": "frontend-dev-guidelines",
+      "description": "Next.js 15 + React 19 + TypeScript + Tailwind CSS development guidelines",
+      "priority": "high",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "component",
+          "frontend",
+          "react",
+          "next.js",
+          "nextjs",
+          "tailwind",
+          "page",
+          "layout",
+          "ui",
+          "style",
+          "animation",
+          "framer",
+          "radix"
+        ],
+        "intentPatterns": [
+          "(create|add|build|make).*?(component|page|route|layout)",
+          "(style|design|animate).*?(component|page|ui)",
+          "(next\\.js|nextjs|react).*?(component|page|route)",
+          "(tailwind|css).*?(style|class|design)",
+          "(radix|framer).*?(component|animation)"
+        ],
+        "filePaths": [
+          "apps/blog/src/app/**/*.tsx",
+          "apps/blog/src/app/**/*.ts",
+          "apps/blog/src/components/**/*.tsx",
+          "apps/blog/src/components/**/*.ts",
+          "apps/blog/src/contexts/**/*.tsx"
+        ],
+        "fileContentPatterns": [
+          "import.*from ['\"]next",
+          "import.*from ['\"]react",
+          "\"use client\"",
+          "export default function.*Page",
+          "className=",
+          "from ['\"]framer-motion",
+          "from ['\"]@radix-ui"
+        ]
+      }
+    },
+    {
+      "skillName": "mdx-content-guidelines",
+      "description": "MDX blog content and documentation guidelines",
+      "priority": "medium",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "mdx",
+          "blog",
+          "article",
+          "content",
+          "document",
+          "frontmatter",
+          "markdown"
+        ],
+        "intentPatterns": [
+          "(create|write|edit|update).*?(blog|article|post|content)",
+          "(mdx|markdown).*?(component|content|file)",
+          "frontmatter.*?(schema|type|validation)"
+        ],
+        "filePaths": [
+          "apps/blog/documents/**/*.mdx",
+          "apps/blog/documents/**/*.md",
+          "apps/blog/src/types/*frontmatter*.ts"
+        ],
+        "fileContentPatterns": [
+          "import.*from ['\"]next-mdx-remote",
+          "import.*from ['\"]gray-matter",
+          "---\\n.*\\n---",
+          "MDXRemote",
+          "DocumentFrontmatter"
+        ]
+      }
+    },
+    {
+      "skillName": "vault-management",
+      "description": "Personal knowledge vault and note-taking system guidelines",
+      "priority": "low",
+      "type": "suggest",
+      "skipIfLoaded": true,
+      "triggers": {
+        "keywords": [
+          "vault",
+          "note",
+          "daily",
+          "weekly",
+          "knowledge",
+          "decision",
+          "project note"
+        ],
+        "intentPatterns": [
+          "(create|add|write).*?(daily|weekly|note|decision)",
+          "vault.*?(new|create|organize)",
+          "(knowledge|notes).*?(management|system)"
+        ],
+        "filePaths": [
+          "vault/**/*.md",
+          "scripts/vault/**/*.sh"
+        ]
+      }
+    },
+    {
+      "skillName": "typescript-quality",
+      "description": "TypeScript code quality and type safety guidelines",
+      "priority": "high",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "typescript",
+          "type",
+          "interface",
+          "zod",
+          "validation",
+          "schema"
+        ],
+        "intentPatterns": [
+          "(create|define|add).*?(type|interface|schema)",
+          "typescript.*?(error|issue|type)",
+          "(zod|validation).*?(schema|parse)"
+        ],
+        "filePaths": [
+          "apps/blog/src/types/**/*.ts",
+          "**/types/**/*.ts"
+        ],
+        "fileContentPatterns": [
+          "import.*from ['\"]zod",
+          "z\\.object\\(",
+          "type.*=.*{",
+          "interface.*{",
+          "export type",
+          "export interface"
+        ]
+      }
+    },
+    {
+      "skillName": "build-and-deployment",
+      "description": "Build, deployment, and CI/CD guidelines for Vercel",
+      "priority": "medium",
+      "type": "suggest",
+      "skipIfLoaded": true,
+      "triggers": {
+        "keywords": [
+          "build",
+          "deploy",
+          "vercel",
+          "ci/cd",
+          "production",
+          "preview"
+        ],
+        "intentPatterns": [
+          "(build|deploy|publish).*?(vercel|production|preview)",
+          "(fix|resolve).*?(build|deployment).*?(error|issue)",
+          "vercel.*?(config|setup|deploy)"
+        ],
+        "filePaths": [
+          "vercel.json",
+          ".vercel/**/*",
+          "apps/blog/next.config.*"
+        ]
+      }
+    }
+  ]
+}

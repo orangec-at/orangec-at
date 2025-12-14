@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useTranslations, useLocale } from "next-intl";
+import { Title, Body, Detail } from "../ui/typography";
 
 interface BlogCardProps {
   title: string;
@@ -19,17 +23,18 @@ export default function BlogCard({
   date,
   slug,
   description,
-  author,
   category,
   thumbnail,
   readTime,
   tags = [],
   featured = false,
 }: BlogCardProps) {
+  const t = useTranslations("blog");
+  const locale = useLocale();
+
   return (
-    <Link href={`/blog/${slug}`}>
+    <Link href={`/${locale}/blog/${slug}`}>
       <article className="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-        {/* 이미지 섹션 - 항상 표시 */}
         <div className="relative aspect-[16/9] overflow-hidden">
           {thumbnail ? (
             <Image
@@ -43,13 +48,12 @@ export default function BlogCard({
               <div className="text-center">
                 <div className="text-4xl mb-2 opacity-60">📝</div>
                 <div className="text-sm font-medium text-gray-500">
-                  {category || "Blog"}
+                  {category || t("defaultCategory")}
                 </div>
               </div>
             </div>
           )}
 
-          {/* 카테고리와 읽기 시간 배지 */}
           <div className="absolute left-3 top-3 flex gap-2">
             {category && (
               <span className="rounded-full bg-black/70 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
@@ -63,29 +67,30 @@ export default function BlogCard({
             )}
           </div>
 
-          {/* Featured 배지 */}
           {featured && (
             <div className="absolute right-3 top-3">
               <span className="rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-sm">
-                ⭐ Featured
+                ⭐ {t("featured")}
               </span>
             </div>
           )}
         </div>
 
-        {/* 컨텐츠 섹션 */}
         <div className="p-5">
-          <h3 className="mb-3 text-lg font-bold text-gray-900 dark:text-white leading-tight transition-colors duration-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-2">
+          <Title
+            variant="m-700"
+            as="h3"
+            className="mb-3 text-gray-900 dark:text-white transition-colors duration-300 group-hover:text-gray-600 dark:group-hover:text-gray-300 line-clamp-2"
+          >
             {title}
-          </h3>
+          </Title>
 
           {description && (
-            <p className="mb-4 text-sm text-gray-600 dark:text-gray-300 line-clamp-3 leading-relaxed">
+            <Body variant="s-400" className="mb-4 text-gray-600 dark:text-gray-300 line-clamp-3">
               {description}
-            </p>
+            </Body>
           )}
 
-          {/* 태그 */}
           {tags.length > 0 && (
             <div className="mb-4 flex flex-wrap gap-1">
               {tags.slice(0, 3).map((tag, index) => (
@@ -104,20 +109,19 @@ export default function BlogCard({
             </div>
           )}
 
-          {/* 작성자와 날짜 정보 */}
           <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700">
             <div className="flex items-center gap-3">
-              <div className="text-sm">
-                <time className="text-gray-500 dark:text-gray-400">{date}</time>
-              </div>
+              <time>
+                <Detail variant="s-400" className="text-gray-500 dark:text-gray-400">
+                  {date}
+                </Detail>
+              </time>
             </div>
 
-            {/* 북마크 아이콘 */}
             <button
               className="rounded-full p-1.5 text-gray-400 dark:text-gray-500 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-300"
               onClick={(e) => {
                 e.preventDefault();
-                // 북마크 기능 구현
               }}
             >
               <svg

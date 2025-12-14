@@ -18,7 +18,7 @@ export function ThemeToggle() {
         <Sun className="h-4 w-4" />
         <span className="sr-only">Light mode</span>
       </Button>
-      
+
       <Button
         variant={theme === "system" ? "default" : "ghost"}
         size="sm"
@@ -28,7 +28,7 @@ export function ThemeToggle() {
         <Monitor className="h-4 w-4" />
         <span className="sr-only">System mode</span>
       </Button>
-      
+
       <Button
         variant={theme === "dark" ? "default" : "ghost"}
         size="sm"
@@ -44,7 +44,7 @@ export function ThemeToggle() {
 
 export function SimpleThemeToggle() {
   const { theme, setTheme } = useTheme();
-  
+
   const toggleTheme = () => {
     if (theme === "light") setTheme("dark");
     else if (theme === "dark") setTheme("system");

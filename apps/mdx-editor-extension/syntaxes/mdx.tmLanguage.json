@@ -1,0 +1,100 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "MDX",
+  "scopeName": "text.html.markdown.mdx",
+  "patterns": [
+    {
+      "include": "#frontmatter"
+    },
+    {
+      "include": "#jsx-component"
+    },
+    {
+      "include": "#jsx-expression"
+    },
+    {
+      "include": "text.html.markdown"
+    }
+  ],
+  "repository": {
+    "frontmatter": {
+      "begin": "\\A---",
+      "end": "^---",
+      "name": "meta.embedded.block.frontmatter",
+      "contentName": "source.yaml",
+      "patterns": [
+        {
+          "include": "source.yaml"
+        }
+      ]
+    },
+    "jsx-component": {
+      "patterns": [
+        {
+          "name": "meta.tag.component.mdx",
+          "begin": "(<)([A-Z][A-Za-z0-9]*)",
+          "end": "(/>)|(</[A-Z][A-Za-z0-9]*>)",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.tag.begin.mdx" },
+            "2": { "name": "entity.name.tag.mdx support.class.component.mdx" }
+          },
+          "endCaptures": {
+            "1": { "name": "punctuation.definition.tag.end.mdx" },
+            "2": { "name": "punctuation.definition.tag.end.mdx" }
+          },
+          "patterns": [
+            {
+              "include": "#jsx-attribute"
+            },
+            {
+              "include": "#jsx-expression"
+            },
+            {
+              "include": "#jsx-component"
+            }
+          ]
+        }
+      ]
+    },
+    "jsx-attribute": {
+      "patterns": [
+        {
+          "name": "meta.attribute.mdx",
+          "match": "([a-zA-Z_:][a-zA-Z0-9_:.\\-]*)",
+          "captures": {
+            "1": { "name": "entity.other.attribute-name.mdx" }
+          }
+        },
+        {
+          "name": "string.quoted.double.mdx",
+          "begin": "\"",
+          "end": "\""
+        },
+        {
+          "name": "string.quoted.single.mdx",
+          "begin": "'",
+          "end": "'"
+        }
+      ]
+    },
+    "jsx-expression": {
+      "name": "meta.embedded.expression.mdx",
+      "begin": "\\{",
+      "end": "\\}",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.embedded.begin.mdx" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.section.embedded.end.mdx" }
+      },
+      "patterns": [
+        {
+          "include": "source.tsx"
+        },
+        {
+          "include": "source.js"
+        }
+      ]
+    }
+  }
+}

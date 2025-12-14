@@ -1,0 +1,34 @@
+{
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Sharing my development journey and technical insights",
+    "readTime": "min read",
+    "category": "Category",
+    "tags": "Tags",
+    "author": "Author",
+    "publishedAt": "Published",
+    "searchPlaceholder": "Search posts...",
+    "allCategories": "All Categories",
+    "allTags": "All Tags",
+    "resetFilters": "Reset Filters",
+    "postCount": "{count} posts",
+    "noPostsFound": "No posts found",
+    "adjustSearch": "Try adjusting your search or filters.",
+    "relatedProjects": "Related Projects",
+    "relatedProjectsDescription": "Check out projects where these technologies are applied.",
+    "defaultCategory": "Blog",
+    "featured": "Featured",
+    "cta": {
+      "title": "Need these technologies for your project?",
+      "description": "I can turn your ideas into real services using the technologies covered above.",
+      "from": " to ",
+      "to": ", let's work together.",
+      "features": {
+        "mvp": "Fast MVP Development",
+        "stable": "Stable Operations"
+      },
+      "startProject": "Start Project",
+      "viewPortfolio": "View Portfolio"
+    }
+  }
+}

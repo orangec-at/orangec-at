@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "title": "이재일 - 프론트엔드 & 풀스택 개발자",
+    "description": "이재일 - 프론트엔드 개발자 포트폴리오",
+    "ogTitle": "이재일 - 프론트엔드 개발자 & 디자이너"
+  },
+  "navigation": {
+    "home": "홈",
+    "blog": "블로그",
+    "projects": "프로젝트",
+    "resume": "이력서",
+    "contact": "연락처"
+  },
+  "footer": {
+    "copyright": "© {year} OrangeCat''s Blog. All rights reserved."
+  }
+}

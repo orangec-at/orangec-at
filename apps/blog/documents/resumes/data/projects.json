@@ -1,0 +1,365 @@
+{
+  "drawhatha": {
+    "id": "drawhatha",
+    "title": "요가기록 앱 'Drawhatha'",
+    "period": "2024.03 - 현재",
+    "company": "개인 프로젝트",
+    "role": "풀스택 개발",
+    "tags": [
+      "react-native",
+      "fullstack",
+      "startup",
+      "mobile",
+      "nestjs",
+      "docker"
+    ],
+    "category": "personal",
+    "description": "React Native를 활용한 iOS 기반 요가 저널링 앱 개발 및 App Store 배포",
+    "achievements": [
+      "풀스택 개발: 프론트엔드부터 백엔드까지 전체 시스템 구현",
+      "pnpm과 turborepo를 활용한 모노레포 아키텍처 구성",
+      "zustand, react-query를 이용한 상태관리 최적화",
+      "NestJS 기반 백엔드 설계 및 구현",
+      "supabase, firebase, vercel kv를 활용한 데이터 관리",
+      "prisma로 ORM 설계 및 구현",
+      "Oracle Cloud와 docker-compose를 활용한 서버 배포"
+    ],
+    "techStack": [
+      "React Native",
+      "TypeScript",
+      "zustand",
+      "NestJS",
+      "Prisma",
+      "Docker"
+    ],
+    "links": {
+      "appStore": "https://apps.apple.com/kr/app/yoga-journaling-drawhatha/id6689512757"
+    }
+  },
+  "yogaday": {
+    "id": "yogaday",
+    "title": "요가 원데이클래스 플랫폼 Yogaday",
+    "period": "2025.08 - 현재",
+    "company": "개인 프로젝트",
+    "role": "풀스택 개발",
+    "tags": ["nextjs", "fullstack", "startup", "web", "ai", "claude-code"],
+    "category": "personal",
+    "description": "Next.js app router 기반 요가 원데이클래스 예약 플랫폼",
+    "achievements": [
+      "NextJs app router, api router, prisma를 이용한 풀스택 개발",
+      "tailwind, shadcn/ui 활용 스타일링",
+      "Zustand, react-query 이용한 상태관리 최적화",
+      "Claude Code와 함께 pair programming",
+      "NextAuth 사용하여 로그인 관리",
+      "vercel 배포"
+    ],
+    "techStack": [
+      "Next.js",
+      "TypeScript",
+      "Prisma",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "NextAuth"
+    ],
+    "links": {
+      "website": "https://www.yogaday.love/"
+    }
+  },
+  "midas-mws": {
+    "id": "midas-mws",
+    "title": "클라우드 스토리지 및 협업 플랫폼(MWS)",
+    "period": "2023.11 - 2024.02",
+    "company": "마이다스아이티",
+    "role": "프론트엔드 전체 책임",
+    "tags": [
+      "enterprise",
+      "cloud",
+      "collaboration",
+      "react",
+      "nextjs",
+      "admin"
+    ],
+    "category": "company",
+    "description": "설계/건축 산업 특화 클라우드 스토리지 시스템 구축",
+    "achievements": [
+      "설계/건축 산업 특화 클라우드 스토리지 시스템 구축",
+      "파일 변경사항 추적 및 효율적인 협업 프로세스 개발",
+      "프론트엔드 개발 전체 책임 및 RESTful API 인터페이스 설계 참여",
+      "신규 기능 기획 단계에서 기술적 타당성 분석 및 개선 방향 제시"
+    ],
+    "techStack": [
+      "React",
+      "TypeScript",
+      "Next.js",
+      "Recoil",
+      "React-Query",
+      "Yarn Workspace"
+    ]
+  },
+  "midas-civil-webview": {
+    "id": "midas-civil-webview",
+    "title": "C++ 데스크톱 프로그램(MIDAS CIVIL) 웹뷰",
+    "period": "2023.06 - 2023.10",
+    "company": "마이다스아이티",
+    "role": "프론트엔드",
+    "tags": ["desktop", "webview", "performance", "react", "webpack"],
+    "category": "company",
+    "description": "대용량 데이터 시각화를 위한 웹뷰 기술 구현",
+    "achievements": [
+      "대용량 데이터 시각화를 위한 웹뷰 기술 구현",
+      "Webpack 번들링과 최적화된 테이블 렌더링으로 데이터 처리 속도 개선",
+      "커스텀 데이터 포맷 처리를 위한 테이블 렌더링 로직 구현",
+      "개발팀에 JS 번들 통합 프로세스 가이드 제공"
+    ],
+    "techStack": ["React", "Webpack", "tanstack-table"]
+  },
+  "midas-rpm": {
+    "id": "midas-rpm",
+    "title": "구독전환 관리 플랫폼(RPM) 백오피스 시스템",
+    "period": "2023.04 - 2023.06",
+    "company": "마이다스아이티",
+    "role": "프론트엔드 전담",
+    "tags": [
+      "admin",
+      "backoffice",
+      "enterprise",
+      "react",
+      "nextjs",
+      "monorepo"
+    ],
+    "category": "company",
+    "description": "백오피스 시스템의 회원 및 제품 관련 페이지 프론트엔드 개발",
+    "achievements": [
+      "백오피스 시스템의 회원 및 제품 관련 페이지 프론트엔드 개발 전담",
+      "다수 팀의 요구사항을 동시 수행하며 개발 컨벤션 확립",
+      "REST API 분석 및 개선사항 도출로 백엔드팀과 효율적 협업",
+      "누락된 기능 및 UI/UX 개선사항 발굴하여 기획팀 제안",
+      "모노레포 내 코드리뷰를 통한 코드 품질 향상 기여"
+    ],
+    "techStack": [
+      "React",
+      "Next.js",
+      "Git Flow",
+      "Yarn Workspace",
+      "Recoil",
+      "React-Query"
+    ]
+  },
+  "midas-sso": {
+    "id": "midas-sso",
+    "title": "다중 서비스 SSO 인증 시스템",
+    "period": "2023.04 - 2023.06",
+    "company": "마이다스아이티",
+    "role": "프론트엔드 아키텍처 설계",
+    "tags": ["auth", "sso", "oauth", "jwt", "security", "enterprise"],
+    "category": "company",
+    "description": "자사, 허브스팟, 젠데스크 간 통합 SSO 시스템 구현",
+    "achievements": [
+      "자사, 허브스팟, 젠데스크 간 통합 SSO 시스템 구현",
+      "데스크톱 앱을 위한 OAuth2.0 Device Flow 인증 아키텍처 설계",
+      "JWT 기반 SSO 시스템의 프론트엔드 아키텍처 설계 및 구현",
+      "백엔드 담당자와 함께 SSO 정책 및 API 설계 협의",
+      "외부 서비스 SSO 정책 분석 및 연동 작업 수행"
+    ],
+    "techStack": [
+      "Next.js SSR",
+      "JWT",
+      "OAuth2.0 Device Flow",
+      "Axios Interceptor"
+    ]
+  },
+  "midas-member": {
+    "id": "midas-member",
+    "title": "회원관리 시스템",
+    "period": "2023.01 - 2023.04",
+    "company": "마이다스아이티",
+    "role": "프론트엔드",
+    "tags": ["admin", "member", "react", "nextjs", "monorepo", "design-system"],
+    "category": "company",
+    "description": "클라이언트/백오피스용 회원관리 시스템 구축",
+    "achievements": [
+      "클라이언트/백오피스용 회원관리 시스템 구축",
+      "레거시 코드 분석 및 개선 작업 주도",
+      "로그인 페이지 및 회원관리 기능 개발",
+      "백엔드 개발자와 API 설계 협업",
+      "기획자와 함께 요구사항 구체화 및 상세화",
+      "프론트엔드 간 공통컴포넌트 개발"
+    ],
+    "techStack": [
+      "React",
+      "Next.js",
+      "모노레포 아키텍처",
+      "디자인시스템",
+      "Recoil",
+      "React-Query"
+    ]
+  },
+  "midas-optimization": {
+    "id": "midas-optimization",
+    "title": "React 프로젝트 기술 검토 및 성능 최적화",
+    "period": "2022.10 - 2023.01",
+    "company": "마이다스아이티",
+    "role": "프론트엔드 리드",
+    "tags": ["performance", "optimization", "react", "refactoring"],
+    "category": "company",
+    "description": "레거시 코드 분석 및 성능 이슈 개선",
+    "achievements": [
+      "레거시 코드 분석 및 성능 이슈 개선",
+      "중첩된 useState 패턴의 성능 병목 현상 해결",
+      "react hook-form 도입으로 폼 상태관리 최적화",
+      "컴포넌트 최적화 및 리팩토링 주도",
+      "팀의 React 개발 역량 강화를 위한 기술 검토 및 가이드 제공"
+    ],
+    "techStack": ["React", "TypeScript", "react hook-form", "상태관리 최적화"]
+  },
+  "Pikurate-sns-app": {
+    "id": "Pikurate-sns-app",
+    "title": "북마크 기반 SNS 앱",
+    "period": "2022.07 - 2022.09",
+    "company": "피큐레잇",
+    "role": "React Native 개발",
+    "tags": ["react-native", "mobile", "sns", "ios", "android"],
+    "category": "company",
+    "description": "React Native를 활용한 웹 서비스의 크로스 플랫폼 앱 전환",
+    "achievements": [
+      "React Native를 활용한 웹 서비스의 크로스 플랫폼 앱 전환",
+      "iOS/Android 사용자 경험 개선을 통한 접근성 향상",
+      "네이티브 공유 기능 연동 및 구현",
+      "재사용 가능한 컴포넌트 개발로 개발 효율성 증대"
+    ],
+    "techStack": [
+      "React Native CLI",
+      "TypeScript",
+      "Redux Toolkit",
+      "React Query",
+      "Styled Component",
+      "React Navigation"
+    ]
+  },
+  "Pikurate-design-system": {
+    "id": "Pikurate-design-system",
+    "title": "사내 디자인 시스템 구축",
+    "period": "2022.04 - 2022.05",
+    "company": "피큐레잇",
+    "role": "프론트엔드 리드",
+    "tags": ["design-system", "component-library", "npm", "storybook"],
+    "category": "company",
+    "description": "웹/모바일웹/크롬익스텐션 멀티 플랫폼 디자인 시스템 구축",
+    "achievements": [
+      "웹/모바일웹/크롬익스텐션 멀티 플랫폼 디자인 시스템 구축",
+      "컴포넌트 재사용성 확보로 개발 생산성 향상",
+      "Styled-component 기반 공통 컴포넌트 개발",
+      "Rollup 설정을 통한 최적화된 번들링 구성",
+      "Private NPM 배포 파이프라인 구축"
+    ],
+    "techStack": [
+      "Styled-component",
+      "Rollup",
+      "TypeScript",
+      "Private NPM Registry",
+      "Storybook"
+    ]
+  },
+  "Pikurate-dashboard": {
+    "id": "Pikurate-dashboard",
+    "title": "마케팅 KPI 모니터링 대시보드",
+    "period": "2022.03 - 2022.04",
+    "company": "피큐레잇",
+    "role": "풀스택 개발",
+    "tags": ["dashboard", "analytics", "charts", "nextjs", "marketing"],
+    "category": "company",
+    "description": "북극성 지표 시각화 대시보드 구축",
+    "achievements": [
+      "북극성 지표 시각화 대시보드 구축으로 마케팅 의사결정 시간 단축",
+      "내부용/공개용 대시보드 접근 권한 분리 설계",
+      "Apache E-charts를 활용한 다양한 차트 컴포넌트 개발",
+      "Next-auth 기반 인증 시스템 구축",
+      "마케팅팀과 핵심 지표 시각화 요구사항 분석 및 구현"
+    ],
+    "techStack": [
+      "Next.js",
+      "TypeScript",
+      "Zustand",
+      "React Query",
+      "Apache E-charts",
+      "Next-auth"
+    ]
+  },
+  "securenet-backoffice": {
+    "id": "securenet-backoffice",
+    "title": "백오피스 통합 및 시스템 고도화",
+    "period": "2021.03 - 2021.11",
+    "company": "시큐어넷",
+    "role": "풀스택 개발",
+    "tags": ["fullstack", "admin", "backoffice", "react", "spring"],
+    "category": "company",
+    "description": "관리자 페이지와 영업관리 시스템 통합",
+    "achievements": [
+      "관리자 페이지와 영업관리 시스템 통합으로 업무 처리 시간 단축",
+      "레거시 시스템 분석 및 통합 아키텍처 설계",
+      "Frontend(React)와 Backend(Spring) 풀스택 개발 수행",
+      "영업팀 인터뷰 통한 핵심 요구사항 파악 및 반영",
+      "스토리보드 작성 및 이해관계자 피드백 수렴 개선"
+    ],
+    "techStack": [
+      "React",
+      "Zustand",
+      "SWR",
+      "Spring Boot",
+      "MyBatis",
+      "Oracle Database"
+    ]
+  },
+  "securenet-sales": {
+    "id": "securenet-sales",
+    "title": "영업관리 백오피스 기획 및 개발",
+    "period": "2020.09 - 2021.02",
+    "company": "시큐어넷",
+    "role": "풀스택 개발 및 기획",
+    "tags": ["fullstack", "admin", "planning", "react", "redux"],
+    "category": "company",
+    "description": "영업 프로세스 디지털화를 통한 업무 효율화",
+    "achievements": [
+      "영업 프로세스 디지털화를 통한 업무 효율화 달성",
+      "영업 프로세스 분석 및 디지털 전환 설계",
+      "스토리보드 작성 및 와이어프레임 설계",
+      "백엔드팀과 데이터베이스 설계 및 API 명세 협업",
+      "서비스 배포 및 운영 환경 구축"
+    ],
+    "techStack": [
+      "React Hooks",
+      "Redux",
+      "Redux-saga",
+      "REST API",
+      "Ubuntu",
+      "Apache2",
+      "Tomcat"
+    ]
+  },
+  "securenet-infra": {
+    "id": "securenet-infra",
+    "title": "인프라 구축 및 운영 자동화",
+    "period": "2020.06 - 2021.11",
+    "company": "시큐어넷",
+    "role": "DevOps",
+    "tags": ["devops", "infra", "automation", "ubuntu", "docker"],
+    "category": "company",
+    "description": "자동화된 배포 및 백업 시스템 구축",
+    "achievements": [
+      "자동화된 배포 및 백업 시스템 구축으로 서비스 안정성 확보",
+      "운영 리스크 90% 감소 및 유지보수 효율성 향상",
+      "프론트엔드/백엔드 서비스 배포 환경 구축",
+      "Git과 Crontab을 활용한 데이터베이스 백업 자동화",
+      "SSL 인증서 자동 갱신 시스템 구현"
+    ],
+    "techStack": [
+      "Ubuntu Server",
+      "Apache2",
+      "Tomcat",
+      "Oracle Database",
+      "Git",
+      "Crontab",
+      "Let's Encrypt"
+    ]
+  }
+}

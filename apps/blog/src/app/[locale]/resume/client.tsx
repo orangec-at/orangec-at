@@ -59,8 +59,12 @@ export default function ResumeClient() {
   const educationData = t.raw("data.education") as TranslatedEducation[];
   const experienceData = t.raw("data.experience") as TranslatedExperience[];
   const languagesData = t.raw("data.languages") as TranslatedLanguage[];
-  const computerSkillsData = t.raw("data.computerSkills") as TranslatedComputerSkill[];
-  const certificatesData = t.raw("data.certificates") as TranslatedCertificate[];
+  const computerSkillsData = t.raw(
+    "data.computerSkills"
+  ) as TranslatedComputerSkill[];
+  const certificatesData = t.raw(
+    "data.certificates"
+  ) as TranslatedCertificate[];
   const projectsData = t.raw("data.projects") as TranslatedProject[];
   const introductionText = t("data.introduction");
 

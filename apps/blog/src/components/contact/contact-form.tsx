@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export default function ContactForm() {
   const t = useTranslations("contact.form");
-  
+
   return (
     <section className="max-w-md mx-auto">
       <form>

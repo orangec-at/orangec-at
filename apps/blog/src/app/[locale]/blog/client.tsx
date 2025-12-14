@@ -48,10 +48,10 @@ export default function BlogClient({ posts }: BlogClientProps) {
     <div className="px-4 py-8 md:px-16 md:py-12 space-y-8">
       {/* 헤더 */}
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t("title")}</h1>
-        <p className="text-gray-600 dark:text-gray-300">
-          {t("subtitle")}
-        </p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          {t("title")}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-300">{t("subtitle")}</p>
       </div>
 
       {/* 검색 및 필터 */}
@@ -173,7 +173,9 @@ export default function BlogClient({ posts }: BlogClientProps) {
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
             {t("noPostsFound")}
           </h3>
-          <p className="text-gray-600 dark:text-gray-300">{t("adjustSearch")}</p>
+          <p className="text-gray-600 dark:text-gray-300">
+            {t("adjustSearch")}
+          </p>
         </div>
       )}
     </div>

@@ -31,7 +31,10 @@ export function ControlCenter({
   const currentLocale = useLocale();
 
   const switchLanguage = useCallback((newLocale: string) => {
-    window.location.href = window.location.href.replace(/\/(ko|en)/, `/${newLocale}`);
+    window.location.href = window.location.href.replace(
+      /\/(ko|en)/,
+      `/${newLocale}`
+    );
   }, []);
 
   // Create config with injected functions
