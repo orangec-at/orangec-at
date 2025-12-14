@@ -22,14 +22,12 @@ import { useRef } from "react";
 interface DocumentDetailClientProps {
   mdxSource: MDXRemoteSerializeResult;
   meta: DocumentMeta;
-  rawContent: string;
   locale: string;
 }
 
 export default function DocumentDetailClient({
   mdxSource,
   meta,
-  rawContent,
   locale,
 }: DocumentDetailClientProps) {
   const contentRef = useRef<HTMLDivElement>(null);

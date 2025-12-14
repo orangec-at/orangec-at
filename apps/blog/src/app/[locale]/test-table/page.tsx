@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentTable, DataTable } from "@orangec-at/design";
+import { DataTable } from "@orangec-at/design";
 import { ColumnDef } from "@tanstack/react-table";
 import projectsData from "../../../../documents/resumes/data/projects.json";
 import experiencesData from "../../../../documents/resumes/data/experiences.json";

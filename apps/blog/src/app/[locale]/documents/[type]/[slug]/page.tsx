@@ -16,7 +16,7 @@ interface DocumentPageProps {
 }
 
 export async function generateMetadata({ params }: DocumentPageProps) {
-  const { locale, type, slug } = await params;
+  const { type, slug } = await params;
 
   const docType = FOLDER_TYPE_MAP[type];
   if (!docType) {
@@ -57,7 +57,6 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
     <DocumentDetailClient
       mdxSource={mdxSource}
       meta={result.meta}
-      rawContent={result.content}
       locale={locale}
     />
   );
