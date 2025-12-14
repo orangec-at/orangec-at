@@ -1,9 +1,11 @@
 # Grayscale Portfolio Design System
 
 ## Overview
+
 This project follows a **minimal grayscale design system** emphasizing readability, professionalism, and consistency. All UI components should adhere to this color palette and token system.
 
 ## Design Philosophy
+
 - **Grayscale First**: Black, white, and gray shades only
 - **Semantic Naming**: Use design tokens, not hardcoded values
 - **Component Consistency**: shadcn/ui components as the foundation
@@ -12,6 +14,7 @@ This project follows a **minimal grayscale design system** emphasizing readabili
 ## Color System
 
 ### Approved Colors
+
 ```css
 /* Text Colors */
 text-gray-900  /* Primary text */
@@ -32,6 +35,7 @@ border-gray-400  /* Emphasized borders */
 ```
 
 ### Forbidden Colors
+
 ❌ **Never use**: `blue-*`, `red-*`, `green-*`, `purple-*`, etc.  
 ✅ **Always use**: `gray-*`, `white`, CSS custom properties from shadcn/ui
 
@@ -60,6 +64,7 @@ className={designTokens.typography.caption}
 ## Component Patterns
 
 ### Buttons
+
 ```tsx
 // Primary action (dark)
 <Button>Primary Action</Button>
@@ -72,8 +77,9 @@ className={designTokens.typography.caption}
 ```
 
 ### Cards
+
 ```tsx
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
 <Card className={designTokens.components.card.default}>
   <CardHeader>
@@ -82,10 +88,11 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card';
   <CardContent>
     <p className={designTokens.typography.body}>Content</p>
   </CardContent>
-</Card>
+</Card>;
 ```
 
 ### Badges/Tags
+
 ```tsx
 // Use grayscale variants only
 <Badge className="bg-gray-100 text-gray-800">Frontend</Badge>
@@ -96,12 +103,14 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card';
 ## Implementation Rules
 
 ### ✅ Do
+
 - Use `designTokens` from `/lib/design-tokens.ts`
 - Follow shadcn/ui component patterns
 - Use semantic CSS custom properties (`var(--primary)`)
 - Test color contrast for accessibility
 
-### ❌ Don't  
+### ❌ Don't
+
 - Use hardcoded colors (`text-blue-600`)
 - Mix color schemes (no blues, greens, etc.)
 - Create custom color utilities outside the system
@@ -110,17 +119,19 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card';
 ## Enforcement
 
 ### Development Validation
+
 ```typescript
-import { auditComponentColors } from '@/lib/design-system-validation';
+import { auditComponentColors } from "@/lib/design-system-validation";
 
 // In development, audit your component
 const audit = auditComponentColors(componentCode);
 if (audit.totalViolations > 0) {
-  console.warn('Design system violations:', audit.violations);
+  console.warn("Design system violations:", audit.violations);
 }
 ```
 
 ### Pre-commit Hook (Optional)
+
 ```bash
 # Add to package.json scripts
 "design-audit": "grep -r 'blue-\\|red-\\|green-' src/ && exit 1 || exit 0"
@@ -140,13 +151,14 @@ If you find non-grayscale colors in existing components:
 ## Resources
 
 - **Design Tokens**: `/src/lib/design-tokens.ts`
-- **Validation**: `/src/lib/design-system-validation.ts` 
+- **Validation**: `/src/lib/design-system-validation.ts`
 - **shadcn/ui Components**: `/src/components/ui/`
 - **Tailwind Config**: `/tailwind.config.ts`
 
 ## Questions?
 
 When in doubt:
+
 1. Check existing components for patterns
 2. Use `designTokens` instead of hardcoded values
 3. Prefer grayscale over any color
