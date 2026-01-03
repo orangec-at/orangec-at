@@ -1,16 +1,15 @@
-import * as vscode from 'vscode';
-import * as path from 'path';
+import * as vscode from "vscode";
 
 /**
  * MDX 미리보기 패널 관리
  */
 export class MDXPreviewPanel {
- public static currentPanel: MDXPreviewPanel | undefined;
+  public static currentPanel: MDXPreviewPanel | undefined;
   private readonly _panel: vscode.WebviewPanel;
   private readonly _extensionUri: vscode.Uri;
   private _disposables: vscode.Disposable[] = [];
   private _updateTimeout: NodeJS.Timeout | undefined;
-  private _latestContent = '';
+  private _latestContent = "";
 
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
     this._panel = panel;
@@ -21,12 +20,12 @@ export class MDXPreviewPanel {
 
     // 메시지 처리 (에러/준비 신호)
     this._panel.webview.onDidReceiveMessage(
-      message => {
+      (message) => {
         switch (message.command) {
-          case 'error':
+          case "error":
             vscode.window.showErrorMessage(message.text);
             return;
-          case 'ready':
+          case "ready":
             this.pushContent();
             return;
         }
@@ -39,7 +38,10 @@ export class MDXPreviewPanel {
   /**
    * 미리보기 패널 생성 또는 표시
    */
-  public static createOrShow(extensionUri: vscode.Uri, document: vscode.TextDocument) {
+  public static createOrShow(
+    extensionUri: vscode.Uri,
+    document: vscode.TextDocument
+  ) {
     const column = vscode.window.activeTextEditor
       ? vscode.ViewColumn.Beside
       : undefined;
@@ -53,22 +55,24 @@ export class MDXPreviewPanel {
 
     // 새 패널 생성
     const panel = vscode.window.createWebviewPanel(
-      'mdxPreview',
-      'MDX Preview',
+      "mdxPreview",
+      "MDX Preview",
       column || vscode.ViewColumn.One,
       {
         enableScripts: true,
         localResourceRoots: [
-          vscode.Uri.joinPath(extensionUri, 'media'),
-          vscode.Uri.joinPath(extensionUri, 'dist')
+          vscode.Uri.joinPath(extensionUri, "media"),
+          vscode.Uri.joinPath(extensionUri, "dist"),
         ],
-        retainContextWhenHidden: true
+        retainContextWhenHidden: true,
       }
     );
 
     MDXPreviewPanel.currentPanel = new MDXPreviewPanel(panel, extensionUri);
     MDXPreviewPanel.currentPanel._panel.webview.html =
-      MDXPreviewPanel.currentPanel._getHtmlForWebview(MDXPreviewPanel.currentPanel._panel.webview);
+      MDXPreviewPanel.currentPanel._getHtmlForWebview(
+        MDXPreviewPanel.currentPanel._panel.webview
+      );
     MDXPreviewPanel.currentPanel.update(document);
   }
 
@@ -94,8 +98,8 @@ export class MDXPreviewPanel {
   private pushContent() {
     if (!this._latestContent) return;
     this._panel.webview.postMessage({
-      command: 'update',
-      content: this._latestContent
+      command: "update",
+      content: this._latestContent,
     });
   }
 
@@ -105,10 +109,10 @@ export class MDXPreviewPanel {
   private _getHtmlForWebview(webview: vscode.Webview): string {
     // 스타일/스크립트 URI
     const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'media', 'preview.css')
+      vscode.Uri.joinPath(this._extensionUri, "media", "preview.css")
     );
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'dist', 'preview.js')
+      vscode.Uri.joinPath(this._extensionUri, "dist", "preview.js")
     );
 
     // Nonce 생성 (보안)
@@ -153,8 +157,9 @@ export class MDXPreviewPanel {
 }
 
 function getNonce() {
-  let text = '';
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let text = "";
+  const possible =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   for (let i = 0; i < 32; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
