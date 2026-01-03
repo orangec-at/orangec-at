@@ -181,6 +181,47 @@ fi
 # Log edited file
 echo "$(date +%s):$file_path:$repo" >> "$cache_dir/edited-files.log"
 
+# ============================================
+# Git Auto-Commit Logic
+# ============================================
+# Only run in the project root and if git is available
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    # Get short stats of unstaged changes
+    stats=$(git diff --shortstat)
+    
+    if [[ -n "$stats" ]]; then
+        # Extract numbers (files changed, insertions, deletions)
+        files_changed=$(echo "$stats" | grep -oE '[0-9]+ file' | awk '{print $1}' || echo 0)
+        insertions=$(echo "$stats" | grep -oE '[0-9]+ insertion' | awk '{print $1}' || echo 0)
+        deletions=$(echo "$stats" | grep -oE '[0-9]+ deletion' | awk '{print $1}' || echo 0)
+        total_lines=$((insertions + deletions))
+
+        # Auto-commit thresholds:
+        # 1. More than 3 files changed
+        # 2. More than 50 lines of code changed
+        # 3. Specific critical files modified
+        critical_files_pattern="(package\.json|schema\.prisma|next\.config|tailwind\.config|\.env)"
+        is_critical=$(git diff --name-only | grep -E "$critical_files_pattern" || true)
+
+        if [[ $files_changed -ge 3 ]] || [[ $total_lines -ge 50 ]] || [[ -n "$is_critical" ]]; then
+            # Try to get current task from CURRENT-WORK.md
+            current_task=$(grep "## Active Task" -A 2 "$CLAUDE_PROJECT_DIR/dev/active/CURRENT-WORK.md" | tail -n 1 | sed 's/^\*\*//;s/\*\*$//' || echo "update")
+            
+            # Simple message generation
+            commit_msg="auto: $current_task ($stats)"
+            
+            # Add and commit (only if not already committing to avoid recursion)
+            if [[ -z "$GIT_AUTO_COMMIT_IN_PROGRESS" ]]; then
+                export GIT_AUTO_COMMIT_IN_PROGRESS=1
+                git add .
+                git commit -m "$commit_msg" --no-verify
+                echo " [Hook] Auto-committed: $commit_msg"
+            fi
+        fi
+    fi
+fi
+# ============================================
+
 # Update affected repos list
 if ! grep -q "^$repo$" "$cache_dir/affected-repos.txt" 2>/dev/null; then
     echo "$repo" >> "$cache_dir/affected-repos.txt"
