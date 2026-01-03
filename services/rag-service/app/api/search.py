@@ -1,5 +1,3 @@
-"""Search API endpoint"""
-
 from typing import List, Optional
 
 from fastapi import APIRouter, HTTPException, Query
