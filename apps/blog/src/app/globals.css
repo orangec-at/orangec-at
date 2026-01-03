@@ -1,5 +1,6 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-gov/dist/web/static/pretendard-gov.css");
 @import url("https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Architects+Daughter&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -600,6 +601,16 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Shelf Theme Base Styles */
+  .paper-texture {
+    background-color: #fdfcf5;
+    background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  .dark .paper-texture {
+    background-color: #1a1a1a;
+    background-image: radial-gradient(#333 1px, transparent 1px);
+  }
 }
 
 @layer utilities {
@@ -638,6 +649,326 @@
       display: none;
     }
     scrollbar-width: none;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 2px;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .particle {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    pointer-events: none;
+    transition: background 0.5s ease;
+  }
+
+  .dark .particle {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .break-inside-avoid {
+    break-inside: avoid;
+  }
+
+  .muji-gallery-bg {
+    --muji-grid-size: 96px;
+    --muji-grid-line: rgba(115, 100, 85, 0.2);
+    --muji-grid-base: #f8f4ed;
+    --muji-wood-base: #fbf7f0;
+    --muji-wood-elevated: #f1e8dc;
+    --muji-wood-line: rgba(115, 100, 85, 0.28);
+    --muji-wood-ink: #5a4b3d;
+    background-color: var(--muji-grid-base);
+    background-image: linear-gradient(
+        to right,
+        var(--muji-grid-line) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, var(--muji-grid-line) 1px, transparent 1px);
+    background-size: var(--muji-grid-size) var(--muji-grid-size);
+  }
+
+  .dark .muji-gallery-bg {
+    --muji-grid-base: #111111;
+    --muji-grid-line: rgba(255, 255, 255, 0.1);
+    --muji-wood-base: #151515;
+    --muji-wood-elevated: #1d1d1d;
+    --muji-wood-line: rgba(255, 255, 255, 0.12);
+    --muji-wood-ink: #e7e1d8;
+  }
+
+  .muji-shelf-frame {
+    background-color: var(--muji-wood-line);
+    padding: 6px;
+    border: 1px solid var(--muji-wood-line);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      0 10px 24px rgba(90, 75, 60, 0.12);
+  }
+
+  .dark .muji-shelf-frame {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 10px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  .muji-shelf-grid {
+    gap: 6px;
+  }
+
+  .muji-shelf-cell {
+    background-color: var(--muji-wood-base);
+    box-shadow: inset 0 0 0 1px rgba(115, 100, 85, 0.18);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .dark .muji-shelf-cell {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .muji-panel {
+    background-color: var(--muji-wood-base);
+    border: 1px solid var(--muji-wood-line);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  }
+
+  .dark .muji-panel {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .muji-label {
+    background-color: var(--muji-wood-elevated);
+    border: 1px solid var(--muji-wood-line);
+    color: var(--muji-wood-ink);
+  }
+
+  .muji-input {
+    background-color: var(--muji-wood-base);
+    border: 1px solid var(--muji-wood-line);
+    border-radius: 0;
+    color: var(--muji-wood-ink);
+  }
+
+  .muji-dock {
+    background-color: rgba(251, 247, 240, 0.92);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 24px 40px rgba(90, 75, 60, 0.18);
+  }
+
+  .dark .muji-dock {
+    background-color: rgba(18, 18, 18, 0.92);
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .muji-control-card {
+    background-color: var(--muji-wood-base);
+    border: 1px solid var(--muji-wood-line);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  }
+
+  .dark .muji-control-card {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .muji-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--muji-wood-line);
+    color: var(--muji-wood-ink);
+    font-size: 12px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .muji-radio::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    border: 1px solid var(--muji-wood-line);
+    background-color: transparent;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .muji-radio[data-active="true"] {
+    background-color: var(--muji-wood-elevated);
+    border-color: var(--muji-wood-ink);
+  }
+
+  .muji-radio[data-active="true"]::before {
+    background-color: var(--muji-wood-ink);
+    border-color: var(--muji-wood-ink);
+  }
+
+  .muji-pill-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--muji-wood-line);
+    background-color: var(--muji-wood-base);
+    color: var(--muji-wood-ink);
+    font-size: 12px;
+    font-weight: 600;
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .muji-pill-button[data-active="true"] {
+    background-color: var(--muji-wood-elevated);
+    border-color: var(--muji-wood-ink);
+  }
+
+  .muji-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid var(--muji-wood-line);
+    background-color: var(--muji-wood-base);
+    color: var(--muji-wood-ink);
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .muji-icon-button:hover {
+    background-color: var(--muji-wood-elevated);
+  }
+
+  /* MUJI pegboard styling for home */
+  .muji-pegboard {
+    position: relative;
+    background-color: var(--muji-wood-base);
+    border: 1px solid var(--muji-wood-line);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      0 18px 30px rgba(90, 75, 60, 0.16);
+    overflow: hidden;
+  }
+
+  .muji-pegboard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      circle at 8px 8px,
+      rgba(90, 75, 60, 0.2) 1px,
+      transparent 1px
+    );
+    background-size: 28px 28px;
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  .dark .muji-pegboard {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 18px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  .dark .muji-pegboard::before {
+    background-image: radial-gradient(
+      circle at 8px 8px,
+      rgba(231, 225, 216, 0.16) 1px,
+      transparent 1px
+    );
+  }
+
+  .muji-pegboard-grid {
+    position: relative;
+    display: grid;
+    gap: 14px;
+  }
+
+  .muji-tile {
+    background: linear-gradient(180deg, #ffffff, #f2f2f2);
+    border: 1px solid rgba(115, 100, 85, 0.18);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    color: #3f3a34;
+  }
+
+  .muji-tile.dark {
+    background: linear-gradient(180deg, #1c1c1c, #111111);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    color: #e7e1d8;
+  }
+
+  .muji-tile-rounded {
+    border-radius: 18px;
+  }
+
+  .muji-tile-pill {
+    border-radius: 999px;
+  }
+
+  .muji-tile-circle {
+    border-radius: 999px;
+    aspect-ratio: 1;
+  }
+
+  .muji-tile-small {
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .muji-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(180deg, #f7f2e9, #eee1cf);
+    border: 1px solid rgba(115, 100, 85, 0.24);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      0 4px 10px rgba(90, 75, 60, 0.12);
+    border-radius: 999px;
+    padding: 6px 10px 6px 10px;
+    color: #3f3a34;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .muji-tag__cap {
+    width: 12px;
+    height: 16px;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #d6c9b7, #b9a88f);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+
+  .muji-tag__body {
+    padding-right: 4px;
+  }
+
+  .muji-tile-label {
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muji-wood-ink);
   }
 
   [data-side="top"] .radix-arrow {

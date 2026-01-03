@@ -1,13 +1,18 @@
-# Grayscale Portfolio Design System
+# MUJI-Inspired Design System
 
 ## Overview
 
-This project follows a **minimal grayscale design system** emphasizing readability, professionalism, and consistency. All UI components should adhere to this color palette and token system.
+This project follows a **MUJI-inspired minimal design aesthetic** emphasizing clean organization, neutral tones, systematic presentation, and generous whitespace. All UI components should adhere to this design philosophy and token system.
+
+**For comprehensive design guidelines, see**: [MUJI-AESTHETIC-GUIDE.md](./MUJI-AESTHETIC-GUIDE.md)
 
 ## Design Philosophy
 
-- **Grayscale First**: Black, white, and gray shades only
-- **Semantic Naming**: Use design tokens, not hardcoded values
+- **Minimalism**: Clean, purposeful, organized like MUJI retail displays
+- **Neutral Palette**: Grayscale + wood tones (warm) + steel tones (cool)
+- **Systematic Layout**: Grid-based organization with 8px base unit
+- **Generous Whitespace**: Let content breathe
+- **Semantic Naming**: Use design tokens from `/lib/design-tokens.ts`
 - **Component Consistency**: shadcn/ui components as the foundation
 - **Accessibility**: WCAG AA compliant color contrasts
 
@@ -15,6 +20,7 @@ This project follows a **minimal grayscale design system** emphasizing readabili
 
 ### Approved Colors
 
+#### Primary Grayscale
 ```css
 /* Text Colors */
 text-gray-900  /* Primary text */
@@ -34,10 +40,56 @@ border-gray-300  /* Default borders */
 border-gray-400  /* Emphasized borders */
 ```
 
+#### Wood Tones (Warm Accents)
+```css
+/* For warm, natural accents - use sparingly */
+bg-wood-50      /* Very light warm background */
+bg-wood-100     /* Light wood accent background */
+text-wood-700   /* Warm accent text */
+border-wood-200 /* Warm accent borders */
+```
+
+#### Steel Tones (Cool Accents)
+```css
+/* For metallic, cool accents - use sparingly */
+bg-steel-100    /* Light metallic background */
+text-steel-700  /* Cool metallic text */
+border-steel-300 /* Metallic borders */
+```
+
 ### Forbidden Colors
 
-❌ **Never use**: `blue-*`, `red-*`, `green-*`, `purple-*`, etc.  
-✅ **Always use**: `gray-*`, `white`, CSS custom properties from shadcn/ui
+❌ **Never use**: `blue-*`, `red-*`, `green-*`, `purple-*`, `yellow-*`, `orange-*`
+✅ **Always use**: `gray-*`, `wood-*` (sparingly), `steel-*` (sparingly), `white`
+⚠️ **Wood/Steel usage**: Only for subtle accents, not as primary colors
+
+## Grid System (MUJI-Inspired)
+
+All layouts should use the systematic grid system for consistent organization:
+
+```typescript
+import { grid } from '@/lib/design-tokens';
+
+// Container widths
+<section className={`${grid.container.wide} mx-auto ${grid.padding.page}`}>
+  {/* Content */}
+</section>
+
+// Grid layouts
+<div className={grid.layout.twoColumn}>      {/* Projects, large cards */}
+<div className={grid.layout.threeColumn}>    {/* Blog posts */}
+<div className={grid.layout.fourColumn}>     {/* Categories */}
+```
+
+### Spacing Scale (8px base unit)
+```
+compact:    8px   - Tight internal spacing
+tight:      16px  - Normal element spacing
+element:    24px  - Standard spacing between elements
+card:       32px  - Card internal padding
+subsection: 48px  - Between subsections
+section:    64px  - Between major sections
+```
 
 ## Typography Scale
 
@@ -94,10 +146,48 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 ### Badges/Tags
 
 ```tsx
-// Use grayscale variants only
-<Badge className="bg-gray-100 text-gray-800">Frontend</Badge>
-<Badge className="bg-gray-200 text-gray-800">Backend</Badge>
-<Badge className="bg-gray-800 text-gray-100">Infra</Badge>
+import { components } from '@/lib/design-tokens';
+
+// Standard gray badge (most common)
+<Badge className={components.badge.default}>Frontend</Badge>
+
+// Outlined badge (subtle emphasis)
+<Badge className={components.badge.outline}>Backend</Badge>
+
+// Minimal badge (flat, subtle)
+<Badge className={components.badge.minimal}>Tag</Badge>
+
+// Wood-toned badge (warm accent - use sparingly)
+<Badge className={components.badge.wood}>Featured</Badge>
+
+// Steel-toned badge (cool accent - use sparingly)
+<Badge className={components.badge.steel}>System</Badge>
+```
+
+### Cards (MUJI-Style)
+
+```tsx
+import { components } from '@/lib/design-tokens';
+
+// Default card (most common)
+<Card className={components.card.default}>
+  <CardContent>{/* Content */}</CardContent>
+</Card>
+
+// Interactive card (with hover state)
+<Card className={components.card.interactive}>
+  <CardContent>{/* Content */}</CardContent>
+</Card>
+
+// Flat card (minimal, like items on shelves)
+<Card className={components.card.flat}>
+  <CardContent>{/* Content */}</CardContent>
+</Card>
+
+// Wood-toned card (warm accent section)
+<Card className={components.card.wood}>
+  <CardContent>{/* Content */}</CardContent>
+</Card>
 ```
 
 ## Implementation Rules
@@ -105,16 +195,24 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 ### ✅ Do
 
 - Use `designTokens` from `/lib/design-tokens.ts`
+- Follow MUJI-inspired systematic layouts
+- Use the grid system for all page layouts
+- Maintain 8px base unit spacing
+- Use wood/steel tones sparingly for subtle accents
 - Follow shadcn/ui component patterns
-- Use semantic CSS custom properties (`var(--primary)`)
 - Test color contrast for accessibility
+- Generous whitespace between sections
+- Clear visual hierarchy
 
 ### ❌ Don't
 
-- Use hardcoded colors (`text-blue-600`)
-- Mix color schemes (no blues, greens, etc.)
+- Use hardcoded colors (use design tokens)
+- Mix bright color schemes (no blues, greens, reds, etc.)
 - Create custom color utilities outside the system
-- Use non-semantic class names
+- Inconsistent spacing (stick to 8px units)
+- Overuse wood/steel tones (they're accents only)
+- Excessive shadows or decorative elements
+- Skip the grid system for layouts
 
 ## Enforcement
 
