@@ -20,7 +20,9 @@
     "vault:knowledge": "./scripts/vault/new-knowledge.sh",
     "vault:search": "./scripts/vault/search.sh",
     "todo": "./scripts/vault/new-todo.sh",
-    "morning": "./scripts/vault/morning-routine.sh"
+    "tweet": "./scripts/vault/new-tweet.sh",
+    "morning": "./scripts/vault/morning-routine.sh",
+    "status": "./scripts/vault/status.sh"
   },
   "devDependencies": {
     "@swc/core": "^1.15.3",

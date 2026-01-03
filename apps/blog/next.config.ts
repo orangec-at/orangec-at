@@ -10,6 +10,7 @@ const withMDXConfig = withMDX({
 });
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   pageExtensions: ["ts", "tsx", "md", "mdx"],
   transpilePackages: ["@/"],
   experimental: {

@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: orangec-blog
+    env: docker
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    plan: free
+    region: singapore # Choose nearest region
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: orangec-db # If using Render Postgres, otherwise provide Supabase URL
+      - key: DIRECT_URL
+        sync: false
+      - key: NEXTAUTH_SECRET
+        generateValue: true
+      - key: NEXTAUTH_URL
+        value: https://your-app-name.onrender.com
+      - key: NEXT_PUBLIC_BASE_URL
+        value: https://your-app-name.onrender.com
+      - key: AUTH_GOOGLE_ID
+        sync: false
+      - key: AUTH_GOOGLE_SECRET
+        sync: false
+      - key: RAG_SERVICE_URL
+        value: https://your-rag-service.up.railway.app/api/chat
+      - key: GEMINI_API_KEY
+        sync: false
