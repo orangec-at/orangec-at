@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { ResumeSection } from "../resume-section";
-import { ResumeTable, Tr, TdLabel, TdValue } from "../resume-table";
+import { ResumeTable, TdLabel, TdValue, Tr } from "../resume-table";
 import { PersonalInfo } from "../types";
 
 interface PersonalInfoSectionProps {
@@ -17,43 +17,62 @@ export function PersonalInfoSection({ data }: PersonalInfoSectionProps) {
       <ResumeTable>
         <tbody>
           <Tr>
-            <TdLabel rowSpan={5} className="align-middle w-28">
-              {t("photo")}
-            </TdLabel>
-            <TdLabel rowSpan={2} className="w-24">
-              {t("name")}
-            </TdLabel>
-            <TdLabel className="w-20">{t("korean")}</TdLabel>
-            <TdValue isLast>{data.nameKorean}</TdValue>
-          </Tr>
-          <Tr>
-            <TdLabel>{t("english")}</TdLabel>
-            <TdValue isLast>{data.nameEnglish}</TdValue>
-          </Tr>
-          <Tr>
-            <TdLabel>{t("birthDate")}</TdLabel>
-            <TdValue colSpan={2} isLast>
-              {data.birthDate}
+            <TdLabel className="w-24">{t("name")}</TdLabel>
+            <TdValue isLast>
+              {data.nameKorean} / {data.nameEnglish}
             </TdValue>
           </Tr>
+
           <Tr>
             <TdLabel>{t("email")}</TdLabel>
             <TdValue colSpan={2} isLast>
               {data.email}
             </TdValue>
           </Tr>
-          <Tr>
-            <TdLabel>{t("phone")}</TdLabel>
-            <TdValue>{data.phone}</TdValue>
-            <TdLabel>{t("sns")}</TdLabel>
-            <TdValue isLast>{data.sns}</TdValue>
-          </Tr>
-          <Tr isLast>
-            <TdLabel colSpan={2}>{t("address")}</TdLabel>
-            <TdValue colSpan={3} isLast>
-              {data.address}
-            </TdValue>
-          </Tr>
+          {(data.sns || data.twitter || data.linkedin || data.blog) && (
+            <Tr>
+              <TdLabel className="align-top">{t("sns")}</TdLabel>
+              <TdValue isLast>
+                <div className="flex flex-wrap gap-2">
+                  {data.sns && (
+                    <span className="muji-tile muji-tile-pill muji-tile-small">
+                      {data.sns}
+                    </span>
+                  )}
+                  {data.twitter && (
+                    <a
+                      href={data.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="muji-tile muji-tile-pill muji-tile-small text-blue-700"
+                    >
+                      {t("twitter")}
+                    </a>
+                  )}
+                  {data.linkedin && (
+                    <a
+                      href={data.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="muji-tile muji-tile-pill muji-tile-small text-blue-700"
+                    >
+                      {t("linkedin")}
+                    </a>
+                  )}
+                  {data.blog && (
+                    <a
+                      href={data.blog}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="muji-tile muji-tile-pill muji-tile-small text-blue-700"
+                    >
+                      {t("blog")}
+                    </a>
+                  )}
+                </div>
+              </TdValue>
+            </Tr>
+          )}
         </tbody>
       </ResumeTable>
     </ResumeSection>

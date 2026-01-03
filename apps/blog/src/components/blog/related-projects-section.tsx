@@ -6,6 +6,7 @@ import { Title, Body, Detail } from "@/components/ui/typography";
 import { Project } from "@/data/projects";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
+import { withLocalePath } from "@/lib/locale-path";
 
 interface RelatedProjectsSectionProps {
   projects: Project[];
@@ -23,7 +24,7 @@ export function RelatedProjectsSection({
   }
 
   return (
-    <div className="mt-12 sm:mt-16 p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+    <div className="mt-12 sm:mt-16 p-4 sm:p-6 lg:p-8 muji-panel">
       <Title
         variant="xl-700"
         as="h3"
@@ -41,7 +42,7 @@ export function RelatedProjectsSection({
         {projects.map((project) => (
           <div
             key={project.id}
-            className="p-4 sm:p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
+            className="p-4 sm:p-6 muji-shelf-cell"
           >
             <Title
               variant="s-700"
@@ -61,14 +62,14 @@ export function RelatedProjectsSection({
                 <Detail
                   key={tech}
                   variant="s-400"
-                  className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded"
+                  className="muji-label px-2 py-1 text-[11px] tracking-wide"
                 >
                   {tech}
                 </Detail>
               ))}
             </div>
             <Button asChild variant="outline" size="sm" className="w-full">
-              <Link href={`/${locale}/projects/${project.id}`}>
+              <Link href={withLocalePath(locale, `/projects/${project.id}`)}>
                 {tp("viewDetails")}
               </Link>
             </Button>

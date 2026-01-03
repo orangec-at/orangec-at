@@ -18,6 +18,7 @@ import {
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import Link from "next/link";
 import { useRef } from "react";
+import { withLocalePath } from "@/lib/locale-path";
 
 interface DocumentDetailClientProps {
   mdxSource: MDXRemoteSerializeResult;
@@ -47,13 +48,13 @@ export default function DocumentDetailClient({
 
   return (
     <>
-      <div className="min-h-screen bg-background print:bg-white">
+      <div className="min-h-screen bg-transparent print:bg-white">
         {/* Toolbar - 프린트 시 숨김 */}
         <div className="print:hidden sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 max-w-5xl">
             <div className="flex items-center justify-between">
               <Button asChild variant="ghost" size="sm">
-                <Link href={`/${locale}/documents`}>
+                <Link href={withLocalePath(locale, "/documents")}>
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   {t.back}
                 </Link>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
+import { withLocalePath } from "@/lib/locale-path";
 import { Title, Body, Detail } from "../ui/typography";
 
 interface BlogCardProps {
@@ -33,9 +34,9 @@ export default function BlogCard({
   const locale = useLocale();
 
   return (
-    <Link href={`/${locale}/blog/${slug}`}>
-      <article className="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-        <div className="relative aspect-[16/9] overflow-hidden">
+    <Link href={withLocalePath(locale, `/blog/${slug}`)} className="block h-full">
+      <article className="group relative flex h-full flex-col overflow-hidden bg-transparent">
+        <div className="relative aspect-[4/3] overflow-hidden bg-wood-100 dark:bg-wood-900">
           {thumbnail ? (
             <Image
               src={thumbnail}
@@ -44,10 +45,10 @@ export default function BlogCard({
               className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
-            <div className="h-full w-full bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center group-hover:from-blue-100 group-hover:via-purple-100 group-hover:to-pink-100 transition-all duration-300">
+            <div className="h-full w-full bg-wood-100 dark:bg-wood-900 flex items-center justify-center">
               <div className="text-center">
-                <div className="text-4xl mb-2 opacity-60">📝</div>
-                <div className="text-sm font-medium text-gray-500">
+                <div className="text-4xl mb-2 opacity-40 text-wood-600 dark:text-wood-400">📝</div>
+                <div className="text-sm font-medium text-wood-700 dark:text-wood-300">
                   {category || t("defaultCategory")}
                 </div>
               </div>
@@ -56,12 +57,12 @@ export default function BlogCard({
 
           <div className="absolute left-3 top-3 flex gap-2">
             {category && (
-              <span className="rounded-full bg-black/70 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
+              <span className="muji-label px-2.5 py-1 text-[11px] font-medium tracking-wide backdrop-blur-sm">
                 {category}
               </span>
             )}
             {readTime && (
-              <span className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-gray-700 backdrop-blur-sm">
+              <span className="muji-label px-2.5 py-1 text-[11px] font-medium tracking-wide backdrop-blur-sm">
                 {readTime}
               </span>
             )}
@@ -69,14 +70,14 @@ export default function BlogCard({
 
           {featured && (
             <div className="absolute right-3 top-3">
-              <span className="rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-sm">
-                ⭐ {t("featured")}
+              <span className="muji-label px-2.5 py-1 text-[11px] font-semibold tracking-wide backdrop-blur-sm">
+                ★ {t("featured")}
               </span>
             </div>
           )}
         </div>
 
-        <div className="p-5">
+        <div className="p-5 flex flex-col flex-1">
           <Title
             variant="m-700"
             as="h3"
@@ -96,30 +97,30 @@ export default function BlogCard({
               {tags.slice(0, 3).map((tag, index) => (
                 <span
                   key={index}
-                  className="inline-flex rounded-md bg-gray-100 dark:bg-gray-700 px-2 py-1 text-xs text-gray-600 dark:text-gray-300"
+                  className="muji-label inline-flex px-2 py-1 text-[11px] tracking-wide"
                 >
                   #{tag}
                 </span>
               ))}
               {tags.length > 3 && (
-                <span className="inline-flex rounded-md bg-gray-100 dark:bg-gray-700 px-2 py-1 text-xs text-gray-500 dark:text-gray-400">
+                <span className="muji-label inline-flex px-2 py-1 text-[11px] tracking-wide">
                   +{tags.length - 3}
                 </span>
               )}
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700">
+          <div className="mt-auto flex items-center justify-between pt-3 border-t border-gray-200/70 dark:border-gray-700">
             <div className="flex items-center gap-3">
               <time>
-                <Detail variant="s-400" className="text-gray-500 dark:text-gray-400">
+                <Detail variant="s-400" className="text-gray-600 dark:text-gray-400">
                   {date}
                 </Detail>
               </time>
             </div>
 
             <button
-              className="rounded-full p-1.5 text-gray-400 dark:text-gray-500 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-300"
+              className="p-1.5 text-gray-500 dark:text-gray-500 transition-colors hover:bg-wood-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300"
               onClick={(e) => {
                 e.preventDefault();
               }}

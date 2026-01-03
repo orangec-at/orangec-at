@@ -1,17 +1,19 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import HomeHero from "@/components/home/home-hero";
+import TechStack from "@/components/home/tech-stack";
+import FeaturedProjects from "@/components/home/featured-projects";
 import {
-  PersonalInfoSection,
-  MilitarySection,
+  CertificateSection,
   EducationSection,
   ExperienceSection,
-  SkillsSection,
   IntroductionSection,
-  CertificateSection,
+  MilitarySection,
+  PersonalInfoSection,
   ProjectHighlightsSection,
   ResumeData,
 } from "@/components/resume";
+import { useTranslations } from "next-intl";
 
 interface TranslatedEducation {
   date: string;
@@ -77,7 +79,11 @@ export default function ResumeClient() {
       email: t("data.emailAddress"),
       phone: t("data.phoneNumber"),
       sns: t("data.snsLink"),
+      twitter: t("data.twitter"),
+      linkedin: t("data.linkedin"),
+      blog: t("data.blog"),
       address: t("data.address"),
+      photoUrl: "/images/avatar.png",
     },
     military: {
       branch: t("data.militaryBranch"),
@@ -129,40 +135,51 @@ export default function ResumeClient() {
 
   return (
     <main className="relative px-4 py-8 md:px-16 md:py-12">
-      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-900 p-8 md:p-12 rounded-lg shadow-lg">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-12 tracking-widest text-gray-900 dark:text-gray-100">
-          {t("title")}
-        </h1>
+      <div className="max-w-5xl mx-auto space-y-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="muji-pegboard rounded-2xl p-5">
+            <HomeHero />
+          </div>
+          <div className="muji-pegboard rounded-2xl p-5">
+            <TechStack />
+          </div>
+        </div>
 
-        {/* 자기소개 */}
-        {resumeData.introduction && (
-          <IntroductionSection content={resumeData.introduction} />
-        )}
+        <FeaturedProjects />
+      </div>
+      <div className="muji-pegboard rounded-2xl p-5 max-w-4xl mx-auto ">
+        <div className="bg-white dark:bg-gray-900 p-8 md:p-12 rounded-lg shadow-lg">
+          <h1 className="text-3xl md:text-4xl font-bold text-center mb-12 tracking-widest text-gray-900 dark:text-gray-100">
+            {t("title")}
+          </h1>
 
-        {/* 인적사항 */}
-        <PersonalInfoSection data={resumeData.personalInfo} />
+          {/* 자기소개 */}
+          {resumeData.introduction && (
+            <IntroductionSection content={resumeData.introduction} />
+          )}
 
-        {/* 병역사항 - 데이터가 있는 경우에만 표시 */}
-        {hasMilitaryData && <MilitarySection data={resumeData.military} />}
+          {/* 인적사항 */}
+          <PersonalInfoSection data={resumeData.personalInfo} />
 
-        {/* 학력사항 */}
-        <EducationSection data={resumeData.education} />
+          {/* 병역사항 - 데이터가 있는 경우에만 표시 */}
+          {hasMilitaryData && <MilitarySection data={resumeData.military} />}
 
-        {/* 경력사항 */}
-        <ExperienceSection data={resumeData.experience} />
+          {/* 학력사항 */}
+          <EducationSection data={resumeData.education} />
 
-        {/* 자격사항 */}
-        {resumeData.certificates && resumeData.certificates.length > 0 && (
-          <CertificateSection data={resumeData.certificates} />
-        )}
+          {/* 경력사항 */}
+          <ExperienceSection data={resumeData.experience} />
 
-        {/* 개인능력 */}
-        <SkillsSection data={resumeData.skills} />
+          {/* 자격사항 */}
+          {resumeData.certificates && resumeData.certificates.length > 0 && (
+            <CertificateSection data={resumeData.certificates} />
+          )}
 
-        {/* 주요 프로젝트 */}
-        {resumeData.projects && resumeData.projects.length > 0 && (
-          <ProjectHighlightsSection data={resumeData.projects} />
-        )}
+          {/* 주요 프로젝트 */}
+          {resumeData.projects && resumeData.projects.length > 0 && (
+            <ProjectHighlightsSection data={resumeData.projects} />
+          )}
+        </div>
       </div>
     </main>
   );

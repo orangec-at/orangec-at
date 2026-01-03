@@ -5,6 +5,9 @@ import { useTheme } from "@/contexts/theme-context";
 import { X } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useMemo, useCallback } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { switchLocalePath } from "@/lib/locale-path";
+import { useBackgroundMusic } from "@/components/layout/background-music";
 import {
   defaultControlCenterConfig,
   inlineControlCenterConfig,
@@ -29,13 +32,25 @@ export function ControlCenter({
 }: ControlCenterProps) {
   const { theme, setTheme } = useTheme();
   const currentLocale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const switchLanguage = useCallback((newLocale: string) => {
-    window.location.href = window.location.href.replace(
-      /\/(ko|en)/,
-      `/${newLocale}`
-    );
-  }, []);
+  const { isPlaying, currentTrack, play, pause, next, previous } =
+    useBackgroundMusic();
+
+  const switchLanguage = useCallback(
+    (newLocale: string) => {
+      const nextPathname = switchLocalePath(pathname, newLocale);
+      const query = searchParams.toString();
+      const hash = typeof window !== "undefined" ? window.location.hash : "";
+      const nextUrl = `${nextPathname}${query ? `?${query}` : ""}${hash}`;
+
+      router.push(nextUrl);
+      router.refresh();
+    },
+    [pathname, router, searchParams]
+  );
 
   // Create config with injected functions
   const config = useMemo(() => {
@@ -59,10 +74,31 @@ export function ControlCenter({
           onLanguageChange: switchLanguage,
         };
       }
+      if (item.type === "music-player") {
+        return {
+          ...item,
+          isPlaying,
+          currentTrack,
+          onPlay: play,
+          onPause: pause,
+          onNext: next,
+          onPrevious: previous,
+        };
+      }
       return item;
     });
     return configCopy;
-  }, [theme, setTheme, currentLocale, switchLanguage, variant]);
+  }, [
+    theme,
+    setTheme,
+    currentLocale,
+    switchLanguage,
+    variant,
+    isPlaying,
+    currentTrack,
+    play,
+    pause,
+  ]);
 
   // Sort items by order and filter enabled ones
   const sortedItems = useMemo(

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
 import { LanguageItem } from "../types";
 import { useTranslations } from "next-intl";
@@ -31,7 +30,7 @@ export function LanguageItemComponent({
   };
 
   return (
-    <div className="col-span-4 bg-card border rounded-lg p-4 hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 ease-out">
+    <div className="col-span-4 muji-control-card rounded-xl p-4">
       <div className="space-y-3">
         {/* Title Row */}
         <div className="flex items-center gap-3">
@@ -47,29 +46,31 @@ export function LanguageItemComponent({
         </div>
 
         {/* Language Button Row */}
-        <div className="flex gap-2 justify-center">
-          {item.availableLanguages.map((language) => (
-            <Button
-              key={language.code}
-              onClick={() => {
-                if (
-                  language.code !== item.currentLocale &&
-                  item.onLanguageChange
-                ) {
-                  item.onLanguageChange(language.code);
-                  onAction?.("language_changed", { locale: language.code });
-                }
-              }}
-              variant={
-                item.currentLocale === language.code ? "default" : "ghost"
-              }
-              size="sm"
-              className="h-9 px-3 hover:scale-105 active:scale-95 transition-transform duration-150 flex items-center gap-2"
-            >
-              <span className="text-sm">{language.flag}</span>
-              <span className="text-xs">{language.name}</span>
-            </Button>
-          ))}
+        <div className="flex flex-wrap gap-2">
+          {item.availableLanguages.map((language) => {
+            const isActive = item.currentLocale === language.code;
+            return (
+              <button
+                key={language.code}
+                type="button"
+                onClick={() => {
+                  if (
+                    language.code !== item.currentLocale &&
+                    item.onLanguageChange
+                  ) {
+                    item.onLanguageChange(language.code);
+                    onAction?.("language_changed", { locale: language.code });
+                  }
+                }}
+                className="muji-radio"
+                data-active={isActive}
+                aria-pressed={isActive}
+              >
+                <span className="text-sm">{language.flag}</span>
+                <span>{language.name}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

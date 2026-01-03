@@ -14,6 +14,7 @@ import {
 import { FileText, FolderOpen, Filter } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { withLocalePath } from "@/lib/locale-path";
 
 interface DocumentsClientProps {
   documents: DocumentMeta[];
@@ -58,7 +59,7 @@ export default function DocumentsClient({
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-transparent">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-6xl">
         {/* Header */}
         <div className="mb-8">
@@ -213,7 +214,7 @@ function DocumentCard({
           </div>
         </div>
         <Button asChild variant="outline" size="sm">
-          <Link href={`/${locale}/documents/${typeFolder}/${doc.slug}`}>
+          <Link href={withLocalePath(locale, `/documents/${typeFolder}/${doc.slug}`)}>
             {locale === "ko" ? "보기" : "View"}
           </Link>
         </Button>

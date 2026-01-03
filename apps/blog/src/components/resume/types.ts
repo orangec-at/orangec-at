@@ -5,6 +5,9 @@ export interface PersonalInfo {
   email: string;
   phone: string;
   sns: string;
+  twitter?: string;
+  linkedin?: string;
+  blog?: string;
   address: string;
   photoUrl?: string;
 }

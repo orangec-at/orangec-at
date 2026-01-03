@@ -1,54 +1,54 @@
 "use client";
 
+import { FileText, Github, Linkedin, Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Title, Detail } from "../ui/typography";
+import { Detail } from "../ui/typography";
+import { colors, spacing } from "@/lib/design-tokens";
 
 export default function ContactCTA() {
-  const t = useTranslations('home.contact');
+  const t = useTranslations("home.contact");
   return (
-    <section className="max-w-2xl mx-auto text-center space-y-8">
-      <div className="border-t pt-12">
-        <Title variant="xl-700" as="h3" className="text-gray-900 dark:text-white mb-6">
-          {t('title')}
-        </Title>
-
+    <section className={spacing.element}>
+      <div className="muji-pegboard rounded-2xl p-6 md:p-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <a
-            href="mailto:your-email@example.com"
-            className="flex flex-col items-center p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-          >
-            <span className="text-xl mb-2">📧</span>
-            <Detail variant="s-700">Email</Detail>
-          </a>
-
-          <a
-            href="https://github.com/yourusername"
-            className="flex flex-col items-center p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="text-xl mb-2">🐙</span>
-            <Detail variant="s-700">GitHub</Detail>
-          </a>
-
-          <a
-            href="https://linkedin.com/in/yourprofile"
-            className="flex flex-col items-center p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="text-xl mb-2">💼</span>
-            <Detail variant="s-700">LinkedIn</Detail>
-          </a>
-
-          <a
-            href="/resume.pdf"
-            className="flex flex-col items-center p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-            target="_blank"
-          >
-            <span className="text-xl mb-2">📄</span>
-            <Detail variant="s-700">Resume</Detail>
-          </a>
+          {[
+            {
+              href: "mailto:your-email@example.com",
+              icon: <Mail className="h-5 w-5" aria-hidden />,
+              label: "Email",
+            },
+            {
+              href: "https://github.com/yourusername",
+              icon: <Github className="h-5 w-5" aria-hidden />,
+              label: "GitHub",
+              target: "_blank",
+            },
+            {
+              href: "https://linkedin.com/in/yourprofile",
+              icon: <Linkedin className="h-5 w-5" aria-hidden />,
+              label: "LinkedIn",
+              target: "_blank",
+            },
+            {
+              href: "/resume.pdf",
+              icon: <FileText className="h-5 w-5" aria-hidden />,
+              label: "Resume",
+              target: "_blank",
+            },
+          ].map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              target={item.target}
+              rel={item.target ? "noopener noreferrer" : undefined}
+              className="muji-tile muji-tile-rounded flex flex-col items-center gap-2 p-4 text-center hover:translate-y-[-2px] transition-transform"
+            >
+              <span className={`text-xl ${colors.text.primary}`}>
+                {item.icon}
+              </span>
+              <Detail variant="s-700">{item.label}</Detail>
+            </a>
+          ))}
         </div>
       </div>
     </section>
