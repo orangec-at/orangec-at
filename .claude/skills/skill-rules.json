@@ -1,6 +1,48 @@
 {
   "skills": [
     {
+      "skillName": "task-breakdown",
+      "description": "Intelligent decomposition of complex tasks into trackable atomic actions with hierarchical organization",
+      "priority": "critical",
+      "type": "auto",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "implement",
+          "build",
+          "create",
+          "add feature",
+          "refactor",
+          "migrate",
+          "fix",
+          "optimize",
+          "integrate",
+          "설계",
+          "구현",
+          "개발",
+          "리팩토링",
+          "마이그레이션"
+        ],
+        "intentPatterns": [
+          "(implement|build|create|add).*?(system|feature|service|architecture)",
+          "(refactor|migrate|upgrade).*?(to|from)",
+          "(integrate|connect).*?(with|api|service)",
+          "(optimize|improve|enhance).*?(performance|quality)",
+          "(fix|resolve|debug).*?(issue|bug|problem)",
+          "(design|plan|architect).*?(system|service|feature)",
+          "복잡한.*?(작업|태스크|구현)",
+          "큰.*?(작업|프로젝트|기능)"
+        ],
+        "complexityIndicators": {
+          "multiStep": "(first|then|after|next|finally)",
+          "multiFile": "(across|throughout|multiple|all|every)",
+          "multiDomain": "(frontend.*backend|ui.*api|client.*server)",
+          "longTerm": "(phase|stage|milestone|sprint|iteration)",
+          "uncertainty": "(not sure|unclear|figure out|explore|investigate)"
+        }
+      }
+    },
+    {
       "skillName": "reference-library",
       "description": "Vault reference system for loading career history, JD analysis, and knowledge base",
       "priority": "critical",
@@ -240,6 +282,352 @@
           "vercel.json",
           ".vercel/**/*",
           "apps/blog/next.config.*"
+        ]
+      }
+    },
+    {
+      "skillName": "vscode-extension-api",
+      "description": "VS Code Extension API development with mandatory official sample verification",
+      "priority": "critical",
+      "type": "auto",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "vscode extension",
+          "vs code extension",
+          "extension development",
+          "webview",
+          "webviewview",
+          "command",
+          "tree view",
+          "language server",
+          "extension api",
+          "vscode api"
+        ],
+        "intentPatterns": [
+          "(create|build|develop|implement).*?(vscode|vs.*?code).*?(extension)",
+          "(add|implement).*?(command|view|webview|panel|provider)",
+          "(fix|debug).*?(extension|provider|webview)",
+          "extension.*?(not.*?work|fail|error|issue)",
+          "(webview|command|view).*?(provider|registration)"
+        ],
+        "errorIndicators": [
+          "no.*?registered.*?data.*?provider",
+          "보기.*?데이터.*?제공.*?공급자.*?없",
+          "extension.*?not.*?activat",
+          "resolveWebviewView.*?not.*?call",
+          "provider.*?not.*?register"
+        ],
+        "filePaths": [
+          "**/package.json",
+          "**/extension.ts",
+          "**/extension.js",
+          "**/.vscode/launch.json",
+          "**/src/*Provider.ts"
+        ],
+        "fileContentPatterns": [
+          "vscode\\.window\\.registerWebviewViewProvider",
+          "vscode\\.commands\\.registerCommand",
+          "implements.*?WebviewViewProvider",
+          "implements.*?TreeDataProvider",
+          "\"contributes\".*?\"views\"",
+          "\"contributes\".*?\"commands\""
+        ]
+      }
+    },
+    {
+      "skillName": "social-media-writer",
+      "description": "Repurpose blog content for Twitter, Instagram, Facebook with platform-specific optimization and engagement strategies",
+      "priority": "high",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "twitter",
+          "트위터",
+          "instagram",
+          "인스타그램",
+          "facebook",
+          "페이스북",
+          "linkedin",
+          "링크드인",
+          "social media",
+          "소셜미디어",
+          "thread",
+          "쓰레드",
+          "post",
+          "게시물",
+          "share",
+          "공유"
+        ],
+        "intentPatterns": [
+          "(write|create|make|작성).*?(twitter|트위터).*?(thread|post|쓰레드)",
+          "(repurpose|convert|transform|변환).*?(blog|article|content).*?(social|twitter|instagram|facebook)",
+          "(share|post|publish|공유).*?(on|to).*?(twitter|instagram|facebook|linkedin)",
+          "(create|make|작성).*?(instagram|인스타그램).*?(carousel|post|reel)",
+          "(optimize|improve|개선).*?(social.*?media|engagement|reach)",
+          "social.*?media.*?(strategy|plan|content)"
+        ],
+        "filePaths": [
+          "apps/blog/src/posts/**/*.mdx",
+          "apps/blog/src/data/projects.ts",
+          "vault/business/twitter-threads.md"
+        ]
+      }
+    },
+    {
+      "skillName": "seo-optimizer",
+      "description": "Analyze content for SEO improvements, keyword optimization, meta tags, and search ranking strategies",
+      "priority": "medium",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "seo",
+          "검색최적화",
+          "keyword",
+          "키워드",
+          "search ranking",
+          "검색순위",
+          "google",
+          "구글",
+          "meta tag",
+          "메타태그",
+          "organic traffic",
+          "자연유입"
+        ],
+        "intentPatterns": [
+          "(optimize|improve|개선).*?(seo|search|검색)",
+          "(analyze|check|review|분석).*?(seo|keyword|ranking)",
+          "(increase|boost|improve|향상).*?(traffic|ranking|visibility|유입)",
+          "(keyword|키워드).*?(research|optimization|analysis|분석)",
+          "(meta|메타).*?(tag|description|title)",
+          "google.*?(ranking|search|console)"
+        ],
+        "filePaths": [
+          "apps/blog/src/posts/**/*.mdx",
+          "apps/blog/src/app/**/page.tsx",
+          "apps/blog/src/app/**/metadata.ts"
+        ]
+      }
+    },
+    {
+      "skillName": "content-strategist",
+      "description": "Create content calendars, identify trending topics, develop topic clusters for blog content strategy",
+      "priority": "medium",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "content strategy",
+          "콘텐츠전략",
+          "content calendar",
+          "콘텐츠캘린더",
+          "content plan",
+          "editorial calendar",
+          "topic cluster",
+          "토픽클러스터",
+          "trending",
+          "트렌드",
+          "blog plan",
+          "블로그계획"
+        ],
+        "intentPatterns": [
+          "(create|make|plan|작성).*?(content|콘텐츠).*?(strategy|calendar|plan|전략|캘린더)",
+          "(identify|find|discover|찾기).*?(trending|popular|viral).*?(topic|content)",
+          "(develop|build|create|개발).*?(topic.*?cluster|content.*?hub)",
+          "(plan|schedule|organize|계획).*?(blog.*?post|article|content)",
+          "what.*?(should|to).*?(write|blog|post).*?about",
+          "(content|블로그).*?(idea|아이디어|suggestion)"
+        ],
+        "filePaths": [
+          "apps/blog/src/posts/**/*.mdx",
+          "apps/blog/src/data/projects.ts",
+          "vault/knowledge/business/*.md"
+        ]
+      }
+    },
+    {
+      "skillName": "n8n-automation",
+      "description": "n8n workflow automation design and implementation guide with common patterns and best practices",
+      "priority": "medium",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "n8n",
+          "automation",
+          "자동화",
+          "workflow",
+          "워크플로우",
+          "automate",
+          "integrate",
+          "연동",
+          "trigger",
+          "트리거",
+          "webhook"
+        ],
+        "intentPatterns": [
+          "(create|build|make|설계).*?(n8n|automation|자동화).*?(workflow|워크플로우)",
+          "(automate|자동화).*?(task|process|작업|프로세스)",
+          "(integrate|connect|연동).*?(api|service|서비스)",
+          "n8n.*?(node|노드|workflow|워크플로우)",
+          "(webhook|웹훅).*?(trigger|트리거|setup|설정)",
+          "(schedule|예약).*?(automation|task|작업)"
+        ]
+      }
+    },
+    {
+      "skillName": "portfolio-consultant",
+      "description": "Transform projects and blog posts into professional portfolio pieces with README optimization, GitHub profile enhancement, and impact quantification",
+      "priority": "high",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "portfolio",
+          "포트폴리오",
+          "readme",
+          "github profile",
+          "깃허브프로필",
+          "showcase",
+          "case study",
+          "케이스스터디",
+          "project",
+          "프로젝트",
+          "demo",
+          "데모",
+          "presentation"
+        ],
+        "intentPatterns": [
+          "(improve|enhance|optimize|개선).*?(readme|portfolio|포트폴리오)",
+          "(create|make|build|작성).*?(portfolio|포트폴리오|showcase)",
+          "(github|깃허브).*?(profile|프로필|optimization|최적화)",
+          "(showcase|present|보여주기).*?(project|프로젝트|work)",
+          "(convert|transform|변환).*?(blog|project).*?(portfolio|case.*?study)",
+          "(quantify|measure|측정).*?(impact|임팩트|result|성과)"
+        ],
+        "filePaths": [
+          "**/README.md",
+          "apps/blog/src/data/projects.ts",
+          "apps/blog/src/posts/**/*.mdx"
+        ]
+      }
+    },
+    {
+      "skillName": "resume-builder",
+      "description": "Generate role-specific resumes and cover letters with JD analysis, STAR method achievement writing, and project-to-impact transformation",
+      "priority": "high",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "resume",
+          "이력서",
+          "cv",
+          "cover letter",
+          "커버레터",
+          "job application",
+          "취업",
+          "이직",
+          "jd",
+          "job description",
+          "채용공고",
+          "star method",
+          "achievement",
+          "성과"
+        ],
+        "intentPatterns": [
+          "(write|create|generate|작성).*?(resume|이력서|cv)",
+          "(write|create|generate|작성).*?(cover.*?letter|커버.*?레터)",
+          "(analyze|분석|review|검토).*?(jd|job.*?description|채용공고)",
+          "(tailor|맞춤|customize|커스터마이징).*?(resume|이력서).*?(company|role|회사|직무)",
+          "(frontend|backend|fullstack).*?(resume|이력서)",
+          "(star|achievement|성과).*?(method|format|작성)",
+          "(job|취업|이직).*?(application|preparation|준비)"
+        ],
+        "filePaths": [
+          "apps/blog/documents/resumes/**/*.mdx",
+          "apps/blog/documents/cover-letters/**/*.mdx",
+          "vault/career/**/*.md",
+          "apps/blog/src/data/projects.ts"
+        ]
+      }
+    },
+    {
+      "skillName": "product-launcher",
+      "description": "Launch side projects as products with MVP validation, launch checklists, user acquisition strategies, and monetization planning",
+      "priority": "medium",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "product launch",
+          "제품출시",
+          "mvp",
+          "launch",
+          "런칭",
+          "validation",
+          "검증",
+          "monetization",
+          "수익화",
+          "pricing",
+          "가격책정",
+          "startup",
+          "스타트업",
+          "사업",
+          "business model"
+        ],
+        "intentPatterns": [
+          "(launch|출시|ship|배포).*?(product|제품|mvp|service)",
+          "(validate|검증|test|테스트).*?(idea|아이디어|mvp)",
+          "(monetize|수익화|pricing|가격).*?(product|service|제품)",
+          "(acquire|get|획득).*?(user|customer|고객|사용자)",
+          "(create|build|만들기).*?(mvp|prototype|프로토타입)",
+          "(business.*?model|수익.*?모델|revenue|매출)"
+        ],
+        "filePaths": [
+          "apps/blog/src/posts/**/*.mdx",
+          "apps/blog/src/data/projects.ts"
+        ]
+      }
+    },
+    {
+      "skillName": "learning-tracker",
+      "description": "Manage personal knowledge with TIL entries, reading notes, learning logs, and Second Brain system for continuous growth",
+      "priority": "medium",
+      "type": "suggest",
+      "skipIfLoaded": false,
+      "triggers": {
+        "keywords": [
+          "til",
+          "today i learned",
+          "learning log",
+          "학습일지",
+          "독서",
+          "book notes",
+          "second brain",
+          "세컨드브레인",
+          "note",
+          "노트",
+          "knowledge",
+          "지식",
+          "idea",
+          "아이디어",
+          "zettelkasten"
+        ],
+        "intentPatterns": [
+          "(create|write|작성).*?(til|today.*?learned|learning.*?log|학습.*?일지)",
+          "(book|독서).*?(note|summary|요약|정리)",
+          "(second.*?brain|세컨드.*?브레인|knowledge.*?management|지식.*?관리)",
+          "(capture|save|저장).*?(idea|learning|note|아이디어|배운.*?것)",
+          "(organize|정리|structure).*?(knowledge|note|learning|지식)",
+          "(zettelkasten|para|linking.*?notes)"
+        ],
+        "filePaths": [
+          "vault/**/*.md",
+          "vault/daily/**/*.md",
+          "vault/knowledge/**/*.md"
         ]
       }
     }

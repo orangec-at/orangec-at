@@ -1,0 +1,18 @@
+{
+  "folders": [
+    {
+      "name": "Extension",
+      "path": "apps/product-life-dashboard"
+    },
+    {
+      "name": "Vault",
+      "path": "vault"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/out": false
+    }
+  }
+}
