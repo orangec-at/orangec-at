@@ -1,0 +1,140 @@
+{
+  "name": "product-life-dashboard",
+  "displayName": "Product Life Dashboard",
+  "description": "제품-마케팅-커리어-삶 실행 시스템 Dashboard",
+  "version": "0.1.0",
+  "publisher": "orangec-at",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [
+    "onStartupFinished",
+    "onView:productLifeDashboard"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Product Life Dashboard",
+      "properties": {
+        "productLife.vaultPath": {
+          "type": "string",
+          "default": "",
+          "description": "vault 폴더의 절대 경로 (예: /Users/yourname/vault)"
+        },
+        "productLife.language": {
+          "type": "string",
+          "default": "ko",
+          "enum": ["ko", "en"],
+          "enumDescriptions": [
+            "한국어",
+            "English"
+          ],
+          "description": "Dashboard 언어 설정"
+        },
+        "productLife.storageMode": {
+          "type": "string",
+          "default": "vault",
+          "enum": ["vault", "vscode"],
+          "enumDescriptions": [
+            "Vault (Markdown 파일) - 개인용, 외부 파일 연동",
+            "VS Code (내장 Storage) - 배포용, Extension 자체 저장"
+          ],
+          "description": "데이터 저장 방식"
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "product-life",
+          "title": "Product Life",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "product-life": [
+        {
+          "type": "webview",
+          "id": "productLifeQuickAdd",
+          "name": "Quick Add"
+        },
+        {
+          "type": "webview",
+          "id": "productLifeWip",
+          "name": "진행중 (WIP)"
+        },
+        {
+          "type": "webview",
+          "id": "productLifeChecklist",
+          "name": "체크리스트"
+        },
+        {
+          "type": "webview",
+          "id": "productLifeTagManager",
+          "name": "태그 관리"
+        },
+        {
+          "type": "webview",
+          "id": "productLifeSettings",
+          "name": "⚙️ Settings"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "productLife.openDashboard",
+        "title": "Product Life: Open Dashboard"
+      },
+      {
+        "command": "productLife.quickAdd",
+        "title": "Product Life: Quick Add TODO"
+      },
+      {
+        "command": "productLife.refresh",
+        "title": "Product Life: Refresh"
+      },
+      {
+        "command": "productLife.ai.analyzeProgress",
+        "title": "🤖 Product Life AI: 진행상황 분석",
+        "category": "AI"
+      },
+      {
+        "command": "productLife.ai.chat",
+        "title": "💬 Product Life AI: 대화하기",
+        "category": "AI"
+      },
+      {
+        "command": "productLife.ai.suggestPriority",
+        "title": "🎯 Product Life AI: 우선순위 제안",
+        "category": "AI"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "productLife.openDashboard",
+        "key": "cmd+shift+d",
+        "mac": "cmd+shift+d"
+      },
+      {
+        "command": "productLife.quickAdd",
+        "key": "cmd+shift+t",
+        "mac": "cmd+shift+t"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile && npm run compile:webview",
+    "compile": "tsc -p ./",
+    "compile:webview": "cd webview-ui && bun run build",
+    "watch": "tsc -watch -p ./",
+    "watch:webview": "cd webview-ui && bun run watch",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "@types/vscode": "^1.107.0",
+    "typescript": "^5.9.3"
+  }
+}

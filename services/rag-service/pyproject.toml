@@ -1,0 +1,36 @@
+[project]
+name = "rag-service"
+version = "0.1.0"
+description = "RAG service for blog with Gemini API"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "google-generativeai>=0.8.0",
+    "numpy>=2.0.0",
+    "pydantic>=2.9.0",
+    "python-multipart>=0.0.12",
+    "python-dotenv>=1.0.0",
+    "psycopg2-binary>=2.9.11",
+    "pgvector>=0.4.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "black>=24.0.0",
+    "ruff>=0.7.0",
+    "httpx>=0.27.0",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

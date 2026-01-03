@@ -1,0 +1,608 @@
+import * as vscode from 'vscode';
+import * as path from 'path';
+import { VaultParser } from './vaultParser';
+
+type ViewType = 'quickAdd' | 'wip' | 'checklist' | 'tagManager' | 'settings';
+
+export class BaseViewProvider implements vscode.WebviewViewProvider {
+  protected static instances: BaseViewProvider[] = [];
+  protected _view?: vscode.WebviewView;
+  protected vaultParser: VaultParser;
+  private viewType: ViewType;
+
+  constructor(
+    private readonly _extensionUri: vscode.Uri,
+    viewType: ViewType
+  ) {
+    this.vaultParser = new VaultParser();
+    this.viewType = viewType;
+    BaseViewProvider.instances.push(this);
+  }
+
+  protected static refreshAll() {
+    console.log('🔄 모든 view refresh');
+    BaseViewProvider.instances.forEach(instance => {
+      instance.refresh();
+    });
+  }
+
+  public resolveWebviewView(
+    webviewView: vscode.WebviewView,
+    context: vscode.WebviewViewResolveContext,
+    _token: vscode.CancellationToken
+  ) {
+    console.log(`🎨 ${this.viewType} View 초기화`);
+    this._view = webviewView;
+
+    webviewView.webview.options = {
+      enableScripts: true,
+      localResourceRoots: [this._extensionUri]
+    };
+
+    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+
+    // 메시지 수신 리스너
+    webviewView.webview.onDidReceiveMessage(
+      async (message) => {
+        await this.handleMessage(message);
+      }
+    );
+  }
+
+  protected async handleMessage(message: any) {
+    console.log(`📨 ${this.viewType} 메시지:`, message);
+
+    switch (message.type) {
+      case 'webviewReady':
+        console.log('✅ Webview 준비 완료');
+        this._update();
+        break;
+      case 'refresh':
+        console.log('🔄 새로고침 요청');
+        this._update();
+        break;
+      case 'addTodo':
+        await this._handleAddTodo(message.text);
+        break;
+      case 'addChecklist':
+        await this._handleAddChecklist(message.text);
+        break;
+      case 'toggleChecklist':
+        await this._handleToggleChecklist(message.index);
+        break;
+      case 'updateChecklistPriority':
+        await this._handleUpdateChecklistPriority(message.index, message.priority);
+        break;
+      case 'updateTag':
+        await this._handleUpdateTag(message.index, message.tag);
+        break;
+      case 'updateProgress':
+        await this._handleUpdateProgress(message.index, message.progress);
+        break;
+      case 'completeWip':
+        await this._handleCompleteWip(message.index);
+        break;
+      case 'deleteWip':
+        await this._handleDeleteWip(message.index);
+        break;
+      case 'changeLanguage':
+        await this._handleChangeLanguage(message.language);
+        break;
+    }
+  }
+
+  public refresh() {
+    this._update();
+  }
+
+  private async _handleAddTodo(text: string) {
+    try {
+      console.log(`📝 TODO 추가: ${text}`);
+
+      const vaultPath = this.vaultParser.getVaultPath();
+      if (!vaultPath) {
+        vscode.window.showErrorMessage('vault 경로를 찾을 수 없습니다');
+        return;
+      }
+
+      const wipFilePath = path.join(vaultPath, 'projects', 'current-wip.md');
+      const fs = await import('fs');
+      const content = fs.readFileSync(wipFilePath, 'utf-8');
+      const lines = content.split('\n');
+      const wipSectionIndex = lines.findIndex(line => line.startsWith('# 진행중인 작업'));
+
+      if (wipSectionIndex === -1) {
+        vscode.window.showErrorMessage('WIP 섹션을 찾을 수 없습니다');
+        return;
+      }
+
+      let lastNumber = 0;
+      for (let i = wipSectionIndex + 1; i < lines.length; i++) {
+        const match = lines[i].match(/^(\d+)\./);
+        if (match) {
+          lastNumber = Math.max(lastNumber, parseInt(match[1]));
+        } else if (lines[i].startsWith('#')) {
+          break;
+        }
+      }
+
+      const newNumber = lastNumber + 1;
+      const newLine = `${newNumber}. ${text} - 0% 시작`;
+
+      let insertIndex = wipSectionIndex + 2;
+      while (insertIndex < lines.length && lines[insertIndex].match(/^\d+\./)) {
+        insertIndex++;
+      }
+
+      lines.splice(insertIndex, 0, newLine);
+      fs.writeFileSync(wipFilePath, lines.join('\n'), 'utf-8');
+
+      vscode.window.showInformationMessage(`추가됨: ${text}`);
+      setTimeout(() => BaseViewProvider.refreshAll(), 100);
+    } catch (error) {
+      console.error('❌ TODO 추가 실패:', error);
+      vscode.window.showErrorMessage(`TODO 추가 실패: ${error}`);
+    }
+  }
+
+  private async _handleAddChecklist(text: string) {
+    try {
+      console.log(`✅ 체크리스트 추가: ${text}`);
+
+      const vaultPath = this.vaultParser.getVaultPath();
+      if (!vaultPath) {
+        vscode.window.showErrorMessage('vault 경로를 찾을 수 없습니다');
+        return;
+      }
+
+      const weeklyPath = this.vaultParser.getWeeklyFilePath();
+      const fs = await import('fs');
+
+      if (!fs.existsSync(weeklyPath)) {
+        vscode.window.showErrorMessage('주간 체크리스트 파일을 찾을 수 없습니다');
+        return;
+      }
+
+      const content = fs.readFileSync(weeklyPath, 'utf-8');
+      const lines = content.split('\n');
+
+      // 마지막 체크리스트 항목 찾기
+      let lastChecklistIndex = -1;
+      for (let i = lines.length - 1; i >= 0; i--) {
+        if (lines[i].match(/^- \[([ x])\]/)) {
+          lastChecklistIndex = i;
+          break;
+        }
+      }
+
+      const newLine = `- [ ] ${text}`;
+
+      if (lastChecklistIndex === -1) {
+        // 체크리스트가 없으면 파일 끝에 추가
+        lines.push(newLine);
+      } else {
+        // 마지막 체크리스트 다음에 추가
+        lines.splice(lastChecklistIndex + 1, 0, newLine);
+      }
+
+      fs.writeFileSync(weeklyPath, lines.join('\n'), 'utf-8');
+      vscode.window.showInformationMessage(`체크리스트 추가: ${text}`);
+
+      setTimeout(() => BaseViewProvider.refreshAll(), 100);
+    } catch (error) {
+      console.error('❌ 체크리스트 추가 실패:', error);
+      vscode.window.showErrorMessage(`체크리스트 추가 실패: ${error}`);
+    }
+  }
+
+  private async _handleToggleChecklist(index: number) {
+    try {
+      const vaultPath = this.vaultParser.getVaultPath();
+      if (!vaultPath) {
+        vscode.window.showErrorMessage('vault 경로를 찾을 수 없습니다');
+        return;
+      }
+
+      const weeklyPath = this.vaultParser.getWeeklyFilePath();
+      const fs = await import('fs');
+      const content = fs.readFileSync(weeklyPath, 'utf-8');
+      const lines = content.split('\n');
+
+      const checklistRegex = /^- \[([ x])\]\s+(.+)/;
+      let checklistCount = 0;
+      let targetLineIndex = -1;
+      let completedItem = '';
+
+      // 완료되지 않은 항목만 카운트 (완료된 섹션 이전 항목만)
+      for (let i = 0; i < lines.length; i++) {
+        // 완료된 섹션 발견하면 중단
+        if (lines[i].startsWith('# 완료된 체크리스트')) {
+          break;
+        }
+        
+        const match = lines[i].match(checklistRegex);
+        if (match && match[1] === ' ') {
+          if (checklistCount === index) {
+            targetLineIndex = i;
+            completedItem = lines[i].replace('[ ]', '[x]');
+            break;
+          }
+          checklistCount++;
+        }
+      }
+
+      if (targetLineIndex === -1) {
+        vscode.window.showErrorMessage('체크리스트 항목을 찾을 수 없습니다');
+        return;
+      }
+
+      // 항목 제거
+      lines.splice(targetLineIndex, 1);
+
+      // 완료된 섹션 찾기 또는 생성
+      let completedSectionIndex = lines.findIndex(line => line.startsWith('# 완료된 체크리스트'));
+
+
+      if (completedSectionIndex === -1) {
+        // 완료된 섹션이 없으면 생성
+        lines.push('', '# 완료된 체크리스트', completedItem);
+      } else {
+        // 완료된 섹션 바로 다음에 추가
+        lines.splice(completedSectionIndex + 1, 0, completedItem);
+      }
+
+      fs.writeFileSync(weeklyPath, lines.join('\n'), 'utf-8');
+      vscode.window.showInformationMessage('✅ 체크리스트 완료!');
+      
+      setTimeout(() => BaseViewProvider.refreshAll(), 100);
+    } catch (error) {
+      console.error('❌ 체크리스트 완료 실패:', error);
+      vscode.window.showErrorMessage(`체크리스트 완료 실패: ${error}`);
+    }
+  }
+
+  private async _handleUpdateTag(index: number, newTag: string) {
+    try {
+      const vaultPath = this.vaultParser.getVaultPath();
+      if (!vaultPath) {
+        vscode.window.showErrorMessage('vault 경로를 찾을 수 없습니다');
+        return;
+      }
+
+      const wipFilePath = path.join(vaultPath, 'projects', 'current-wip.md');
+      const fs = await import('fs');
+      const content = fs.readFileSync(wipFilePath, 'utf-8');
+      const lines = content.split('\n');
+
+      const regexWithTag = /^\d+\.\s+\[(.+?)\]\s+(.+?)\s+-\s+(\d+)%/;
+      const regexWithoutTag = /^\d+\.\s+([^\[].+?)\s+-\s+(\d+)%/;
+      let wipCount = 0;
+      let targetLineIndex = -1;
+      let hasTag = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        const matchWithTag = lines[i].match(regexWithTag);
+        const matchWithoutTag = lines[i].match(regexWithoutTag);
+
+        if (matchWithTag || matchWithoutTag) {
+          if (wipCount === index) {
+            targetLineIndex = i;
+            hasTag = !!matchWithTag;
+            break;
+          }
+          wipCount++;
+        }
+      }
+
+      if (targetLineIndex === -1) {
+        vscode.window.showErrorMessage('WIP 항목을 찾을 수 없습니다');
+        return;
+      }
+
+      const line = lines[targetLineIndex];
+      if (hasTag) {
+        lines[targetLineIndex] = line.replace(/\[(.+?)\]/, `[${newTag}]`);
+      } else {
+        lines[targetLineIndex] = line.replace(/^(\d+\.\s+)/, `$1[${newTag}] `);
+      }
+
+      fs.writeFileSync(wipFilePath, lines.join('\n'), 'utf-8');
+      vscode.window.showInformationMessage(`태그 업데이트: ${newTag}`);
+
+      setTimeout(() => BaseViewProvider.refreshAll(), 100);
+    } catch (error) {
+      console.error('❌ 태그 업데이트 실패:', error);
+      vscode.window.showErrorMessage(`태그 업데이트 실패: ${error}`);
+    }
+  }
+
+  private async _handleChangeLanguage(language: 'ko' | 'en') {
+    try {
+      console.log(`🌐 언어 변경: ${language}`);
+      const config = vscode.workspace.getConfiguration('productLife');
+      await config.update('language', language, vscode.ConfigurationTarget.Global);
+
+      vscode.window.showInformationMessage(`언어가 변경되었습니다: ${language === 'ko' ? '한국어' : 'English'}`);
+
+      // 모든 view refresh
+      setTimeout(() => BaseViewProvider.refreshAll(), 100);
+    } catch (error) {
+      console.error('❌ 언어 변경 실패:', error);
+      vscode.window.showErrorMessage(`언어 변경 실패: ${error}`);
+    }
+  }
+
+  private async _handleUpdateProgress(index: number, newProgress: number) {
+    try {
+      const vaultPath = this.vaultParser.getVaultPath();
+      if (!vaultPath) {
+        vscode.window.showErrorMessage('vault 경로를 찾을 수 없습니다');
+        return;
+      }
+
+      const wipFilePath = path.join(vaultPath, 'projects', 'current-wip.md');
+      const fs = await import('fs');
+      const content = fs.readFileSync(wipFilePath, 'utf-8');
+      const lines = content.split('\n');
+
+      const regexWithTag = /^\d+\.\s+\[(.+?)\]\s+(.+?)\s+-\s+(\d+)%/;
+      const regexWithoutTag = /^\d+\.\s+([^\[].+?)\s+-\s+(\d+)%/;
+      let wipCount = 0;
+      let targetLineIndex = -1;
+
+      for (let i = 0; i < lines.length; i++) {
+        const matchWithTag = lines[i].match(regexWithTag);
+        const matchWithoutTag = lines[i].match(regexWithoutTag);
+
+        if (matchWithTag || matchWithoutTag) {
+          if (wipCount === index) {
+            targetLineIndex = i;
+            break;
+          }
+          wipCount++;
+        }
+      }
+
+      if (targetLineIndex === -1) {
+        vscode.window.showErrorMessage('WIP 항목을 찾을 수 없습니다');
+        return;
+      }
+
+      const line = lines[targetLineIndex];
+      lines[targetLineIndex] = line.replace(/\d+%/, `${newProgress}%`);
+
+      fs.writeFileSync(wipFilePath, lines.join('\n'), 'utf-8');
+      console.log(`✅ Progress 업데이트: ${newProgress}%`);
+
+      setTimeout(() => BaseViewProvider.refreshAll(), 100);
+    } catch (error) {
+      console.error('❌ Progress 업데이트 실패:', error);
+      vscode.window.showErrorMessage(`Progress 업데이트 실패: ${error}`);
+    }
+  }
+
+  private async _handleCompleteWip(index: number) {
+    try {
+      const vaultPath = this.vaultParser.getVaultPath();
+      if (!vaultPath) {
+        vscode.window.showErrorMessage('vault 경로를 찾을 수 없습니다');
+        return;
+      }
+
+      const wipFilePath = path.join(vaultPath, 'projects', 'current-wip.md');
+      const fs = await import('fs');
+      const content = fs.readFileSync(wipFilePath, 'utf-8');
+      const lines = content.split('\n');
+
+      const regexWithTag = /^\d+\.\s+\[(.+?)\]\s+(.+?)\s+-\s+(\d+)%/;
+      const regexWithoutTag = /^\d+\.\s+([^\[].+?)\s+-\s+(\d+)%/;
+      let wipCount = 0;
+      let targetLineIndex = -1;
+      let completedItem = '';
+
+      for (let i = 0; i < lines.length; i++) {
+        const matchWithTag = lines[i].match(regexWithTag);
+        const matchWithoutTag = lines[i].match(regexWithoutTag);
+
+        if (matchWithTag || matchWithoutTag) {
+          if (wipCount === index) {
+            targetLineIndex = i;
+            completedItem = lines[i].replace(/\d+%/, '100%');
+            break;
+          }
+          wipCount++;
+        }
+      }
+
+      if (targetLineIndex === -1) {
+        vscode.window.showErrorMessage('WIP 항목을 찾을 수 없습니다');
+        return;
+      }
+
+      // Remove from WIP section
+      lines.splice(targetLineIndex, 1);
+
+      // Find or create completed section
+      let completedSectionIndex = lines.findIndex(line => line.startsWith('# 완료된 작업'));
+
+      if (completedSectionIndex === -1) {
+        // Add completed section if it doesn't exist
+        lines.push('', '# 완료된 작업', completedItem);
+      } else {
+        // Add to completed section
+        lines.splice(completedSectionIndex + 1, 0, completedItem);
+      }
+
+      // Renumber WIP items
+      wipCount = 1;
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].match(regexWithTag)) {
+          lines[i] = lines[i].replace(/^\d+\./, `${wipCount}.`);
+          wipCount++;
+        } else if (lines[i].match(regexWithoutTag)) {
+          lines[i] = lines[i].replace(/^\d+\./, `${wipCount}.`);
+          wipCount++;
+        }
+      }
+
+      fs.writeFileSync(wipFilePath, lines.join('\n'), 'utf-8');
+      vscode.window.showInformationMessage('✅ 작업 완료!');
+
+      setTimeout(() => BaseViewProvider.refreshAll(), 100);
+    } catch (error) {
+      console.error('❌ 완료 처리 실패:', error);
+      vscode.window.showErrorMessage(`완료 처리 실패: ${error}`);
+    }
+  }
+
+  private async _handleDeleteWip(index: number) {
+    try {
+      const vaultPath = this.vaultParser.getVaultPath();
+      if (!vaultPath) {
+        vscode.window.showErrorMessage('vault 경로를 찾을 수 없습니다');
+        return;
+      }
+
+      const wipFilePath = path.join(vaultPath, 'projects', 'current-wip.md');
+      const fs = await import('fs');
+      const content = fs.readFileSync(wipFilePath, 'utf-8');
+      const lines = content.split('\n');
+
+      const regexWithTag = /^\d+\.\s+\[(.+?)\]\s+(.+?)\s+-\s+(\d+)%/;
+      const regexWithoutTag = /^\d+\.\s+([^\[].+?)\s+-\s+(\d+)%/;
+      let wipCount = 0;
+      let targetLineIndex = -1;
+
+      for (let i = 0; i < lines.length; i++) {
+        const matchWithTag = lines[i].match(regexWithTag);
+        const matchWithoutTag = lines[i].match(regexWithoutTag);
+
+        if (matchWithTag || matchWithoutTag) {
+          if (wipCount === index) {
+            targetLineIndex = i;
+            break;
+          }
+          wipCount++;
+        }
+      }
+
+      if (targetLineIndex === -1) {
+        vscode.window.showErrorMessage('WIP 항목을 찾을 수 없습니다');
+        return;
+      }
+
+      // Remove the item
+      lines.splice(targetLineIndex, 1);
+
+      // Renumber WIP items
+      wipCount = 1;
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].match(regexWithTag)) {
+          lines[i] = lines[i].replace(/^\d+\./, `${wipCount}.`);
+          wipCount++;
+        } else if (lines[i].match(regexWithoutTag)) {
+          lines[i] = lines[i].replace(/^\d+\./, `${wipCount}.`);
+          wipCount++;
+        }
+      }
+
+      fs.writeFileSync(wipFilePath, lines.join('\n'), 'utf-8');
+      console.log('✅ WIP 항목 삭제');
+
+      setTimeout(() => BaseViewProvider.refreshAll(), 100);
+    } catch (error) {
+      console.error('❌ 삭제 실패:', error);
+      vscode.window.showErrorMessage(`삭제 실패: ${error}`);
+    }
+  }
+
+  protected async _update() {
+    if (!this._view) {
+      console.warn(`⚠️ ${this.viewType} View가 없어서 업데이트 불가`);
+      return;
+    }
+
+    try {
+      console.log(`📊 ${this.viewType} 데이터 파싱 시작...`);
+      const data = await this.vaultParser.parse();
+
+      // 설정에서 언어 가져오기
+      const config = vscode.workspace.getConfiguration('productLife');
+      const language = config.get<'ko' | 'en'>('language', 'ko');
+
+      console.log(`✅ ${this.viewType} 파싱 완료:`, {
+        wip: data.wip.length,
+        checklist: data.checklist.length,
+        language
+      });
+
+      this._view.webview.postMessage({
+        type: 'update',
+        viewType: this.viewType,
+        data: {
+          ...data,
+          language
+        }
+      });
+      console.log(`📤 ${this.viewType} 메시지 전송 완료`);
+    } catch (error) {
+      console.error(`❌ ${this.viewType} Update 실패:`, error);
+      vscode.window.showErrorMessage(`${this.viewType} 업데이트 실패: ${error}`);
+    }
+  }
+
+  private _getHtmlForWebview(webview: vscode.Webview): string {
+    const scriptUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview.js')
+    );
+    const styleUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview.css')
+    );
+
+    return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src ${webview.cspSource};">
+  <title>Product Life</title>
+  <link rel="stylesheet" href="${styleUri}">
+</head>
+<body>
+  <div id="root" data-view-type="${this.viewType}"></div>
+  <script src="${scriptUri}"></script>
+</body>
+</html>`;
+  }
+}
+
+// 각 뷰를 위한 Provider 클래스들
+export class QuickAddViewProvider extends BaseViewProvider {
+  constructor(extensionUri: vscode.Uri) {
+    super(extensionUri, 'quickAdd');
+  }
+}
+
+export class WipViewProvider extends BaseViewProvider {
+  constructor(extensionUri: vscode.Uri) {
+    super(extensionUri, 'wip');
+  }
+}
+
+export class ChecklistViewProvider extends BaseViewProvider {
+  constructor(extensionUri: vscode.Uri) {
+    super(extensionUri, 'checklist');
+  }
+}
+
+export class TagManagerViewProvider extends BaseViewProvider {
+  constructor(extensionUri: vscode.Uri) {
+    super(extensionUri, 'tagManager');
+  }
+}
+
+export class SettingsViewProvider extends BaseViewProvider {
+  constructor(extensionUri: vscode.Uri) {
+    super(extensionUri, 'settings');
+  }
+}
