@@ -11,7 +11,10 @@
       "email": "Email",
       "phone": "Phone",
       "sns": "SNS",
-      "address": "Address"
+      "address": "Address",
+      "twitter": "X",
+      "linkedin": "LinkedIn",
+      "blog": "Blog"
     },
     "military": {
       "title": "Military Service",
@@ -63,10 +66,10 @@
       "koreanName": "이재일",
       "englishName": "Lee Jaeil",
       "birthDate": "-",
-      "emailAddress": "jaeil1117@gmail.com",
-      "phoneNumber": "-",
-      "snsLink": "my.surfit.io/w/966536808",
-      "address": "-",
+      "emailAddress": "radio941016@gmail.com",
+      "phoneNumber": "",
+      "snsLink": "",
+      "address": "",
       "militaryBranch": "-",
       "militaryStatus": "-",
       "militaryRank": "-",
@@ -78,9 +81,21 @@
           "date": "Mar 2013 ~ Feb 2021",
           "school": "Dongguk University",
           "major": "Chemical & Biological Engineering"
+        },
+        {
+          "date": "Nov 2024 ~ Apr 2025",
+          "school": "LikeLion Duotone",
+          "major": "KDT Design School Cohort 4"
         }
       ],
       "experience": [
+        {
+          "period": "Sep 2025 ~ Present",
+          "company": "DPP Platform",
+          "position": "Frontend Developer",
+          "department": "Digital Product Passport (Next.js)",
+          "rank": "-"
+        },
         {
           "period": "Oct 2022 ~ Mar 2024",
           "company": "MIDAS IT",
@@ -90,7 +105,7 @@
         },
         {
           "period": "Mar 2022 ~ Sep 2022",
-          "company": "Pcurate Inc.",
+          "company": "Pikurate Inc.",
           "position": "Frontend Developer",
           "department": "Dev Team",
           "rank": "Researcher"
@@ -142,46 +157,94 @@
       ],
       "projects": [
         {
+          "company": "DPP Platform",
+          "name": "Battery Digital Product Passport (Admin/Data/User Front)",
+          "period": "Sep 2025 ~ Present",
+          "description": "Built three Next.js fronts for EV battery lifecycle management (DPP) across admin, data provider, and user portals",
+          "achievements": [
+            "Led FE architecture",
+            "Unified design system across fronts"
+          ],
+          "techStack": [
+            "Next.js",
+            "TypeScript",
+            "Zustand",
+            "TanStack Query",
+            "TanStack Table"
+          ]
+        },
+        {
           "company": "Side Project",
           "name": "Yoga Journaling App (React Native)",
           "period": "Mar 2024 ~ Oct 2024",
           "description": "Built React Native app with pnpm monorepo and turborepo. NestJS backend with Supabase/Firebase integration.",
-          "achievements": ["Successfully launched on App Store", "Full ownership of frontend and backend"],
-          "techStack": ["React Native", "NestJS", "Zustand", "React Query", "Prisma"]
+          "achievements": [
+            "Successfully launched on App Store",
+            "Full ownership of frontend and backend"
+          ],
+          "techStack": [
+            "React Native",
+            "NestJS",
+            "Zustand",
+            "React Query",
+            "Prisma"
+          ]
         },
         {
           "company": "MIDAS IT",
           "name": "Cloud Storage for Architecture Industry",
           "period": "Nov 2023 ~ Feb 2024",
           "description": "Built cloud storage system for architecture industry with file tracking and sharing process development",
-          "achievements": ["Full ownership of project FE development", "Participated in RESTful API interface design"],
-          "techStack": ["React", "Next.js", "Recoil", "React-Query", "Design System"]
+          "achievements": [
+            "Full ownership of project FE development",
+            "Participated in RESTful API interface design"
+          ],
+          "techStack": [
+            "React",
+            "Next.js",
+            "Recoil",
+            "React-Query",
+            "Design System"
+          ]
         },
         {
           "company": "MIDAS IT",
           "name": "Subscription Management Platform Back-office",
           "period": "Apr 2023 ~ Aug 2023",
           "description": "Handled development requirements from 2 teams simultaneously, establishing development conventions to shorten overall timeline",
-          "achievements": ["Improved code quality through monorepo code review", "Active communication with planning/backend teams"],
-          "techStack": ["React", "Next.js", "Recoil", "React-Query", "Yarn Workspace"]
-        },
-        {
-          "company": "Pcurate",
-          "name": "Internal Design System",
-          "period": "Apr 2022 ~ May 2022",
-          "description": "Built multi-platform (web/mobile web/chrome extension) design system ensuring component reusability",
-          "achievements": ["Built Private NPM deployment pipeline", "Configured optimized Rollup bundling"],
-          "techStack": ["Styled-components", "Rollup", "TypeScript", "Storybook"]
+          "achievements": [
+            "Improved code quality through monorepo code review",
+            "Active communication with planning/backend teams"
+          ],
+          "techStack": [
+            "React",
+            "Next.js",
+            "Recoil",
+            "React-Query",
+            "Yarn Workspace"
+          ]
         },
         {
           "company": "SecureNet",
           "name": "Sales Management Back-office",
           "period": "Sep 2020 ~ Feb 2021",
           "description": "Built digital transformation system for sales process, reducing processing time",
-          "achievements": ["Analyzed and designed digital transformation of sales process", "Built service deployment and operation environment"],
-          "techStack": ["React", "Redux", "Redux-saga", "Ubuntu", "Apache2"]
+          "achievements": [
+            "Analyzed and designed digital transformation of sales process",
+            "Built service deployment and operation environment"
+          ],
+          "techStack": [
+            "React",
+            "Redux",
+            "Redux-saga",
+            "Ubuntu",
+            "Apache2"
+          ]
         }
-      ]
+      ],
+      "twitter": "https://x.com/x_orangec_at",
+      "linkedin": "https://www.linkedin.com/in/orangec-at/",
+      "blog": "https://orangec-at.vercel.app"
     }
   }
 }

@@ -4,7 +4,25 @@
       "title": "안녕하세요, 프로덕트 지향 프론트엔드 개발자입니다",
       "subtitle": "스타트업 창업자이자 AI 기반 개발에 열정적인 개발자",
       "description": "현재 요가 테크 생태계를 구축하며, 두 개의 라이브 제품을 운영하고 있습니다. 파트타임 기회를 통해 인사이트를 공유하고 혁신적인 팀에 기여하고 싶습니다.",
-      "cta": "프로젝트 보기"
+      "cta": "프로젝트 보기",
+      "location": "Seoul, South Korea",
+      "experiences": [
+        {
+          "period": "2025.09 ~ 현재",
+          "company": "DPP Platform",
+          "title": "디지털 제품 여권 FE (Next.js) 풀타임"
+        },
+        {
+          "period": "2023.11 ~ 2024.02",
+          "company": "Midas IT",
+          "title": "Cloud storage 플랫폼 FE 메인"
+        },
+        {
+          "period": "2023.01 ~ 2023.04",
+          "company": "Midas IT",
+          "title": "회원관리 시스템 FE 전담"
+        }
+      ]
     },
     "about": {
       "title": "소개",
@@ -72,6 +90,14 @@
     "contact": {
       "title": "연락하기",
       "description": "프로젝트나 협업에 대해 이야기해보세요"
+    },
+    "landing": {
+      "featuredReads": "추천 글",
+      "latestPosts": "최근 글",
+      "viewAll": "모두 보기",
+      "blog": "블로그",
+      "projects": "프로젝트",
+      "resume": "이력서"
     },
     "career": {
       "title": "경력 사항",

@@ -1,10 +1,28 @@
 {
   "home": {
     "hero": {
-      "title": "Hi, I'm a Product-minded Frontend Developer",
+      "title": "Hi, I'm a product-minded Frontend Developer",
       "subtitle": "Startup Founder | AI-powered Development Enthusiast",
       "description": "Currently building the yoga tech ecosystem with two live products while exploring part-time opportunities to share insights and contribute to innovative teams.",
-      "cta": "View Projects"
+      "cta": "View Projects",
+      "location": "Seoul, South Korea",
+      "experiences": [
+        {
+          "period": "Sep 2025 ~ Present",
+          "company": "DPP Platform",
+          "title": "Digital Product Passport FE (Next.js) · Full-time"
+        },
+        {
+          "period": "Nov 2023 ~ Feb 2024",
+          "company": "Midas IT",
+          "title": "Cloud storage platform FE lead"
+        },
+        {
+          "period": "Jan 2023 ~ Apr 2023",
+          "company": "Midas IT",
+          "title": "Membership system FE owner"
+        }
+      ]
     },
     "about": {
       "title": "About Me",
@@ -73,6 +91,14 @@
       "title": "Get In Touch",
       "description": "Let's talk about projects and collaboration opportunities"
     },
+    "landing": {
+      "featuredReads": "Featured Reads",
+      "latestPosts": "Latest Posts",
+      "viewAll": "View all",
+      "blog": "Blog",
+      "projects": "Projects",
+      "resume": "Resume"
+    },
     "career": {
       "title": "Work Experience",
       "techLabel": "Tech Stack",
@@ -92,7 +118,7 @@
           "techStack": "React, TypeScript, Next.js, Recoil, React-Query, Yarn Workspace"
         },
         {
-          "company": "Pcurate Inc.",
+          "company": "Pikurate Inc.",
           "role": "Frontend Developer",
           "period": "Mar 2022 ~ Sep 2022",
           "team": "Researcher | Product Team",

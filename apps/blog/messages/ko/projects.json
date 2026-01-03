@@ -5,6 +5,19 @@
     "tech": "기술 스택",
     "description": "설명",
     "viewMore": "자세히 보기",
-    "viewDetails": "프로젝트 자세히 보기"
+    "viewDetails": "프로젝트 자세히 보기",
+    "subtitle": "체계적으로 정리한 작업 컬렉션",
+    "backToList": "프로젝트 목록으로 돌아가기",
+    "liveSite": "라이브 사이트",
+    "github": "GitHub",
+    "techStack": "기술 스택",
+    "overview": "프로젝트 소개",
+    "keyFeatures": "주요 기능",
+    "keyFeaturesPlaceholder": "프로젝트의 핵심 기능들을 여기에 설명할 수 있습니다.",
+    "challenges": "기술적 도전",
+    "challengesPlaceholder": "프로젝트 개발 과정에서의 주요 도전과 해결책을 설명할 수 있습니다.",
+    "relatedPosts": "📚 관련 블로그 글",
+    "relatedPostsDescription": "이 프로젝트의 개발 과정과 기술적 인사이트를 더 자세히 알아보세요.",
+    "readMore": "읽어보기"
   }
 }

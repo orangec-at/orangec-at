@@ -5,6 +5,19 @@
     "tech": "Tech Stack",
     "description": "Description",
     "viewMore": "View More",
-    "viewDetails": "View Project Details"
+    "viewDetails": "View Project Details",
+    "backToList": "Back to projects",
+    "liveSite": "Live Site",
+    "github": "GitHub",
+    "techStack": "Tech Stack",
+    "overview": "Project Overview",
+    "keyFeatures": "Key Features",
+    "keyFeaturesPlaceholder": "You can describe the key features of this project here.",
+    "challenges": "Technical Challenges",
+    "challengesPlaceholder": "Describe the major challenges and solutions from development.",
+    "relatedPosts": "📚 Related Blog Posts",
+    "relatedPostsDescription": "Dive deeper into the build process and technical insights for this project.",
+    "readMore": "Read More",
+    "subtitle": "A systematic collection of my work"
   }
 }
