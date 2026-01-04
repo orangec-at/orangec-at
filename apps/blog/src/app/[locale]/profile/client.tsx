@@ -16,7 +16,9 @@ export default function ProfileClient() {
   const locale = useLocale();
   const { data: session, status } = useSession();
 
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState<
+    "ACTIVE" | "PENDING" | "UNSUBSCRIBED"
+  >("UNSUBSCRIBED");
 
   const themeMode = theme === "dark" ? "dark" : "light";
 
@@ -28,7 +30,7 @@ export default function ProfileClient() {
     void (async () => {
       const current = await getNewsletterStatus();
       if (isCancelled) return;
-      setIsSubscribed(current?.status === "ACTIVE");
+      setSubscriptionStatus(current?.status ?? "UNSUBSCRIBED");
     })();
 
     return () => {
@@ -54,14 +56,17 @@ export default function ProfileClient() {
       return;
     }
 
-    if (isSubscribed) {
+    if (subscriptionStatus === "ACTIVE" || subscriptionStatus === "PENDING") {
       const result = await unsubscribeNewsletter();
-      if (result.success) setIsSubscribed(false);
+      if (result.success) setSubscriptionStatus("UNSUBSCRIBED");
       return;
     }
 
     const result = await subscribeNewsletter({ locale });
-    if (result.success) setIsSubscribed(true);
+    if (result.success) {
+      const isPending = result.message.toLowerCase().includes("confirm");
+      setSubscriptionStatus(isPending ? "PENDING" : "ACTIVE");
+    }
   };
 
   if (status === "loading") {
@@ -108,7 +113,8 @@ export default function ProfileClient() {
       isAdmin={isAdmin}
       inkPoints={session.user?.inkPoints ?? 0}
       highlightedTexts={new Set()}
-      isSubscribed={isSubscribed}
+      isSubscribed={subscriptionStatus === "ACTIVE"}
+      subscriptionStatus={subscriptionStatus}
       onSubscriptionToggle={handleSubscriptionToggle}
       onLogout={handleLogout}
       theme={themeMode}

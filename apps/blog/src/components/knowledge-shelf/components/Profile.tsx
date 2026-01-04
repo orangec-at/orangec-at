@@ -20,6 +20,7 @@ interface ProfileProps {
   inkPoints: number;
   highlightedTexts: Set<string>;
   isSubscribed: boolean;
+  subscriptionStatus?: "ACTIVE" | "PENDING" | "UNSUBSCRIBED";
   onSubscriptionToggle: () => void;
   onLogout: () => void;
   theme: ThemeMode;
@@ -32,6 +33,7 @@ export const Profile: React.FC<ProfileProps> = ({
   inkPoints,
   highlightedTexts,
   isSubscribed,
+  subscriptionStatus,
   onSubscriptionToggle,
   onLogout,
   theme,
@@ -133,19 +135,23 @@ export const Profile: React.FC<ProfileProps> = ({
                   <div>
                     <p className="text-sm font-bold">Archives Gazette</p>
                     <p className="text-[10px] text-stone-500 uppercase tracking-widest font-bold">
-                      {isSubscribed ? "Subscribed" : "Unsubscribed"}
+                      {subscriptionStatus === "PENDING"
+                        ? "Pending"
+                        : isSubscribed
+                          ? "Subscribed"
+                          : "Unsubscribed"}
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={onSubscriptionToggle}
                   className={`px-4 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest transition-all ${
-                    isSubscribed
+                    subscriptionStatus === "PENDING" || isSubscribed
                       ? "bg-stone-100 dark:bg-stone-800 text-stone-500"
                       : "bg-stone-900 text-white"
                   }`}
                 >
-                  {isSubscribed ? "Mute" : "Subscribe"}
+                  {subscriptionStatus === "PENDING" ? "Cancel" : isSubscribed ? "Mute" : "Subscribe"}
                 </button>
               </div>
             </div>

@@ -115,22 +115,30 @@ export async function subscribeNewsletter(input: {
   const sessionEmail = session?.user?.email ? normalizeEmail(session.user.email) : null;
 
   if (userId && sessionEmail && email === sessionEmail) {
-    await prisma.newsletterSubscription.upsert({
-      where: { email },
-      create: {
-        email,
-        status: "ACTIVE",
-        userId,
-        confirmedAt: new Date(),
-      },
-      update: {
-        status: "ACTIVE",
-        userId,
-        confirmedAt: existing?.confirmedAt ?? new Date(),
-        unsubscribedAt: null,
-        confirmTokenHash: null,
-      },
-    });
+    const now = existing?.confirmedAt ?? new Date();
+
+    await prisma.$transaction([
+      prisma.newsletterSubscription.upsert({
+        where: { email },
+        create: {
+          email,
+          status: "ACTIVE",
+          userId,
+          confirmedAt: now,
+        },
+        update: {
+          status: "ACTIVE",
+          userId,
+          confirmedAt: now,
+          unsubscribedAt: null,
+          confirmTokenHash: null,
+        },
+      }),
+      prisma.user.update({
+        where: { id: userId },
+        data: { newsletterOptInAt: now },
+      }),
+    ]);
 
     return { success: true, message: "Subscribed" };
   }
@@ -215,16 +223,24 @@ export async function confirmNewsletterSubscription(input: {
     select: { id: true },
   });
 
-  await prisma.newsletterSubscription.update({
-    where: { id: subscription.id },
-    data: {
-      status: "ACTIVE",
-      confirmedAt: new Date(),
-      confirmTokenHash: null,
-      unsubscribedAt: null,
-      userId: user?.id ?? subscription.userId,
-    },
-  });
+  const now = new Date();
+
+  await prisma.$transaction([
+    prisma.newsletterSubscription.update({
+      where: { id: subscription.id },
+      data: {
+        status: "ACTIVE",
+        confirmedAt: now,
+        confirmTokenHash: null,
+        unsubscribedAt: null,
+        userId: user?.id ?? subscription.userId,
+      },
+    }),
+    prisma.user.updateMany({
+      where: { email: subscription.email },
+      data: { newsletterOptInAt: now },
+    }),
+  ]);
 
   return { success: true, message: "Subscription confirmed" };
 }
@@ -245,14 +261,22 @@ export async function unsubscribeNewsletter(input?: {
       return { success: false, message: "Invalid token" };
     }
 
-    await prisma.newsletterSubscription.update({
-      where: { id: subscription.id },
-      data: {
-        status: "UNSUBSCRIBED",
-        unsubscribedAt: new Date(),
-        confirmTokenHash: null,
-      },
-    });
+    const now = new Date();
+
+    await prisma.$transaction([
+      prisma.newsletterSubscription.update({
+        where: { id: subscription.id },
+        data: {
+          status: "UNSUBSCRIBED",
+          unsubscribedAt: now,
+          confirmTokenHash: null,
+        },
+      }),
+      prisma.user.updateMany({
+        where: { email: subscription.email },
+        data: { newsletterOptInAt: null },
+      }),
+    ]);
 
     return { success: true, message: "Unsubscribed" };
   }
@@ -270,14 +294,22 @@ export async function unsubscribeNewsletter(input?: {
     return { success: true, message: "Already unsubscribed" };
   }
 
-  await prisma.newsletterSubscription.update({
-    where: { email },
-    data: {
-      status: "UNSUBSCRIBED",
-      unsubscribedAt: new Date(),
-      confirmTokenHash: null,
-    },
-  });
+  const now = new Date();
+
+  await prisma.$transaction([
+    prisma.newsletterSubscription.update({
+      where: { email },
+      data: {
+        status: "UNSUBSCRIBED",
+        unsubscribedAt: now,
+        confirmTokenHash: null,
+      },
+    }),
+    prisma.user.updateMany({
+      where: { email },
+      data: { newsletterOptInAt: null },
+    }),
+  ]);
 
   return { success: true, message: "Unsubscribed" };
 }

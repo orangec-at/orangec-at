@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 
@@ -80,7 +81,41 @@ export default function OnboardingClient({
               />
               <div>
                 <div className="text-sm font-medium text-stone-900 dark:text-stone-100">
-                  {locale === "ko" ? "이용약관에 동의합니다" : "I agree to the terms"}
+                  {locale === "ko" ? (
+                    <>
+                      <Link
+                        href={withLocalePath(locale, "/terms")}
+                        className="underline underline-offset-4"
+                      >
+                        이용약관
+                      </Link>
+                      {" 및 "}
+                      <Link
+                        href={withLocalePath(locale, "/privacy")}
+                        className="underline underline-offset-4"
+                      >
+                        개인정보처리방침
+                      </Link>
+                      {"에 동의합니다"}
+                    </>
+                  ) : (
+                    <>
+                      I agree to the {" "}
+                      <Link
+                        href={withLocalePath(locale, "/terms")}
+                        className="underline underline-offset-4"
+                      >
+                        terms
+                      </Link>
+                      {" and "}
+                      <Link
+                        href={withLocalePath(locale, "/privacy")}
+                        className="underline underline-offset-4"
+                      >
+                        privacy policy
+                      </Link>
+                    </>
+                  )}
                 </div>
                 <div className="mt-1 text-xs text-stone-500">
                   {locale === "ko"

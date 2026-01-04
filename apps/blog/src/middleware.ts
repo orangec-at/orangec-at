@@ -18,6 +18,8 @@ export default auth((req) => {
   const onboardingPath = locale === "en" ? "/en/onboarding" : "/onboarding";
 
   const isOnboardingRoute = /\/(en\/)?onboarding(\/|$)/.test(pathname);
+  const isLegalRoute = /\/(en\/)?(terms|privacy)(\/|$)/.test(pathname);
+  const isNewsletterRoute = /\/(en\/)?newsletter\/(confirm|unsubscribe)(\/|$)/.test(pathname);
 
   if (!req.auth && isOnboardingRoute) {
     return NextResponse.redirect(new URL("/api/auth/signin", req.url));
@@ -28,7 +30,13 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/api/auth/signin", req.url));
   }
 
-  if (req.auth && !req.auth.user?.onboardingCompleted && !isOnboardingRoute) {
+  if (
+    req.auth &&
+    !req.auth.user?.onboardingCompleted &&
+    !isOnboardingRoute &&
+    !isLegalRoute &&
+    !isNewsletterRoute
+  ) {
     const url = new URL(onboardingPath, req.url);
     url.searchParams.set("from", pathname);
     return NextResponse.redirect(url);

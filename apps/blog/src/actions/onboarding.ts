@@ -32,7 +32,7 @@ export async function completeOnboarding(input: {
     data: {
       termsAcceptedAt: now,
       onboardingCompletedAt: now,
-      newsletterOptInAt: input.newsletterOptIn ? now : null,
+      newsletterOptInAt: null,
     },
   });
 
