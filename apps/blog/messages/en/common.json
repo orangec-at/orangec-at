@@ -11,7 +11,14 @@
     "resume": "Resume",
     "contact": "Contact"
   },
+  "legal": {
+    "terms": "Terms",
+    "privacy": "Privacy"
+  },
   "footer": {
-    "copyright": "© {year} OrangeCat''s Blog. All rights reserved."
+    "copyright": "© {year} OrangeCat''s Blog. All rights reserved.",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "newsletter": "Newsletter"
   }
 }

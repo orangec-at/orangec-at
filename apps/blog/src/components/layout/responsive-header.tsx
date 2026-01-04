@@ -169,6 +169,21 @@ export default function ResponsiveHeader({
                   })}
                 </div>
               </nav>
+
+              <div className="hidden md:flex items-center gap-3 text-xs">
+                <Link
+                  href={withLocalePath(locale, "/terms")}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("legal.terms")}
+                </Link>
+                <Link
+                  href={withLocalePath(locale, "/privacy")}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("legal.privacy")}
+                </Link>
+              </div>
             </header>
           </div>
         ) : (

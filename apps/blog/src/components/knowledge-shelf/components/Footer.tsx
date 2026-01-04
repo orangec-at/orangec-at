@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { Github, Twitter, Linkedin, Mail, Check, Layers } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useSession } from "next-auth/react";
 
+import { withLocalePath } from "@/lib/locale-path";
 import { subscribeNewsletter } from "@/actions/newsletter";
 import type { ThemeMode } from "../types";
 
@@ -175,6 +177,18 @@ export const Footer: React.FC<FooterProps> = ({
             >
               UI SYSTEM <Layers className="w-3 h-3" />
             </button>
+            <Link
+              href={withLocalePath(locale, "/terms")}
+              className="text-stone-400 hover:text-white transition-colors"
+            >
+              Terms
+            </Link>
+            <Link
+              href={withLocalePath(locale, "/privacy")}
+              className="text-stone-400 hover:text-white transition-colors"
+            >
+              Privacy
+            </Link>
           </div>
           <span>Open Source Forever</span>
         </div>

@@ -11,7 +11,14 @@
     "resume": "이력서",
     "contact": "연락처"
   },
+  "legal": {
+    "terms": "이용약관",
+    "privacy": "개인정보처리방침"
+  },
   "footer": {
-    "copyright": "© {year} OrangeCat''s Blog. All rights reserved."
+    "copyright": "© {year} OrangeCat''s Blog. All rights reserved.",
+    "terms": "이용약관",
+    "privacy": "개인정보처리방침",
+    "newsletter": "뉴스레터"
   }
 }
