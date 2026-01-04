@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button } from '@orangec-at/design';
+import { Card } from '@orangec-at/design';
 import { ChatMessages } from './chat-messages';
 import { ChatInput } from './chat-input';
 import { streamChat, type ChatMessage, type SourceDocument } from '@/lib/rag-client';

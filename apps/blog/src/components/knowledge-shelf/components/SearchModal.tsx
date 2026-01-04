@@ -1,13 +1,16 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Search, Hash, BookOpen, MessageSquare, ChevronRight, Loader2 } from "lucide-react";
+import { X, Search, BookOpen, MessageSquare, ChevronRight, Loader2 } from "lucide-react";
 
+import { stripLocalePrefix, withLocalePath } from "@/lib/locale-path";
 import type { Fragment, Post, ThemeMode } from "../types";
 
 interface SearchModalProps {
   isOpen: boolean;
+  locale: string;
   posts: Post[];
   fragments: Fragment[];
   onClose: () => void;
@@ -15,17 +18,31 @@ interface SearchModalProps {
   theme: ThemeMode;
 }
 
+type RemoteSearchResult = {
+  slug: string;
+  title: string;
+  url: string;
+  content_type: string;
+  similarity: number;
+  excerpt: string;
+  locale: string;
+};
 
 export const SearchModal: React.FC<SearchModalProps> = ({
   isOpen,
+  locale,
   posts,
   fragments,
   onClose,
   onPostClick,
   theme,
 }) => {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [isRemoteLoading, setIsRemoteLoading] = useState(false);
+  const [remoteResults, setRemoteResults] = useState<RemoteSearchResult[]>([]);
+  const [remoteError, setRemoteError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const isDark = theme === "dark";
 
@@ -52,9 +69,61 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
   const normalizedQuery = query.trim().toLowerCase();
 
-  const { filteredPosts, filteredFragments, totalResults } = useMemo(() => {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const trimmed = query.trim();
+    if (!trimmed) {
+      setRemoteResults([]);
+      setRemoteError(null);
+      setIsRemoteLoading(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(async () => {
+      try {
+        setIsRemoteLoading(true);
+        setRemoteError(null);
+
+        const response = await fetch(
+          `/api/search?query=${encodeURIComponent(trimmed)}&locale=${encodeURIComponent(locale)}`,
+          { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+          const text = await response.text();
+          setRemoteError(text || "Search failed");
+          setRemoteResults([]);
+          return;
+        }
+
+        const data = (await response.json()) as unknown;
+        if (Array.isArray(data)) {
+          setRemoteResults(data as RemoteSearchResult[]);
+        } else {
+          setRemoteResults([]);
+        }
+      } catch (e) {
+        if (controller.signal.aborted) return;
+        setRemoteError(e instanceof Error ? e.message : "Search failed");
+        setRemoteResults([]);
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsRemoteLoading(false);
+        }
+      }
+    }, 250);
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timeoutId);
+    };
+  }, [isOpen, locale, query]);
+
+  const { filteredPosts, filteredFragments } = useMemo(() => {
     if (normalizedQuery === "") {
-      return { filteredPosts: [], filteredFragments: [], totalResults: 0 };
+      return { filteredPosts: [], filteredFragments: [] };
     }
 
     const nextPosts = posts.filter((p) => {
@@ -77,11 +146,22 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     return {
       filteredPosts: nextPosts,
       filteredFragments: nextFragments,
-      totalResults: nextPosts.length + nextFragments.length,
     };
   }, [fragments, normalizedQuery, posts]);
 
+  const totalResults = filteredPosts.length + filteredFragments.length + remoteResults.length;
+  const shouldShowRemoteBlogResults = posts.length === 0;
+  const remoteBlogResults = remoteResults.filter((r) => r.content_type === "blog");
+  const remoteDocumentResults = remoteResults.filter((r) => r.content_type !== "blog");
+
+  const handleRemoteResultClick = (result: RemoteSearchResult) => {
+    const nextPathname = stripLocalePrefix(result.url || "/");
+    router.push(withLocalePath(locale, nextPathname));
+    onClose();
+  };
+
   return (
+
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10">
@@ -119,7 +199,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
               </div>
 
               <div className="relative">
-                {isTyping ? (
+                {isTyping || isRemoteLoading ? (
                   <Loader2
                     className={`absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 animate-spin ${
                       isDark ? "text-red-900" : "text-stone-300"
@@ -175,6 +255,136 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 </div>
               ) : (
                 <div className="space-y-16">
+                  {remoteError && (
+                    <div
+                      className={`text-[9px] uppercase tracking-[0.5em] ${
+                        isDark ? "text-red-900" : "text-stone-400"
+                      }`}
+                    >
+                      {remoteError}
+                    </div>
+                  )}
+
+                  {shouldShowRemoteBlogResults && remoteBlogResults.length > 0 && (
+                    <section>
+                      <h3
+                        className={`text-[10px] tracking-[0.3em] uppercase text-stone-400 font-bold mb-6 border-b pb-2 ${
+                          isDark ? "border-stone-800" : "border-stone-100"
+                        }`}
+                      >
+                        Journal Entries ({remoteBlogResults.length})
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {remoteBlogResults.map((result) => (
+                          <div
+                            key={`${result.content_type}:${result.slug}:${result.url}`}
+                            onClick={() => handleRemoteResultClick(result)}
+                            className={`p-6 border cursor-pointer group flex items-center justify-between transition-all ${
+                              isDark
+                                ? "bg-stone-900/40 border-stone-800 hover:border-red-900"
+                                : "bg-white border-stone-100 hover:border-stone-400"
+                            }`}
+                          >
+                            <div className="pr-6">
+                              <span
+                                className={`text-[8px] uppercase tracking-widest font-bold block mb-1 ${
+                                  isDark ? "text-red-900" : "text-stone-400"
+                                }`}
+                              >
+                                Semantic Match • {Math.round(result.similarity * 100)}%
+                              </span>
+                              <h4
+                                className={`text-lg font-serif font-bold transition-colors ${
+                                  isDark
+                                    ? "text-stone-200 group-hover:text-white"
+                                    : "text-stone-800 group-hover:text-stone-600"
+                                }`}
+                              >
+                                {result.title}
+                              </h4>
+                              {result.excerpt && (
+                                <p
+                                  className={`mt-2 text-xs leading-relaxed line-clamp-2 ${
+                                    isDark ? "text-stone-500" : "text-stone-600"
+                                  }`}
+                                >
+                                  {result.excerpt}
+                                </p>
+                              )}
+                            </div>
+                            <ChevronRight
+                              className={`w-5 h-5 transition-colors ${
+                                isDark
+                                  ? "text-stone-800 group-hover:text-red-900"
+                                  : "text-stone-200 group-hover:text-stone-800"
+                              }`}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {remoteDocumentResults.length > 0 && (
+                    <section>
+                      <h3
+                        className={`text-[10px] tracking-[0.3em] uppercase text-stone-400 font-bold mb-6 border-b pb-2 ${
+                          isDark ? "border-stone-800" : "border-stone-100"
+                        }`}
+                      >
+                        Documents ({remoteDocumentResults.length})
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {remoteDocumentResults.map((result) => (
+                          <div
+                            key={`${result.content_type}:${result.slug}:${result.url}`}
+                            onClick={() => handleRemoteResultClick(result)}
+                            className={`p-6 border cursor-pointer group flex items-center justify-between transition-all ${
+                              isDark
+                                ? "bg-stone-900/40 border-stone-800 hover:border-red-900"
+                                : "bg-white border-stone-100 hover:border-stone-400"
+                            }`}
+                          >
+                            <div className="pr-6">
+                              <span
+                                className={`text-[8px] uppercase tracking-widest font-bold block mb-1 ${
+                                  isDark ? "text-red-900" : "text-stone-400"
+                                }`}
+                              >
+                                {result.content_type} • {Math.round(result.similarity * 100)}%
+                              </span>
+                              <h4
+                                className={`text-lg font-serif font-bold transition-colors ${
+                                  isDark
+                                    ? "text-stone-200 group-hover:text-white"
+                                    : "text-stone-800 group-hover:text-stone-600"
+                                }`}
+                              >
+                                {result.title}
+                              </h4>
+                              {result.excerpt && (
+                                <p
+                                  className={`mt-2 text-xs leading-relaxed line-clamp-2 ${
+                                    isDark ? "text-stone-500" : "text-stone-600"
+                                  }`}
+                                >
+                                  {result.excerpt}
+                                </p>
+                              )}
+                            </div>
+                            <ChevronRight
+                              className={`w-5 h-5 transition-colors ${
+                                isDark
+                                  ? "text-stone-800 group-hover:text-red-900"
+                                  : "text-stone-200 group-hover:text-stone-800"
+                              }`}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
                   {filteredPosts.length > 0 && (
                     <section>
                       <h3
@@ -278,7 +488,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                     </section>
                   )}
 
-                  {totalResults === 0 && (
+                  {totalResults === 0 && !isRemoteLoading && (
                     <div className="py-20 text-center">
                       <p
                         className={`font-serif italic text-2xl ${

@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui";
-import { Title, Body } from "@/components/ui/typography";
+import { Button } from "@orangec-at/design";
+import { Title, Body } from "@orangec-at/design/blog";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { withLocalePath } from "@/lib/locale-path";

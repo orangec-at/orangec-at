@@ -534,6 +534,7 @@ export default function KnowledgeShelfApp({
 
       <SearchModal
         isOpen={isSearchOpen}
+        locale={locale}
         posts={initialPosts}
         fragments={initialFragments}
         onClose={() => setIsSearchOpen(false)}

@@ -1,6 +1,6 @@
 "use server";
 
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { auth } from "@/auth";
 import { withLocalePath } from "@/lib/locale-path";
 
@@ -14,6 +14,7 @@ export async function createCheckoutSession(productId: string, priceId?: string,
   const locale = "ko"; // Ideally get from current context
 
   try {
+    const stripe = getStripe();
     const checkoutSession = await stripe.checkout.sessions.create({
       customer_email: session.user.email,
       line_items: [
@@ -41,8 +42,9 @@ export async function createCheckoutSession(productId: string, priceId?: string,
     });
 
     return { url: checkoutSession.url };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Stripe Error:", error);
-    return { error: error.message };
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: message };
   }
 }

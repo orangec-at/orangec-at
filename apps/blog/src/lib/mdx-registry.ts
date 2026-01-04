@@ -30,9 +30,9 @@ import {
 } from "@/components/resume";
 
 // UI 컴포넌트
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@orangec-at/design";
+import { Badge } from "@orangec-at/design";
+import { Button } from "@orangec-at/design";
 import {
   Card,
   CardContent,
@@ -40,7 +40,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@orangec-at/design";
 import { SplitText } from "@/components/ui/split-text";
 import {
   PageBreak,

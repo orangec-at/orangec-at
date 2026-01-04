@@ -4,6 +4,7 @@ import { GadgetToolbar } from "@/components/GadgetToolbar";
 import { auth } from "@/auth";
 import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
+import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -32,15 +33,17 @@ export default async function RootLayout({
         />
       </head>
       <body className="font-sans antialiased paper-texture transition-colors duration-500">
-        <ThemeProvider defaultTheme="system" storageKey="orangecat-theme">
-          {children}
-          <GadgetToolbar 
-            isLoggedIn={!!session} 
-            // Theme toggle is handled by ThemeProvider mostly, but GadgetToolbar has a button for it.
-            // We might need a client wrapper to handle onThemeToggle if it requires useTheme hook access.
-            // For now, passing empty or implementing inside GadgetToolbar if it uses useTheme.
-          />
-        </ThemeProvider>
+        <SessionProvider session={session}>
+          <ThemeProvider defaultTheme="system" storageKey="orangecat-theme">
+            {children}
+            <GadgetToolbar 
+              isLoggedIn={!!session} 
+              // Theme toggle is handled by ThemeProvider mostly, but GadgetToolbar has a button for it.
+              // We might need a client wrapper to handle onThemeToggle if it requires useTheme hook access.
+              // For now, passing empty or implementing inside GadgetToolbar if it uses useTheme.
+            />
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

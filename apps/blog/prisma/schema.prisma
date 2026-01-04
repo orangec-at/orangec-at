@@ -21,6 +21,7 @@ model User {
   orders        Order[]
   threads       Thread[]
   marginalia    Marginalia[]
+  newsletterSubscriptions NewsletterSubscription[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -28,6 +29,12 @@ model User {
 enum Role {
   USER
   ADMIN
+}
+
+enum NewsletterStatus {
+  PENDING
+  ACTIVE
+  UNSUBSCRIBED
 }
 
 model Account {
@@ -127,4 +134,21 @@ model Embedding {
 
   @@index([locale])
   @@index([contentType])
+}
+
+model NewsletterSubscription {
+  id                 String           @id @default(cuid())
+  email              String           @unique
+  status             NewsletterStatus @default(PENDING)
+  userId             String?
+  user               User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  confirmTokenHash   String?
+  unsubscribeTokenHash String?
+  confirmedAt        DateTime?
+  unsubscribedAt     DateTime?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([status])
 }

@@ -177,11 +177,16 @@ class VectorStore:
                 cur.execute(sql, params)
                 
                 for row in cur.fetchall():
+                    metadata = json.loads(row[2]) if isinstance(row[2], str) else (row[2] or {})
+                    title = metadata.get("title") or row[0]
+                    url = metadata.get("url") or ""
+
                     results.append({
                         "slug": row[0],
                         "text": row[1],
-                        "title": json.loads(row[2]).get("title", row[0]) if isinstance(row[2], str) else row[2].get("title", row[0]),
-                        "metadata": json.loads(row[2]) if isinstance(row[2], str) else row[2],
+                        "title": title,
+                        "url": url,
+                        "metadata": metadata,
                         "locale": row[3],
                         "content_type": row[4],
                         "similarity": float(row[5])
@@ -202,7 +207,11 @@ class VectorStore:
         try:
             with conn.cursor() as cur:
                 cur.execute('SELECT COUNT(*) FROM "Embedding"')
-                stats["total_embeddings"] = cur.fetchone()[0]
+                total_row = cur.fetchone()
+                if total_row is not None:
+                    stats["total_embeddings"] = total_row[0]
+                else:
+                    stats["total_embeddings"] = 0
                 
                 cur.execute('SELECT locale, COUNT(*) FROM "Embedding" GROUP BY locale')
                 for row in cur.fetchall():

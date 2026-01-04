@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@orangec-at/design";
 import { FaGithub, FaLinkedin, FaMailBulk } from "react-icons/fa";
 
 export default function SocialLinks() {

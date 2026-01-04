@@ -34,7 +34,7 @@ async def trigger_indexing(
             status="info",
             message="Please run the indexing script manually: `uv run python scripts/generate_embeddings.py`",
             indexed_count=stats["total_embeddings"],
-            embeddings_path=str(vector_store.embeddings_path)
+            embeddings_path="database"
         )
 
     except Exception as e:

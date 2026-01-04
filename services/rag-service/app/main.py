@@ -2,7 +2,7 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import chat, indexing
+from app.api import chat, indexing, search
 from app.models.schemas import HealthResponse
 from app.services.gemini import GeminiService
 from dotenv import load_dotenv
@@ -34,6 +34,7 @@ app.add_middleware(
 # Include routers
 app.include_router(chat.router, prefix="/api", tags=["chat"])
 app.include_router(indexing.router, prefix="/api", tags=["indexing"])
+app.include_router(search.router, prefix="/api", tags=["search"])
 
 
 @app.get("/", response_model=dict)

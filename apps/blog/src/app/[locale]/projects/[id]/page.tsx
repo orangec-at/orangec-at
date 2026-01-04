@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { PROJECTS } from "@/data/projects";
-import { Button } from "@/components/ui/button";
+import { Button } from "@orangec-at/design";
 import { designTokens } from "@/lib/design-tokens";
 import { getBlogPostsMeta } from "@/lib/blog-utils.server";
 import { getRelatedBlogSlugs } from "@/data/connections";

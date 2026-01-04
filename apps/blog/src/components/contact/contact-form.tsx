@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import { Button } from "@orangec-at/design";
 
 export default function ContactForm() {
   const t = useTranslations("contact.form");

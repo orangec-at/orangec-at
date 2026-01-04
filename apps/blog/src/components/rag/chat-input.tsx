@@ -2,7 +2,7 @@
 
 import { useState, KeyboardEvent } from 'react';
 import { Send } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@orangec-at/design';
 import { Textarea } from '@/components/ui/textarea';
 
 interface ChatInputProps {

@@ -1,8 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Github, Twitter, Linkedin, Mail, Check, Layers } from "lucide-react";
+import { useLocale } from "next-intl";
+import { useSession } from "next-auth/react";
 
+import { subscribeNewsletter } from "@/actions/newsletter";
 import type { ThemeMode } from "../types";
 
 interface FooterProps {
@@ -17,16 +20,45 @@ export const Footer: React.FC<FooterProps> = ({
   onSubscribe,
   onDesignSystemClick,
 }) => {
+  const locale = useLocale();
+  const { data: session } = useSession();
+
   const [email, setEmail] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const sessionEmail = session?.user?.email;
+    if (!sessionEmail) return;
+    if (!email) setEmail(sessionEmail);
+  }, [email, session?.user?.email]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !onSubscribe) return;
-    onSubscribe(email);
-    setIsSuccess(true);
-    setTimeout(() => setIsSuccess(false), 3000);
-    setEmail("");
+    if (!email) return;
+
+    setError(null);
+
+    if (onSubscribe) {
+      onSubscribe(email);
+      setIsSuccess(true);
+      setTimeout(() => setIsSuccess(false), 3000);
+      setEmail("");
+      return;
+    }
+
+    const result = await subscribeNewsletter({ email, locale });
+
+    if (result.success) {
+      setIsSuccess(true);
+      setTimeout(() => setIsSuccess(false), 3000);
+      if (!session?.user?.email) {
+        setEmail("");
+      }
+      return;
+    }
+
+    setError(result.message);
   };
 
   return (
@@ -48,14 +80,21 @@ export const Footer: React.FC<FooterProps> = ({
               </div>
             ) : (
               <form className="flex gap-4" onSubmit={handleSubmit}>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="EMAIL ADDRESS"
-                  className="bg-transparent border-b border-stone-700 py-3 flex-grow outline-none focus:border-white transition-colors text-xs tracking-widest font-light"
-                />
+                <div className="flex-grow">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="EMAIL ADDRESS"
+                    className="bg-transparent border-b border-stone-700 py-3 w-full outline-none focus:border-white transition-colors text-xs tracking-widest font-light"
+                  />
+                  {error && (
+                    <div className="mt-2 text-[10px] tracking-widest text-red-400">
+                      {error}
+                    </div>
+                  )}
+                </div>
                 <button
                   type="submit"
                   className="text-xs tracking-widest uppercase font-bold border-b border-stone-200 pb-1 hover:text-stone-400 hover:border-stone-400 transition-colors"

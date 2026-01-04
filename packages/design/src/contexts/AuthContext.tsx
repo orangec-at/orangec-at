@@ -7,7 +7,7 @@ import React, {
   useState,
   useCallback,
 } from "react";
-import { TokenManager } from "@orangec-at/design/utils/token-manager";
+import { TokenManager } from "@orangec-at/design/lib/token-manager";
 
 interface AuthContextType {
   isAuthenticated: boolean;

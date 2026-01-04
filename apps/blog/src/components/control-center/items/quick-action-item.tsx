@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@orangec-at/design";
 import { QuickActionItem } from "../types";
 
 interface QuickActionItemProps {

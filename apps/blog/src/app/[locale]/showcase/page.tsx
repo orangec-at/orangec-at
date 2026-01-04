@@ -1,5 +1,5 @@
 import { components } from "@/lib/design-tokens";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@orangec-at/design";
 
 export default function ShowcasePage() {
   // MUJI 진열대처럼 다양한 컴포넌트 배치

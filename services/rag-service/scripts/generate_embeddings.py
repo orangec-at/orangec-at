@@ -123,8 +123,11 @@ async def index_blog_posts(gemini: GeminiService) -> List[Dict]:
                     "content_type": "blog",
                     "embedding": embedding,
                     "text": cleaned_text[:1000],  # Store first 1000 chars
-                    "url": f"/{locale}/blog/{mdx_file.stem}",
+                    "url": f"/catalog/{mdx_file.stem}",
                     "metadata": {
+                        "title": frontmatter.get("title", mdx_file.stem),
+                    "url": f"/catalog/{mdx_file.stem}",
+
                         "date": frontmatter.get("date", ""),
                         "tags": frontmatter.get("tags", "").split(",") if frontmatter.get("tags") else [],
                         "category": frontmatter.get("category", ""),
@@ -207,8 +210,10 @@ async def index_documents(gemini: GeminiService) -> List[Dict]:
                     "content_type": doc_type,
                     "embedding": embedding,
                     "text": cleaned_text[:1000],
-                    "url": f"/{locale}/documents/{doc_type}/{mdx_file.stem}",
+                    "url": f"/documents/{doc_type}/{mdx_file.stem}",
                     "metadata": {
+                        "title": frontmatter.get("title", mdx_file.stem),
+                        "url": f"/documents/{doc_type}/{mdx_file.stem}",
                         "type": frontmatter.get("type", doc_type),
                         "status": frontmatter.get("status", ""),
                         "company": frontmatter.get("company", ""),

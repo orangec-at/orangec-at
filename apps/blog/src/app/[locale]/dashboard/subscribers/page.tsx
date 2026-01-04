@@ -1,0 +1,127 @@
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
+
+import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
+import { withLocalePath } from "@/lib/locale-path";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+
+  return {
+    title: locale === "ko" ? "구독자" : "Subscribers",
+    robots: { index: false, follow: false },
+  };
+}
+
+export default async function AdminSubscribersPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    redirect(withLocalePath(locale, "/"));
+  }
+
+  const subscribers = await prisma.$queryRaw<
+    Array<{
+      id: string;
+      email: string;
+      status: string;
+      updatedAt: Date;
+      userName: string | null;
+      userEmail: string | null;
+    }>
+  >`
+    SELECT
+      ns.id,
+      ns.email,
+      ns.status::text as status,
+      ns."updatedAt" as "updatedAt",
+      u.name as "userName",
+      u.email as "userEmail"
+    FROM "NewsletterSubscription" ns
+    LEFT JOIN "User" u ON u.id = ns."userId"
+    ORDER BY ns."updatedAt" DESC
+    LIMIT 300
+  `;
+
+  return (
+    <div className="min-h-screen paper-texture bg-[#fdfcf5] dark:bg-[#1a1a1a]">
+      <div className="max-w-6xl mx-auto px-4 py-10">
+        <h1 className="font-serif text-3xl font-bold text-stone-900 dark:text-stone-100">
+          {locale === "ko" ? "구독자" : "Subscribers"}
+        </h1>
+        <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">
+          {locale === "ko"
+            ? "뉴스레터 구독 상태를 확인합니다."
+            : "Review newsletter subscription status."}
+        </p>
+
+        <div className="mt-8 overflow-hidden rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900">
+          <table className="w-full">
+            <thead className="bg-stone-50 dark:bg-stone-800">
+              <tr>
+                <th className="text-left text-xs font-bold uppercase tracking-wider text-stone-500 px-6 py-4">
+                  Email
+                </th>
+                <th className="text-left text-xs font-bold uppercase tracking-wider text-stone-500 px-6 py-4">
+                  {locale === "ko" ? "상태" : "Status"}
+                </th>
+                <th className="text-left text-xs font-bold uppercase tracking-wider text-stone-500 px-6 py-4">
+                  {locale === "ko" ? "연결된 사용자" : "User"}
+                </th>
+                <th className="text-left text-xs font-bold uppercase tracking-wider text-stone-500 px-6 py-4">
+                  {locale === "ko" ? "업데이트" : "Updated"}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
+              {subscribers.map((s) => (
+                <tr key={s.id}>
+                  <td className="px-6 py-4">
+                    <div className="text-sm font-medium text-stone-900 dark:text-stone-100">
+                      {s.email}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-xs font-bold tracking-widest text-stone-600 dark:text-stone-300">
+                      {s.status}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-stone-700 dark:text-stone-200">
+                      {s.userName || s.userEmail || "-"}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-xs text-stone-500">
+                      {new Date(s.updatedAt).toLocaleString(
+                        locale === "ko" ? "ko-KR" : "en-US"
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+
+              {subscribers.length === 0 && (
+                <tr>
+                  <td className="px-6 py-10 text-center text-sm text-stone-500" colSpan={4}>
+                    {locale === "ko" ? "구독자가 없습니다." : "No subscribers"}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { ControlCenter } from "./control-center";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@orangec-at/design";
 
 export function ControlCenterDemo() {
   return (

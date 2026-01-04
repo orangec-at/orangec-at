@@ -30,6 +30,16 @@ class SourceDocument(BaseModel):
     excerpt: str = Field(description="Text excerpt from the document")
 
 
+class SearchResult(BaseModel):
+    slug: str
+    title: str
+    url: str
+    content_type: str
+    similarity: float
+    excerpt: str
+    locale: str
+
+
 class ChatResponse(BaseModel):
     """Chat response model"""
     answer: str

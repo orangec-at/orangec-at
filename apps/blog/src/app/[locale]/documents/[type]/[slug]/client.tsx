@@ -1,7 +1,7 @@
 "use client";
 
 import { mdxComponents } from "@/components/blog/mdx-components";
-import { Badge, Button } from "@/components/ui";
+import { Badge, Button } from "@orangec-at/design";
 import {
   DocumentMeta,
   DOCUMENT_STATUS_COLORS,

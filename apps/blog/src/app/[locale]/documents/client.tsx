@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Button, Card } from "@/components/ui";
+import { Badge, Button, Card } from "@orangec-at/design";
 import {
   DocumentMeta,
   DocumentStatus,

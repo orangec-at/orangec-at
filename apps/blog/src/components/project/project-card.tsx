@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Project } from "@/data/projects";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Title, Body, TypographyLink } from "@/components/ui/typography";
+import { Card } from "@orangec-at/design";
+import { Badge } from "@orangec-at/design";
+import { Title, Body, TypographyLink } from "@orangec-at/design/blog";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { withLocalePath } from "@/lib/locale-path";

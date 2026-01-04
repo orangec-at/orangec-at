@@ -88,7 +88,6 @@ export default function HomeClient({
       <SkillsSection theme={themeMode} />
       <Footer
         onAdminSecret={handleAdminClick}
-        onSubscribe={() => {}}
         onDesignSystemClick={handleDesignSystemClick}
         theme={themeMode}
       />

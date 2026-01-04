@@ -33,6 +33,8 @@ export default function DashboardClient({ data, locale }: DashboardClientProps) 
     orders: locale === "ko" ? "주문 내역" : "Orders",
     users: locale === "ko" ? "사용자" : "Users",
     products: locale === "ko" ? "상품" : "Products",
+    inbox: locale === "ko" ? "서신함" : "Inbox",
+    subscribers: locale === "ko" ? "구독자" : "Subscribers",
     totalUsers: locale === "ko" ? "전체 사용자" : "Total Users",
     totalPoints: locale === "ko" ? "총 잉크 포인트" : "Total Ink Points",
     avgPoints: locale === "ko" ? "평균 포인트" : "Avg Points",
@@ -81,9 +83,25 @@ export default function DashboardClient({ data, locale }: DashboardClientProps) 
         </Link>
 
         <header className="mb-12">
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-stone-900 dark:text-stone-100 mb-2">
-            {t.title}
-          </h1>
+          <div className="flex items-start justify-between gap-4">
+            <h1 className="font-serif text-3xl md:text-4xl font-bold text-stone-900 dark:text-stone-100 mb-2">
+              {t.title}
+            </h1>
+            <div className="flex items-center gap-2">
+              <Link
+                href={withLocalePath(locale, "/dashboard/dm")}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700"
+              >
+                {t.inbox}
+              </Link>
+              <Link
+                href={withLocalePath(locale, "/dashboard/subscribers")}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700"
+              >
+                {t.subscribers}
+              </Link>
+            </div>
+          </div>
           <div className="flex gap-2 mt-6">
             {tabs.map((tab) => (
               <button

@@ -55,7 +55,13 @@ export default function ArchivesNavigation({ children }: ArchivesNavigationProps
   const handleThreadsClick = () => router.push(withLocalePath(locale, "/threads"));
   const handleShopClick = () => router.push(withLocalePath(locale, "/shop"));
   const handleAboutClick = () => router.push(withLocalePath(locale, "/about"));
-  const handleProfileClick = () => router.push(withLocalePath(locale, "/profile"));
+  const handleProfileClick = () => {
+    if (!isLoggedIn) {
+      void signIn();
+      return;
+    }
+    router.push(withLocalePath(locale, "/profile"));
+  };
   
   const handleAdminClick = () => {
     if (!isLoggedIn) {
@@ -109,7 +115,8 @@ export default function ArchivesNavigation({ children }: ArchivesNavigationProps
 
       <SearchModal
         isOpen={isSearchOpen}
-        posts={[]} 
+        locale={locale}
+        posts={[]}
         fragments={[]}
         onClose={() => setIsSearchOpen(false)}
         onPostClick={handlePostClick}

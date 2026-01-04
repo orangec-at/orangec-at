@@ -3,8 +3,8 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { User, Bot, ExternalLink } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+import { Badge } from '@orangec-at/design';
+import { Card } from '@orangec-at/design';
 import type { ChatMessage, SourceDocument } from '@/lib/rag-client';
 import Link from 'next/link';
 

@@ -15,20 +15,37 @@ function getRoleFromUser(user: unknown): Role | undefined {
   return;
 }
 
+function getInkPointsFromUser(user: unknown): number {
+  if (typeof user !== "object" || user === null) return 0;
+  if (!("inkPoints" in user)) return 0;
+
+  const { inkPoints } = user as { inkPoints: unknown };
+  return typeof inkPoints === "number" ? inkPoints : 0;
+}
+
+const authEmailFrom =
+  process.env.AUTH_EMAIL_FROM ?? "Archives <onboarding@resend.dev>"
+
+const providers = [
+  Google,
+  ...(process.env.RESEND_API_KEY
+    ? [
+        Resend({
+          from: authEmailFrom,
+        }),
+      ]
+    : []),
+]
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [
-    Google,
-    Resend({
-      from: "Archives <onboarding@resend.dev>",
-    }),
-  ],
+  providers,
   callbacks: {
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id
         session.user.role = getRoleFromUser(user) ?? "USER"
-        session.user.inkPoints = (user as any).inkPoints ?? 0
+        session.user.inkPoints = getInkPointsFromUser(user)
       }
 
       return session

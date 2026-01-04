@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@orangec-at/design";
 import { useTheme } from "@/contexts/theme-context";
 import { X } from "lucide-react";
 import { useLocale } from "next-intl";

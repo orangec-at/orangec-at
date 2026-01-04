@@ -127,7 +127,7 @@ export const GadgetToolbar: React.FC<GadgetToolbarProps> = ({
       setChatHistory(prev => [...prev, { role: 'model', text: '' }]);
 
       let currentModelResponse = '';
-      let currentSources: any[] = [];
+      let currentSources: unknown[] = [];
 
       while (true) {
         const { done, value } = await reader.read();

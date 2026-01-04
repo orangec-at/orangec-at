@@ -3,7 +3,7 @@
 import { BlogCTASection } from "@/components/blog/blog-cta-section";
 import { mdxComponents } from "@/components/blog/mdx-components";
 import { RelatedProjectsSection } from "@/components/blog/related-projects-section";
-import { Button } from "@/components/ui";
+import { Button } from "@orangec-at/design";
 import { BlogPostMeta, getRelatedProjects } from "@/lib/blog-utils";
 import { translateCategory, translateTag } from "@/types/frontmatter";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";

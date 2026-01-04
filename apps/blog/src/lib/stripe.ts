@@ -1,13 +1,21 @@
 import Stripe from "stripe";
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY is not defined");
-}
+let stripeClient: Stripe | null = null;
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2025-01-27.acacia" as any, // Use latest stable
-  appInfo: {
-    name: "OrangeC Archives Blog",
-    version: "0.1.0",
-  },
-});
+export function getStripe() {
+  if (stripeClient) return stripeClient;
+
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey) {
+    throw new Error("STRIPE_SECRET_KEY is not defined");
+  }
+
+  stripeClient = new Stripe(secretKey, {
+    appInfo: {
+      name: "OrangeC Archives Blog",
+      version: "0.1.0",
+    },
+  });
+
+  return stripeClient;
+}
