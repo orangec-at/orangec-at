@@ -7,6 +7,7 @@ declare module "next-auth" {
       id: string;
       role: Role;
       inkPoints: number;
+      onboardingCompleted: boolean;
     };
   }
 }

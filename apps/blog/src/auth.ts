@@ -23,6 +23,14 @@ function getInkPointsFromUser(user: unknown): number {
   return typeof inkPoints === "number" ? inkPoints : 0;
 }
 
+function getOnboardingCompletedFromUser(user: unknown): boolean {
+  if (typeof user !== "object" || user === null) return false;
+  if (!("onboardingCompletedAt" in user)) return false;
+
+  const { onboardingCompletedAt } = user as { onboardingCompletedAt: unknown };
+  return Boolean(onboardingCompletedAt);
+}
+
 const authEmailFrom =
   process.env.AUTH_EMAIL_FROM ?? "Archives <onboarding@resend.dev>"
 
@@ -46,6 +54,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.id = user.id
         session.user.role = getRoleFromUser(user) ?? "USER"
         session.user.inkPoints = getInkPointsFromUser(user)
+        session.user.onboardingCompleted = getOnboardingCompletedFromUser(user)
       }
 
       return session
