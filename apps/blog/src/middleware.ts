@@ -25,9 +25,16 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/api/auth/signin", req.url));
   }
 
-  const isProtected = /\/(dashboard|shop)/.test(pathname);
-  if (isProtected && !req.auth) {
+  const isDashboardRoute = /\/dashboard(\/|$)/.test(pathname);
+  const isShopRoute = /\/shop(\/|$)/.test(pathname);
+
+  if ((isDashboardRoute || isShopRoute) && !req.auth) {
     return NextResponse.redirect(new URL("/api/auth/signin", req.url));
+  }
+
+  if (isDashboardRoute && req.auth && req.auth.user?.role !== "ADMIN") {
+    const profilePath = locale === "en" ? "/en/profile" : "/profile";
+    return NextResponse.redirect(new URL(profilePath, req.url));
   }
 
   if (

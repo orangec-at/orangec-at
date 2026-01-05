@@ -174,11 +174,14 @@ export default function ShopClient({ products, userPoints, locale }: ShopClientP
                         
                         <div className="aspect-square bg-stone-100 dark:bg-stone-800 flex items-center justify-center">
                           {product.image ? (
-                            <img 
-                              src={product.image} 
-                              alt={product.name}
-                              className="w-full h-full object-cover"
-                            />
+                            <>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={product.image}
+                                alt={product.name}
+                                className="w-full h-full object-cover"
+                              />
+                            </>
                           ) : (
                             <Package className="w-12 h-12 text-stone-300 dark:text-stone-600" />
                           )}
@@ -285,11 +288,14 @@ export default function ShopClient({ products, userPoints, locale }: ShopClientP
                 <>
                   <div className="aspect-video bg-stone-100 dark:bg-stone-800 flex items-center justify-center">
                     {selectedProduct.image ? (
-                      <img 
-                        src={selectedProduct.image} 
-                        alt={selectedProduct.name}
-                        className="w-full h-full object-cover"
-                      />
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={selectedProduct.image}
+                          alt={selectedProduct.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </>
                     ) : (
                       <Package className="w-16 h-16 text-stone-300 dark:text-stone-600" />
                     )}

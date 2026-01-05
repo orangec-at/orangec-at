@@ -3,13 +3,12 @@
 import { ControlCenter } from "./control-center";
 import { ChevronDown, ChevronUp, Sliders } from "lucide-react";
 import { FaGithub, FaLinkedin, FaEnvelope, FaXTwitter } from "react-icons/fa6";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import ContactForm from "@/components/contact/contact-form";
 
 export default function ControlCenterDock() {
   const t = useTranslations("controlCenter");
-  const locale = useLocale();
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [showContact, setShowContact] = useState(false);
   const ownerEmail = "radio941016@gmail.com";

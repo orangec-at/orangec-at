@@ -3,7 +3,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, Droplets, Quote, Mail, Sparkles, Footprints, Settings, User, X, Music, Highlighter, Play, Pause, Send, Loader2, CloudRain, Book, Coffee, Keyboard as KeyboardIcon, Moon, Sun } from 'lucide-react';
+import { Bot, Droplets, Quote, Mail, Sparkles, Footprints, Settings, User, X, Music, Highlighter, Play, Pause, Send, Loader2, CloudRain, Book, Coffee, Keyboard as KeyboardIcon, Sun } from 'lucide-react';
 import { sendAdminDM } from "@/actions/admin-dm";
 
 interface GadgetToolbarProps {

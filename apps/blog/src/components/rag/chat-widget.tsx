@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
+import { MessageCircle, X } from 'lucide-react';
 import { Button } from '@orangec-at/design';
 import { Card } from '@orangec-at/design';
 import { ChatMessages } from './chat-messages';

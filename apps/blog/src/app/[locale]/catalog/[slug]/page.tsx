@@ -1,7 +1,4 @@
-import {
-  getAvailableTranslations,
-  getBlogPostMeta,
-} from "@/lib/blog-utils.server";
+import { getBlogPostMeta } from "@/lib/blog-utils.server";
 import { buildKnowledgeShelfDataFromBlogMeta } from "@/lib/knowledge-shelf-utils.server";
 import { promises as fs } from "fs";
 import matter from "gray-matter";
@@ -41,7 +38,7 @@ export default async function CatalogDetailPage({ params }: CatalogDetailPagePro
     notFound();
   }
 
-  const { content, data } = matter(source);
+  const { content } = matter(source);
   const mdxSource = await serialize(content);
 
   const blogMeta = await getBlogPostMeta(slug, resolvedLocale);

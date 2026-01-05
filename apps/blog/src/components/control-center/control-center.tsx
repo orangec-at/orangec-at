@@ -98,6 +98,8 @@ export function ControlCenter({
     currentTrack,
     play,
     pause,
+    next,
+    previous,
   ]);
 
   // Sort items by order and filter enabled ones

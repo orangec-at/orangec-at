@@ -51,7 +51,6 @@ export async function POST(req: Request) {
       throw new Error(`RAG Service Error: ${ragResponse.status} - ${errorText}`);
     }
 
-    const encoder = new TextEncoder();
     const decoder = new TextDecoder();
     let fullResponseText = '';
 

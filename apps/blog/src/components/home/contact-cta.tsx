@@ -1,12 +1,10 @@
 "use client";
 
 import { FileText, Github, Linkedin, Mail } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { Detail } from "../ui/typography";
 import { colors, spacing } from "@/lib/design-tokens";
 
 export default function ContactCTA() {
-  const t = useTranslations("home.contact");
   return (
     <section className={spacing.element}>
       <div className="muji-pegboard rounded-2xl p-6 md:p-8">

@@ -1,6 +1,5 @@
 "use client";
 
-import { BlogPostMeta } from "@/lib/blog-utils.server";
 import { Post, Fragment } from "@/components/knowledge-shelf/types";
 import { Hero } from "@/components/knowledge-shelf/components/Hero";
 import { FeaturedPosts } from "@/components/knowledge-shelf/components/FeaturedPosts";

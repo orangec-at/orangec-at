@@ -123,12 +123,6 @@ const ARTIFACTS: Artifact[] = [
   },
 ];
 
-const PERSONALITY_TRAITS = [
-  { left: "CASUAL", right: "FORMAL", value: 25 },
-  { left: "FUN", right: "SERIOUS", value: 72 },
-  { left: "REALISTIC", right: "IDEALISTIC", value: 42 },
-  { left: "APPROACHABLE", right: "EXCLUSIVE", value: 58 },
-];
 
 export const About: React.FC<AboutProps> = ({ onBack, theme }) => {
   const isDark = theme === "dark";
@@ -180,6 +174,7 @@ export const About: React.FC<AboutProps> = ({ onBack, theme }) => {
                     isDark ? "bg-stone-900 border-red-900" : "bg-stone-200 border-stone-800"
                   }`}
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop"
                     className="w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 transition-all duration-1000"

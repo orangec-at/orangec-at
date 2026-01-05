@@ -1,4 +1,3 @@
-import { components } from "@/lib/design-tokens";
 import { Badge } from "@orangec-at/design";
 
 export default function ShowcasePage() {

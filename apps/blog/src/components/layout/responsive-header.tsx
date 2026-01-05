@@ -24,7 +24,6 @@ interface ResponsiveHeaderProps {
 export default function ResponsiveHeader({
   position = "top",
   enableScrollAnimation = true,
-  showSocialIcons = false,
 }: ResponsiveHeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVerySmallScreen, setIsVerySmallScreen] = useState(false);
@@ -83,7 +82,6 @@ export default function ResponsiveHeader({
     };
   };
 
-  const getSocialIconSize = () => (isMobile ? 20 : 20);
   const getBackButtonSize = () => (isMobile ? 20 : 18);
   const getDropdownSide = (): "top" | "bottom" =>
     position === "top" ? "bottom" : "top";

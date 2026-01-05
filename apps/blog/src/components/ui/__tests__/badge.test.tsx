@@ -81,7 +81,7 @@ describe('Badge Component', () => {
     })
 
     it('asChild 없이는 span으로 렌더링되어야 함', () => {
-      const { container } = render(<Badge>Normal Badge</Badge>)
+      render(<Badge>Normal Badge</Badge>)
       const badge = screen.getByText('Normal Badge')
       expect(badge.tagName).toBe('SPAN')
     })
