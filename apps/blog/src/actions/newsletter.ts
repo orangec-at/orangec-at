@@ -6,14 +6,22 @@ import { createHash, randomBytes } from "crypto";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
-type NewsletterResult = {
-  success: boolean;
-  message: string;
-};
+type NewsletterStatus = "PENDING" | "ACTIVE" | "UNSUBSCRIBED";
+
+type NewsletterResult =
+  | {
+      success: true;
+      status: NewsletterStatus;
+      message: string;
+    }
+  | {
+      success: false;
+      message: string;
+    };
 
 type NewsletterStatusResult = {
   email: string;
-  status: "PENDING" | "ACTIVE" | "UNSUBSCRIBED";
+  status: NewsletterStatus;
   confirmedAt: string | null;
   unsubscribedAt: string | null;
 };
@@ -109,7 +117,7 @@ export async function subscribeNewsletter(input: {
   });
 
   if (existing?.status === "ACTIVE") {
-    return { success: true, message: "Already subscribed" };
+    return { success: true, status: "ACTIVE", message: "Already subscribed" };
   }
 
   const sessionEmail = session?.user?.email ? normalizeEmail(session.user.email) : null;
@@ -140,7 +148,7 @@ export async function subscribeNewsletter(input: {
       }),
     ]);
 
-    return { success: true, message: "Subscribed" };
+    return { success: true, status: "ACTIVE", message: "Subscribed" };
   }
 
   if (!process.env.RESEND_API_KEY) {
@@ -196,7 +204,7 @@ export async function subscribeNewsletter(input: {
     return { success: false, message: "Failed to send confirmation email" };
   }
 
-  return { success: true, message: "Check your email to confirm" };
+  return { success: true, status: "PENDING", message: "Check your email to confirm" };
 }
 
 export async function confirmNewsletterSubscription(input: {
@@ -242,7 +250,7 @@ export async function confirmNewsletterSubscription(input: {
     }),
   ]);
 
-  return { success: true, message: "Subscription confirmed" };
+  return { success: true, status: "ACTIVE", message: "Subscription confirmed" };
 }
 
 export async function unsubscribeNewsletter(input?: {
@@ -278,7 +286,7 @@ export async function unsubscribeNewsletter(input?: {
       }),
     ]);
 
-    return { success: true, message: "Unsubscribed" };
+    return { success: true, status: "UNSUBSCRIBED", message: "Unsubscribed" };
   }
 
   if (!sessionEmail) {
@@ -291,7 +299,7 @@ export async function unsubscribeNewsletter(input?: {
   });
 
   if (!existing || existing.status === "UNSUBSCRIBED") {
-    return { success: true, message: "Already unsubscribed" };
+    return { success: true, status: "UNSUBSCRIBED", message: "Already unsubscribed" };
   }
 
   const now = new Date();
@@ -311,5 +319,5 @@ export async function unsubscribeNewsletter(input?: {
     }),
   ]);
 
-  return { success: true, message: "Unsubscribed" };
+  return { success: true, status: "UNSUBSCRIBED", message: "Unsubscribed" };
 }

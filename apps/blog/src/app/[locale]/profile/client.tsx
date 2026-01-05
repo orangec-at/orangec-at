@@ -58,14 +58,13 @@ export default function ProfileClient() {
 
     if (subscriptionStatus === "ACTIVE" || subscriptionStatus === "PENDING") {
       const result = await unsubscribeNewsletter();
-      if (result.success) setSubscriptionStatus("UNSUBSCRIBED");
+      if (result.success) setSubscriptionStatus(result.status);
       return;
     }
 
     const result = await subscribeNewsletter({ locale });
     if (result.success) {
-      const isPending = result.message.toLowerCase().includes("confirm");
-      setSubscriptionStatus(isPending ? "PENDING" : "ACTIVE");
+      setSubscriptionStatus(result.status);
     }
   };
 

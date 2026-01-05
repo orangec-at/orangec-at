@@ -26,7 +26,7 @@ export const Footer: React.FC<FooterProps> = ({
   const { data: session } = useSession();
 
   const [email, setEmail] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -43,8 +43,8 @@ export const Footer: React.FC<FooterProps> = ({
 
     if (onSubscribe) {
       onSubscribe(email);
-      setIsSuccess(true);
-      setTimeout(() => setIsSuccess(false), 3000);
+      setSuccessMessage("Subscribed.");
+      setTimeout(() => setSuccessMessage(null), 3000);
       setEmail("");
       return;
     }
@@ -52,8 +52,12 @@ export const Footer: React.FC<FooterProps> = ({
     const result = await subscribeNewsletter({ email, locale });
 
     if (result.success) {
-      setIsSuccess(true);
-      setTimeout(() => setIsSuccess(false), 3000);
+      setSuccessMessage(
+        result.status === "PENDING"
+          ? "Check your email to confirm your subscription."
+          : "You are now a researcher in our dispatch list."
+      );
+      setTimeout(() => setSuccessMessage(null), 3000);
       if (!session?.user?.email) {
         setEmail("");
       }
@@ -75,10 +79,10 @@ export const Footer: React.FC<FooterProps> = ({
               Get monthly updates on technical deep-dives, industry observations,
               and the occasional philosophical detour. No spam, only knowledge.
             </p>
-            {isSuccess ? (
+            {successMessage ? (
               <div className="flex items-center gap-3 text-green-400 font-serif italic py-3 animate-pulse">
                 <Check className="w-5 h-5" />
-                <span>You are now a researcher in our dispatch list.</span>
+                <span>{successMessage}</span>
               </div>
             ) : (
               <form className="flex gap-4" onSubmit={handleSubmit}>
