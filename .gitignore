@@ -62,7 +62,9 @@ package-lock.json
 # AI Sub Folders
 # .claude/ # For common setup
 .claude/tsc-cache/
-.serena/
+# .serena/ - memories는 동기화, cache만 제외
+.serena/cache/
+apps/**/.serena/
 .superdesign/
 
 codes/
