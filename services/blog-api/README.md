@@ -28,6 +28,11 @@ Lightweight Rust API server for OrangeC Blog, designed to run on Oracle Cloud fr
 | POST | `/api/chat` | RAG chat (SSE) |
 | GET | `/api/search` | RAG search |
 
+### Auth Notes
+
+- `POST /api/auth/login` uses Supabase password grant (needs `SUPABASE_URL`, `SUPABASE_ANON_KEY`).
+- `GET /api/auth/me` expects `Authorization: Bearer <access_token>` and verifies with `SUPABASE_JWT_SECRET`.
+
 ## Development
 
 ```bash
