@@ -8,3 +8,4 @@ pub mod shop;
 pub mod marginalia;
 pub mod admin;
 pub mod admin_dm;
+pub mod onboarding;

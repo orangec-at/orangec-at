@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
 use crate::auth::verify_internal_api_key;
+use crate::schema::users;
 use crate::services::AppState;
 
 #[derive(Deserialize)]
@@ -288,6 +289,180 @@ async fn dashboard(
     }
 }
 
+#[derive(Deserialize)]
+pub struct UpdateUserInkPointsRequest {
+    pub user_role: String,
+    pub target_user_id: String,
+    pub points: i32,
+}
+
+#[derive(Serialize)]
+pub struct SimpleResult {
+    pub success: bool,
+    pub message: String,
+}
+
+#[derive(Serialize)]
+pub struct AdminUser {
+    pub id: String,
+    pub name: Option<String>,
+    pub email: Option<String>,
+    pub image: Option<String>,
+    pub ink_points: i32,
+    pub role: String,
+    pub created_at: chrono::NaiveDateTime,
+    pub order_count: i64,
+}
+
+#[derive(QueryableByName)]
+struct AdminUserRow {
+    #[diesel(sql_type = Text)]
+    id: String,
+    #[diesel(sql_type = Nullable<Text>)]
+    name: Option<String>,
+    #[diesel(sql_type = Nullable<Text>)]
+    email: Option<String>,
+    #[diesel(sql_type = Nullable<Text>)]
+    image: Option<String>,
+    #[diesel(sql_type = Int4)]
+    ink_points: i32,
+    #[diesel(sql_type = Text)]
+    role: String,
+    #[diesel(sql_type = Timestamp)]
+    created_at: chrono::NaiveDateTime,
+    #[diesel(sql_type = BigInt)]
+    order_count: i64,
+}
+
+async fn list_users(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    Json(payload): Json<AdminRequest>,
+) -> (StatusCode, Json<Vec<AdminUser>>) {
+    if verify_internal_api_key(&headers).is_err() {
+        return (StatusCode::UNAUTHORIZED, Json(vec![]));
+    }
+
+    if payload.user_role != "ADMIN" {
+        return (StatusCode::FORBIDDEN, Json(vec![]));
+    }
+
+    let pool = state.db.clone();
+
+    let result = tokio::task::spawn_blocking(move || {
+        let mut conn = pool.get().map_err(|e| format!("DB connection error: {}", e))?;
+
+        let sql = r#"
+            SELECT
+                u.id::text AS id,
+                u.name::text AS name,
+                u.email::text AS email,
+                u.image::text AS image,
+                u."inkPoints"::int4 AS ink_points,
+                u.role::text AS role,
+                u."createdAt" AS created_at,
+                COALESCE(COUNT(o.id), 0)::bigint AS order_count
+            FROM "User" u
+            LEFT JOIN "Order" o ON o."userId" = u.id
+            GROUP BY u.id
+            ORDER BY u."createdAt" DESC
+        "#;
+
+        let rows: Vec<AdminUserRow> = sql_query(sql)
+            .load(&mut conn)
+            .map_err(|e| format!("Users query error: {}", e))?;
+
+        let data = rows
+            .into_iter()
+            .map(|r| AdminUser {
+                id: r.id,
+                name: r.name,
+                email: r.email,
+                image: r.image,
+                ink_points: r.ink_points,
+                role: r.role,
+                created_at: r.created_at,
+                order_count: r.order_count,
+            })
+            .collect::<Vec<_>>();
+
+        Ok::<_, String>(data)
+    })
+    .await
+    .unwrap_or_else(|e| Err(format!("Task error: {}", e)));
+
+    match result {
+        Ok(users) => (StatusCode::OK, Json(users)),
+        Err(e) => {
+            tracing::error!("list_users error: {}", e);
+            (StatusCode::INTERNAL_SERVER_ERROR, Json(vec![]))
+        }
+    }
+}
+
+async fn update_user_ink_points(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    Json(payload): Json<UpdateUserInkPointsRequest>,
+) -> (StatusCode, Json<SimpleResult>) {
+    if verify_internal_api_key(&headers).is_err() {
+        return (
+            StatusCode::UNAUTHORIZED,
+            Json(SimpleResult {
+                success: false,
+                message: "Unauthorized".to_string(),
+            }),
+        );
+    }
+
+    if payload.user_role != "ADMIN" {
+        return (
+            StatusCode::FORBIDDEN,
+            Json(SimpleResult {
+                success: false,
+                message: "Unauthorized".to_string(),
+            }),
+        );
+    }
+
+    let pool = state.db.clone();
+    let target_user_id = payload.target_user_id;
+    let points = payload.points;
+
+    let result = tokio::task::spawn_blocking(move || {
+        let mut conn = pool.get().map_err(|e| format!("DB connection error: {}", e))?;
+
+        diesel::update(users::table.filter(users::id.eq(&target_user_id)))
+            .set(users::ink_points.eq(points))
+            .execute(&mut conn)
+            .map_err(|e| format!("Update error: {}", e))?;
+
+        Ok::<_, String>(())
+    })
+    .await
+    .unwrap_or_else(|e| Err(format!("Task error: {}", e)));
+
+    match result {
+        Ok(()) => (
+            StatusCode::OK,
+            Json(SimpleResult {
+                success: true,
+                message: "Points updated successfully".to_string(),
+            }),
+        ),
+        Err(e) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(SimpleResult {
+                success: false,
+                message: e,
+            }),
+        ),
+    }
+}
+
 pub fn router() -> Router<Arc<AppState>> {
-    Router::new().route("/dashboard", post(dashboard))
+    Router::new()
+        .route("/dashboard", post(dashboard))
+        .route("/users", post(list_users))
+        .route("/users/ink-points", post(update_user_ink_points))
 }

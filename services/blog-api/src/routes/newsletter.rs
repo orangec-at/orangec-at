@@ -23,6 +23,12 @@ pub struct SubscribeRequest {
 }
 
 #[derive(Deserialize)]
+pub struct NewsletterDirectSubscribeRequest {
+    pub user_id: String,
+    pub email: String,
+}
+
+#[derive(Deserialize)]
 pub struct ConfirmRequest {
     pub token: String,
 }
@@ -257,6 +263,114 @@ async fn subscribe(
     (status, Json(response))
 }
 
+async fn subscribe_direct(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    Json(payload): Json<NewsletterDirectSubscribeRequest>,
+) -> (StatusCode, Json<NewsletterResponse>) {
+    if verify_internal_api_key(&headers).is_err() {
+        return (
+            StatusCode::UNAUTHORIZED,
+            Json(NewsletterResponse {
+                success: false,
+                status: "ERROR".to_string(),
+                message: "Unauthorized".to_string(),
+            }),
+        );
+    }
+
+    let email = normalize_email(&payload.email);
+    if !is_valid_email(&email) {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(NewsletterResponse {
+                success: false,
+                status: "ERROR".to_string(),
+                message: "Invalid email".to_string(),
+            }),
+        );
+    }
+
+    let user_id = payload.user_id;
+    let pool = state.db.clone();
+
+    let result = tokio::task::spawn_blocking(move || {
+        let mut conn = pool.get().map_err(|e| format!("DB connection error: {}", e))?;
+
+        let now = chrono::Utc::now().naive_utc();
+
+        conn.transaction::<_, anyhow::Error, _>(|conn| {
+            let existing: Option<String> = newsletter_subscriptions::table
+                .filter(newsletter_subscriptions::email.eq(&email))
+                .select(newsletter_subscriptions::id)
+                .first(conn)
+                .optional()?;
+
+            if let Some(id) = existing {
+                diesel::update(newsletter_subscriptions::table.filter(newsletter_subscriptions::id.eq(&id)))
+                    .set((
+                        newsletter_subscriptions::status.eq("ACTIVE"),
+                        newsletter_subscriptions::user_id.eq(Some(user_id.as_str())),
+                        newsletter_subscriptions::confirmed_at.eq(Some(now)),
+                        newsletter_subscriptions::unsubscribed_at.eq::<Option<chrono::NaiveDateTime>>(None),
+                        newsletter_subscriptions::confirm_token_hash.eq::<Option<String>>(None),
+                    ))
+                    .execute(conn)?;
+            } else {
+                let new_sub = NewNewsletterSubscription {
+                    id: cuid2::create_id(),
+                    email: email.clone(),
+                    status: "ACTIVE".to_string(),
+                    user_id: Some(user_id.clone()),
+                    confirm_token_hash: None,
+                    unsubscribe_token_hash: None,
+                };
+
+                diesel::insert_into(newsletter_subscriptions::table)
+                    .values(&new_sub)
+                    .execute(conn)?;
+
+                diesel::update(newsletter_subscriptions::table.filter(newsletter_subscriptions::email.eq(&email)))
+                    .set(newsletter_subscriptions::confirmed_at.eq(Some(now)))
+                    .execute(conn)?;
+            }
+
+            let _ = diesel::update(users::table.filter(users::id.eq(&user_id)))
+                .set(users::newsletter_opt_in_at.eq(Some(now)))
+                .execute(conn);
+
+            Ok(())
+        })
+        .map_err(|e| e.to_string())?;
+
+        Ok::<_, String>(())
+    })
+    .await
+    .unwrap_or_else(|e| Err(format!("Task error: {}", e)));
+
+    match result {
+        Ok(()) => (
+            StatusCode::OK,
+            Json(NewsletterResponse {
+                success: true,
+                status: "ACTIVE".to_string(),
+                message: "Subscribed".to_string(),
+            }),
+        ),
+        Err(e) => {
+            tracing::error!("subscribe_direct error: {}", e);
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(NewsletterResponse {
+                    success: false,
+                    status: "ERROR".to_string(),
+                    message: "Internal server error".to_string(),
+                }),
+            )
+        }
+    }
+}
+
 async fn confirm(
     State(state): State<Arc<AppState>>,
     Json(payload): Json<ConfirmRequest>,
@@ -346,8 +460,21 @@ async fn confirm(
 
 async fn unsubscribe(
     State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
     Json(payload): Json<UnsubscribeRequest>,
 ) -> (StatusCode, Json<NewsletterResponse>) {
+    if payload.token.is_none() {
+        if payload.email.is_some() && verify_internal_api_key(&headers).is_err() {
+            return (
+                StatusCode::UNAUTHORIZED,
+                Json(NewsletterResponse {
+                    success: false,
+                    status: "ERROR".to_string(),
+                    message: "Unauthorized".to_string(),
+                }),
+            );
+        }
+    }
     let pool = state.db.clone();
 
     let result = if let Some(token) = payload.token {
@@ -539,6 +666,7 @@ async fn status(
 pub fn router() -> Router<Arc<AppState>> {
     Router::new()
         .route("/subscribe", post(subscribe))
+        .route("/subscribe-direct", post(subscribe_direct))
         .route("/unsubscribe", post(unsubscribe))
         .route("/confirm", post(confirm))
         .route("/status", post(status))

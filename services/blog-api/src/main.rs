@@ -49,6 +49,7 @@ async fn root() -> Json<ApiInfo> {
             "POST /api/auth/logout".to_string(),
             "GET  /api/auth/me".to_string(),
             "POST /api/newsletter/subscribe".to_string(),
+            "POST /api/newsletter/subscribe-direct".to_string(),
             "POST /api/newsletter/confirm".to_string(),
             "POST /api/newsletter/unsubscribe".to_string(),
             "POST /api/checkout/create-session".to_string(),
@@ -61,7 +62,10 @@ async fn root() -> Json<ApiInfo> {
             "POST /api/shop/orders".to_string(),
             "POST /api/marginalia".to_string(),
             "POST /api/admin/dashboard".to_string(),
+            "POST /api/admin/users".to_string(),
+            "POST /api/admin/users/ink-points".to_string(),
             "POST /api/admin-dm".to_string(),
+            "POST /api/onboarding/complete".to_string(),
         ],
     })
 }
@@ -111,6 +115,7 @@ async fn main() {
         .nest("/api/marginalia", routes::marginalia::router())
         .nest("/api/admin", routes::admin::router())
         .nest("/api/admin-dm", routes::admin_dm::router())
+        .nest("/api/onboarding", routes::onboarding::router())
         .layer(TraceLayer::new_for_http())
         .layer(create_cors_layer());
 
