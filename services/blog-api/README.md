@@ -25,13 +25,24 @@ Lightweight Rust API server for OrangeC Blog, designed to run on Oracle Cloud fr
 | POST | `/api/newsletter/unsubscribe` | Unsubscribe |
 | POST | `/api/checkout/create-session` | Stripe checkout |
 | POST | `/api/webhook/stripe` | Stripe webhook |
-| POST | `/api/chat` | RAG chat (SSE) |
-| GET | `/api/search` | RAG search |
+| POST | `/api/chat` | RAG chat passthrough (SSE) |
+| POST | `/api/chat/simple` | RAG chat (non-streaming JSON) |
+| GET | `/api/search` | RAG search passthrough |
 
 ### Auth Notes
 
 - `POST /api/auth/login` uses Supabase password grant (needs `SUPABASE_URL`, `SUPABASE_ANON_KEY`).
 - `GET /api/auth/me` expects `Authorization: Bearer <access_token>` and verifies with `SUPABASE_JWT_SECRET`.
+
+### RAG Notes
+
+- `RAG_SERVICE_URL` can be set to either the origin (e.g. `http://localhost:7073`) or the chat URL (e.g. `http://localhost:7073/api/chat`).
+- `/api/chat` proxies the upstream SSE stream and forwards `data: {...}` lines.
+- `/api/chat/simple` consumes the upstream SSE stream and returns `{ response, hasContext, sourceCount }`.
+
+### Internal Auth Notes
+
+Some endpoints require `x-internal-api-key` and are validated against `INTERNAL_API_KEY`.
 
 ## Development
 

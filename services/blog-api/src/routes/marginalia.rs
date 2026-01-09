@@ -1,10 +1,11 @@
 use axum::{
-    extract::State,
+    extract::{Query, State},
     http::{HeaderMap, StatusCode},
-    routing::post,
+    routing::{get, post},
     Json,
     Router,
 };
+use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -106,6 +107,87 @@ async fn save_marginalia(
     }
 }
 
+#[derive(Deserialize)]
+pub struct ListMarginaliaQuery {
+    pub limit: Option<i64>,
+}
+
+#[derive(Serialize)]
+pub struct MarginaliaItem {
+    pub id: String,
+    pub content: String,
+    pub tags: Vec<String>,
+    pub created_at: String,
+}
+
+#[derive(Serialize)]
+pub struct ListMarginaliaResponse {
+    pub items: Vec<MarginaliaItem>,
+}
+
+fn format_date(dt: NaiveDateTime) -> String {
+    dt.format("%Y.%m.%d").to_string()
+}
+
+async fn list_marginalia(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    Query(params): Query<ListMarginaliaQuery>,
+) -> (StatusCode, Json<ListMarginaliaResponse>) {
+    if verify_internal_api_key(&headers).is_err() {
+        return (
+            StatusCode::UNAUTHORIZED,
+            Json(ListMarginaliaResponse { items: vec![] }),
+        );
+    }
+
+    let limit = params.limit.unwrap_or(20).min(100);
+    let pool = state.db.clone();
+
+    let result = tokio::task::spawn_blocking(move || {
+        let mut conn = pool.get().map_err(|e| format!("DB connection error: {}", e))?;
+
+        let rows: Vec<(String, String, Vec<String>, NaiveDateTime)> = marginalia::table
+            .select((
+                marginalia::id,
+                marginalia::content,
+                marginalia::tags,
+                marginalia::created_at,
+            ))
+            .order(marginalia::created_at.desc())
+            .limit(limit)
+            .load(&mut conn)
+            .map_err(|e| format!("DB query error: {}", e))?;
+
+        let items: Vec<MarginaliaItem> = rows
+            .into_iter()
+            .map(|(id, content, tags, created_at)| MarginaliaItem {
+                id,
+                content,
+                tags,
+                created_at: format_date(created_at),
+            })
+            .collect();
+
+        Ok::<_, String>(items)
+    })
+    .await
+    .unwrap_or_else(|e| Err(format!("Task error: {}", e)));
+
+    match result {
+        Ok(items) => (StatusCode::OK, Json(ListMarginaliaResponse { items })),
+        Err(e) => {
+            tracing::error!("list_marginalia error: {}", e);
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(ListMarginaliaResponse { items: vec![] }),
+            )
+        }
+    }
+}
+
 pub fn router() -> Router<Arc<AppState>> {
-    Router::new().route("/", post(save_marginalia))
+    Router::new()
+        .route("/", post(save_marginalia))
+        .route("/", get(list_marginalia))
 }

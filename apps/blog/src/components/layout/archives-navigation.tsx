@@ -9,7 +9,7 @@ import { Navbar } from "@/components/knowledge-shelf/components/Navbar";
 import { GadgetToolbar } from "@/components/GadgetToolbar";
 import { SearchModal } from "@/components/knowledge-shelf/components/SearchModal";
 import type { Post, ViewState } from "@/components/knowledge-shelf/types";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 interface ArchivesNavigationProps {
   children: ReactNode;
@@ -57,7 +57,7 @@ export default function ArchivesNavigation({ children }: ArchivesNavigationProps
   const handleAboutClick = () => router.push(withLocalePath(locale, "/about"));
   const handleProfileClick = () => {
     if (!isLoggedIn) {
-      void signIn();
+      router.push(withLocalePath(locale, "/login"));
       return;
     }
     router.push(withLocalePath(locale, "/profile"));
@@ -65,7 +65,7 @@ export default function ArchivesNavigation({ children }: ArchivesNavigationProps
   
   const handleAdminClick = () => {
     if (!isLoggedIn) {
-      void signIn();
+      router.push(withLocalePath(locale, "/login"));
       return;
     }
     if (!isAdmin) {
@@ -125,7 +125,7 @@ export default function ArchivesNavigation({ children }: ArchivesNavigationProps
 
       <GadgetToolbar
         isLoggedIn={isLoggedIn}
-        onLoginToggle={() => (isLoggedIn ? router.push(withLocalePath(locale, "/profile")) : void signIn())}
+        onLoginToggle={() => router.push(withLocalePath(locale, isLoggedIn ? "/profile" : "/login"))}
         inkPoints={inkPoints}
         highlightedTexts={highlightedTexts}
         onAdminSecret={handleAdminClick}

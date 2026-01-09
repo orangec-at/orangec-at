@@ -1,12 +1,17 @@
-import { prisma } from "@/lib/prisma";
-
 import type { Fragment } from "@/components/knowledge-shelf/types";
 
-function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}.${month}.${day}`;
+const BLOG_API_URL = process.env.NEXT_PUBLIC_BLOG_API_URL ?? "http://localhost:3001";
+const INTERNAL_API_KEY = process.env.BLOG_API_INTERNAL_KEY ?? "";
+
+interface MarginaliaItem {
+  id: string;
+  content: string;
+  tags: string[];
+  created_at: string;
+}
+
+interface ListMarginaliaResponse {
+  items: MarginaliaItem[];
 }
 
 function normalizeTag(tag: string): string {
@@ -21,21 +26,26 @@ export async function getShelfMarginaliaFragments(
   limit: number
 ): Promise<Fragment[]> {
   try {
-    const items = await prisma.marginalia.findMany({
-      select: {
-        id: true,
-        content: true,
-        tags: true,
-        createdAt: true,
-      },
-      orderBy: { createdAt: "desc" },
-      take: limit,
-    });
+    const response = await fetch(
+      `${BLOG_API_URL}/api/marginalia?limit=${limit}`,
+      {
+        headers: {
+          "x-internal-api-key": INTERNAL_API_KEY,
+        },
+        next: { revalidate: 60 },
+      }
+    );
 
-    return items.map((item, idx) => ({
+    if (!response.ok) {
+      return [];
+    }
+
+    const data: ListMarginaliaResponse = await response.json();
+
+    return data.items.map((item, idx) => ({
       id: item.id,
       content: item.content,
-      date: formatDate(item.createdAt),
+      date: item.created_at,
       tags: item.tags.map(normalizeTag).filter((tag) => tag !== ""),
       rotation: ROTATIONS[idx % ROTATIONS.length],
     }));

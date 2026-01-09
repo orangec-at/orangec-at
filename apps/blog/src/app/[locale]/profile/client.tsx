@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { withLocalePath } from "@/lib/locale-path";
 import { useEffect, useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import { getNewsletterStatus, subscribeNewsletter, unsubscribeNewsletter } from "@/actions/newsletter";
 
@@ -52,7 +52,7 @@ export default function ProfileClient() {
 
   const handleSubscriptionToggle = async () => {
     if (!session) {
-      await signIn();
+      router.push(withLocalePath(locale, "/login"));
       return;
     }
 
@@ -86,7 +86,7 @@ export default function ProfileClient() {
           </p>
           <div className="mt-6 flex gap-3">
             <button
-              onClick={() => void signIn()}
+              onClick={() => router.push(withLocalePath(locale, "/login"))}
               className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium bg-stone-900 text-white hover:bg-stone-700 dark:bg-red-900 dark:hover:bg-red-800 transition-colors"
             >
               {locale === "ko" ? "로그인" : "Sign in"}

@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
 use crate::auth::verify_internal_api_key;
-use crate::models::NewNewsletterSubscription;
+use crate::models::{NewNewsletterSubscription, NewsletterStatus};
 use crate::schema::{newsletter_subscriptions, users};
 use crate::services::AppState;
 
@@ -81,7 +81,7 @@ async fn complete_onboarding(
                 if let Some(id) = existing {
                     diesel::update(newsletter_subscriptions::table.filter(newsletter_subscriptions::id.eq(&id)))
                         .set((
-                            newsletter_subscriptions::status.eq("ACTIVE"),
+                            newsletter_subscriptions::status.eq(NewsletterStatus::ACTIVE),
                             newsletter_subscriptions::user_id.eq(Some(user_id.as_str())),
                             newsletter_subscriptions::confirmed_at.eq(Some(now)),
                             newsletter_subscriptions::unsubscribed_at.eq::<Option<chrono::NaiveDateTime>>(None),
@@ -92,7 +92,7 @@ async fn complete_onboarding(
                     let new_sub = NewNewsletterSubscription {
                         id: cuid2::create_id(),
                         email: email.clone(),
-                        status: "ACTIVE".to_string(),
+                        status: NewsletterStatus::ACTIVE,
                         user_id: Some(user_id.clone()),
                         confirm_token_hash: None,
                         unsubscribe_token_hash: None,

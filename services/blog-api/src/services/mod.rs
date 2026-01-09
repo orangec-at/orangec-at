@@ -1,6 +1,7 @@
 pub mod db;
 pub mod stripe;
 pub mod resend;
+pub mod email;
 
 pub use db::DbPool;
 

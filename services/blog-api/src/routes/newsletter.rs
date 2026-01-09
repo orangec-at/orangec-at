@@ -11,7 +11,7 @@ use sha2::{Digest, Sha256};
 use std::sync::Arc;
 
 use crate::auth::verify_internal_api_key;
-use crate::models::{NewsletterSubscription, NewNewsletterSubscription};
+use crate::models::{NewsletterSubscription, NewNewsletterSubscription, NewsletterStatus};
 use crate::schema::{newsletter_subscriptions, users};
 use crate::services::resend::{send_email, EmailParams};
 use crate::services::AppState;
@@ -150,7 +150,7 @@ async fn subscribe(
             .map_err(|e| format!("DB query error: {}", e))?;
 
         if let Some(ref sub) = existing {
-            if sub.status == "ACTIVE" {
+            if sub.status == NewsletterStatus::ACTIVE {
                 return Ok::<_, String>((
                     StatusCode::OK,
                     NewsletterResponse {
@@ -167,7 +167,7 @@ async fn subscribe(
                     .filter(newsletter_subscriptions::email.eq(&email_for_db)),
             )
             .set((
-                newsletter_subscriptions::status.eq("PENDING"),
+                newsletter_subscriptions::status.eq(NewsletterStatus::PENDING),
                 newsletter_subscriptions::confirm_token_hash.eq(Some(confirm_hash_for_db)),
                 newsletter_subscriptions::unsubscribe_token_hash.eq(Some(unsubscribe_hash_for_db)),
                 newsletter_subscriptions::confirmed_at.eq::<Option<chrono::NaiveDateTime>>(None),
@@ -190,7 +190,7 @@ async fn subscribe(
         let new_sub = NewNewsletterSubscription {
             id: cuid2::create_id(),
             email: email_for_db,
-            status: "PENDING".to_string(),
+            status: NewsletterStatus::PENDING,
             user_id: None,
             confirm_token_hash: Some(confirm_hash_for_db),
             unsubscribe_token_hash: Some(unsubscribe_hash_for_db),
@@ -309,7 +309,7 @@ async fn subscribe_direct(
             if let Some(id) = existing {
                 diesel::update(newsletter_subscriptions::table.filter(newsletter_subscriptions::id.eq(&id)))
                     .set((
-                        newsletter_subscriptions::status.eq("ACTIVE"),
+                        newsletter_subscriptions::status.eq(NewsletterStatus::ACTIVE),
                         newsletter_subscriptions::user_id.eq(Some(user_id.as_str())),
                         newsletter_subscriptions::confirmed_at.eq(Some(now)),
                         newsletter_subscriptions::unsubscribed_at.eq::<Option<chrono::NaiveDateTime>>(None),
@@ -320,7 +320,7 @@ async fn subscribe_direct(
                 let new_sub = NewNewsletterSubscription {
                     id: cuid2::create_id(),
                     email: email.clone(),
-                    status: "ACTIVE".to_string(),
+                    status: NewsletterStatus::ACTIVE,
                     user_id: Some(user_id.clone()),
                     confirm_token_hash: None,
                     unsubscribe_token_hash: None,
@@ -395,7 +395,7 @@ async fn confirm(
 
         let subscription: Option<NewsletterSubscription> = newsletter_subscriptions::table
             .filter(newsletter_subscriptions::confirm_token_hash.eq(&token_hash))
-            .filter(newsletter_subscriptions::status.eq("PENDING"))
+            .filter(newsletter_subscriptions::status.eq(NewsletterStatus::PENDING))
             .first(&mut conn)
             .optional()
             .map_err(|e| format!("DB query error: {}", e))?;
@@ -418,7 +418,7 @@ async fn confirm(
 
         diesel::update(newsletter_subscriptions::table.filter(newsletter_subscriptions::id.eq(&sub.id)))
             .set((
-                newsletter_subscriptions::status.eq("ACTIVE"),
+                newsletter_subscriptions::status.eq(NewsletterStatus::ACTIVE),
                 newsletter_subscriptions::confirmed_at.eq(Some(now)),
                 newsletter_subscriptions::unsubscribed_at.eq::<Option<chrono::NaiveDateTime>>(None),
                 newsletter_subscriptions::confirm_token_hash.eq::<Option<String>>(None),
@@ -507,7 +507,7 @@ async fn unsubscribe(
 
             diesel::update(newsletter_subscriptions::table.filter(newsletter_subscriptions::id.eq(&sub.id)))
                 .set((
-                    newsletter_subscriptions::status.eq("UNSUBSCRIBED"),
+                    newsletter_subscriptions::status.eq(NewsletterStatus::UNSUBSCRIBED),
                     newsletter_subscriptions::unsubscribed_at.eq(Some(now)),
                     newsletter_subscriptions::confirm_token_hash.eq::<Option<String>>(None),
                 ))
@@ -542,12 +542,12 @@ async fn unsubscribe(
                 .map_err(|e| format!("DB query error: {}", e))?;
 
             if let Some(sub) = existing {
-                if sub.status != "UNSUBSCRIBED" {
+                if sub.status != NewsletterStatus::UNSUBSCRIBED {
                     let now = chrono::Utc::now().naive_utc();
 
                     diesel::update(newsletter_subscriptions::table.filter(newsletter_subscriptions::id.eq(&sub.id)))
                         .set((
-                            newsletter_subscriptions::status.eq("UNSUBSCRIBED"),
+                            newsletter_subscriptions::status.eq(NewsletterStatus::UNSUBSCRIBED),
                             newsletter_subscriptions::unsubscribed_at.eq(Some(now)),
                             newsletter_subscriptions::confirm_token_hash.eq::<Option<String>>(None),
                         ))
@@ -642,7 +642,7 @@ async fn status(
 
                 NewsletterStatusResponse {
                     email: sub.email,
-                    status: sub.status,
+                    status: format!("{:?}", sub.status),
                     confirmed_at,
                     unsubscribed_at,
                 }

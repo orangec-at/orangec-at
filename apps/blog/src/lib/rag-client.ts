@@ -2,6 +2,8 @@
  * RAG API Client for chat functionality
  */
 
+import { blogApiUrl } from "@/lib/blog-api";
+
 export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
@@ -21,7 +23,6 @@ export interface ChatResponse {
   sources: SourceDocument[];
 }
 
-const RAG_API_URL = process.env.NEXT_PUBLIC_RAG_API_URL || 'http://localhost:7073';
 
 /**
  * Stream chat response from RAG API
@@ -30,9 +31,9 @@ export async function* streamChat(
   query: string,
   locale: string = 'ko'
 ): AsyncGenerator<{ type: 'sources' | 'content' | 'done'; sources?: SourceDocument[]; content?: string }> {
-  console.log('🚀 Starting chat stream:', { query, locale, url: `${RAG_API_URL}/api/chat` });
+  console.log('🚀 Starting chat stream:', { query, locale, url: blogApiUrl("/api/chat") });
 
-  const response = await fetch(`${RAG_API_URL}/api/chat`, {
+  const response = await fetch(blogApiUrl("/api/chat"), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -95,9 +96,9 @@ export async function* streamChat(
  */
 export async function checkHealth(): Promise<boolean> {
   try {
-    const response = await fetch(`${RAG_API_URL}/health`);
+    const response = await fetch(blogApiUrl("/health"));
     const data = await response.json();
-    return data.status === 'healthy' && data.gemini_configured;
+    return data.status === "healthy";
   } catch (error) {
     console.error('Health check failed:', error);
     return false;

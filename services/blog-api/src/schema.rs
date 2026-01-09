@@ -1,4 +1,17 @@
+pub mod sql_types {
+    #[derive(diesel::query_builder::QueryId, diesel::sql_types::SqlType)]
+    #[diesel(postgres_type(name = "Role"))]
+    pub struct Role;
+
+    #[derive(diesel::query_builder::QueryId, diesel::sql_types::SqlType)]
+    #[diesel(postgres_type(name = "NewsletterStatus"))]
+    pub struct NewsletterStatus;
+}
+
 diesel::table! {
+    use diesel::sql_types::*;
+    use super::sql_types::Role;
+
     #[sql_name = "User"]
     users (id) {
         id -> Text,
@@ -7,7 +20,7 @@ diesel::table! {
         #[sql_name = "emailVerified"]
         email_verified -> Nullable<Timestamp>,
         image -> Nullable<Text>,
-        role -> Text,
+        role -> Role,
         #[sql_name = "inkPoints"]
         ink_points -> Int4,
         #[sql_name = "termsAcceptedAt"]
@@ -156,11 +169,14 @@ diesel::table! {
 }
 
 diesel::table! {
+    use diesel::sql_types::*;
+    use super::sql_types::NewsletterStatus;
+
     #[sql_name = "NewsletterSubscription"]
     newsletter_subscriptions (id) {
         id -> Text,
         email -> Text,
-        status -> Text,
+        status -> NewsletterStatus,
         #[sql_name = "userId"]
         user_id -> Nullable<Text>,
         #[sql_name = "confirmTokenHash"]

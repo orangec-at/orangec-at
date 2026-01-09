@@ -2,9 +2,9 @@ use axum::{
     routing::get,
     Router,
     Json,
-    http::{Method, HeaderValue},
+    http::{Method, HeaderValue, header, HeaderName},
 };
-use tower_http::cors::{CorsLayer, Any};
+use tower_http::cors::CorsLayer;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 use std::net::SocketAddr;
@@ -48,6 +48,8 @@ async fn root() -> Json<ApiInfo> {
             "POST /api/auth/login".to_string(),
             "POST /api/auth/logout".to_string(),
             "GET  /api/auth/me".to_string(),
+            "POST /api/auth/magic-link".to_string(),
+            "POST /api/auth/verify".to_string(),
             "POST /api/newsletter/subscribe".to_string(),
             "POST /api/newsletter/subscribe-direct".to_string(),
             "POST /api/newsletter/confirm".to_string(),
@@ -55,6 +57,7 @@ async fn root() -> Json<ApiInfo> {
             "POST /api/checkout/create-session".to_string(),
             "POST /api/webhook/stripe".to_string(),
             "POST /api/chat".to_string(),
+            "POST /api/chat/simple".to_string(),
             "GET  /api/search".to_string(),
             "GET  /api/shop/products".to_string(),
             "POST /api/shop/ink-points".to_string(),
@@ -82,7 +85,12 @@ fn create_cors_layer() -> CorsLayer {
     CorsLayer::new()
         .allow_origin(origins)
         .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
-        .allow_headers(Any)
+        .allow_headers([
+            header::CONTENT_TYPE,
+            header::AUTHORIZATION,
+            header::ACCEPT,
+            HeaderName::from_static("x-internal-api-key"),
+        ])
         .allow_credentials(true)
 }
 

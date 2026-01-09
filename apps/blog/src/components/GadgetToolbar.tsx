@@ -5,6 +5,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Droplets, Quote, Mail, Sparkles, Footprints, Settings, User, X, Music, Highlighter, Play, Pause, Send, Loader2, CloudRain, Book, Coffee, Keyboard as KeyboardIcon, Sun } from 'lucide-react';
 import { sendAdminDM } from "@/actions/admin-dm";
+import { blogApiUrl } from "@/lib/blog-api";
 
 interface GadgetToolbarProps {
   isLoggedIn?: boolean;
@@ -103,7 +104,7 @@ export const GadgetToolbar: React.FC<GadgetToolbarProps> = ({
     const timeoutId = setTimeout(() => controller.abort(), 60000);
 
     try {
-      const res = await fetch('/api/chat', {
+      const res = await fetch(blogApiUrl("/api/chat"), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Search, BookOpen, MessageSquare, ChevronRight, Loader2 } from "lucide-react";
 
 import { stripLocalePrefix, withLocalePath } from "@/lib/locale-path";
+import { blogApiUrl } from "@/lib/blog-api";
 import type { Fragment, Post, ThemeMode } from "../types";
 
 interface SearchModalProps {
@@ -87,7 +88,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         setRemoteError(null);
 
         const response = await fetch(
-          `/api/search?query=${encodeURIComponent(trimmed)}&locale=${encodeURIComponent(locale)}`,
+          blogApiUrl(`/api/search?query=${encodeURIComponent(trimmed)}&locale=${encodeURIComponent(locale)}`),
           { signal: controller.signal }
         );
 

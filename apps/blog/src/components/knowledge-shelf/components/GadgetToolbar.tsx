@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 
 import type { ThemeMode, ViewState } from "../types";
+import { blogApiUrl } from "@/lib/blog-api";
 
 interface GadgetToolbarProps {
   isLoggedIn?: boolean;
@@ -164,7 +165,7 @@ export const GadgetToolbar: React.FC<GadgetToolbarProps> = ({
     const timeoutId = setTimeout(() => controller.abort(), 30000);
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(blogApiUrl("/api/chat/simple"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -1,34 +1,40 @@
 use bigdecimal::BigDecimal;
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
+use diesel_derive_enum::DbEnum;
 use serde::{Deserialize, Serialize};
 
 use crate::schema::*;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "UPPERCASE")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, DbEnum)]
+#[ExistingTypePath = "crate::schema::sql_types::Role"]
 pub enum Role {
-    User,
-    Admin,
+    #[db_rename = "USER"]
+    USER,
+    #[db_rename = "ADMIN"]
+    ADMIN,
 }
 
 impl Default for Role {
     fn default() -> Self {
-        Role::User
+        Role::USER
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "UPPERCASE")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, DbEnum)]
+#[ExistingTypePath = "crate::schema::sql_types::NewsletterStatus"]
 pub enum NewsletterStatus {
-    Pending,
-    Active,
-    Unsubscribed,
+    #[db_rename = "PENDING"]
+    PENDING,
+    #[db_rename = "ACTIVE"]
+    ACTIVE,
+    #[db_rename = "UNSUBSCRIBED"]
+    UNSUBSCRIBED,
 }
 
 impl Default for NewsletterStatus {
     fn default() -> Self {
-        NewsletterStatus::Pending
+        NewsletterStatus::PENDING
     }
 }
 
@@ -41,7 +47,7 @@ pub struct User {
     pub email: Option<String>,
     pub email_verified: Option<NaiveDateTime>,
     pub image: Option<String>,
-    pub role: String,
+    pub role: Role,
     pub ink_points: i32,
     pub terms_accepted_at: Option<NaiveDateTime>,
     pub onboarding_completed_at: Option<NaiveDateTime>,
@@ -56,7 +62,7 @@ pub struct NewUser {
     pub id: String,
     pub name: Option<String>,
     pub email: Option<String>,
-    pub role: String,
+    pub role: Role,
     pub ink_points: i32,
 }
 
@@ -76,7 +82,7 @@ pub struct UpdateUser {
 pub struct NewsletterSubscription {
     pub id: String,
     pub email: String,
-    pub status: String,
+    pub status: NewsletterStatus,
     pub user_id: Option<String>,
     pub confirm_token_hash: Option<String>,
     pub unsubscribe_token_hash: Option<String>,
@@ -91,7 +97,7 @@ pub struct NewsletterSubscription {
 pub struct NewNewsletterSubscription {
     pub id: String,
     pub email: String,
-    pub status: String,
+    pub status: NewsletterStatus,
     pub user_id: Option<String>,
     pub confirm_token_hash: Option<String>,
     pub unsubscribe_token_hash: Option<String>,
@@ -100,7 +106,7 @@ pub struct NewNewsletterSubscription {
 #[derive(Debug, AsChangeset)]
 #[diesel(table_name = newsletter_subscriptions)]
 pub struct UpdateNewsletterSubscription {
-    pub status: Option<String>,
+    pub status: Option<NewsletterStatus>,
     pub user_id: Option<Option<String>>,
     pub confirm_token_hash: Option<Option<String>>,
     pub unsubscribe_token_hash: Option<Option<String>>,
