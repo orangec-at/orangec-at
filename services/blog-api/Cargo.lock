@@ -204,6 +204,7 @@ dependencies = [
 name = "blog-api"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "async-stripe",
  "axum",
  "bigdecimal",

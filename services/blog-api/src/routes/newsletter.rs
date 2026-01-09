@@ -1,6 +1,6 @@
 use axum::{
     extract::State,
-    http::StatusCode,
+    http::{HeaderMap, StatusCode},
     routing::post,
     Json,
     Router,
@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::sync::Arc;
 
+use crate::auth::verify_internal_api_key;
 use crate::models::{NewsletterSubscription, NewNewsletterSubscription};
 use crate::schema::{newsletter_subscriptions, users};
 use crate::services::resend::{send_email, EmailParams};
@@ -30,6 +31,19 @@ pub struct ConfirmRequest {
 pub struct UnsubscribeRequest {
     pub token: Option<String>,
     pub email: Option<String>,
+}
+
+#[derive(Deserialize)]
+pub struct NewsletterStatusRequest {
+    pub email: String,
+}
+
+#[derive(Serialize)]
+pub struct NewsletterStatusResponse {
+    pub email: String,
+    pub status: String,
+    pub confirmed_at: Option<String>,
+    pub unsubscribed_at: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -457,9 +471,75 @@ async fn unsubscribe(
     }
 }
 
+async fn status(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    Json(payload): Json<NewsletterStatusRequest>,
+) -> (StatusCode, Json<Option<NewsletterStatusResponse>>) {
+    if verify_internal_api_key(&headers).is_err() {
+        return (StatusCode::UNAUTHORIZED, Json(None));
+    }
+
+    let email = normalize_email(&payload.email);
+    if !is_valid_email(&email) {
+        return (StatusCode::BAD_REQUEST, Json(None));
+    }
+
+    let pool = state.db.clone();
+
+    let result = tokio::task::spawn_blocking(move || {
+        let mut conn = pool.get().map_err(|e| format!("DB connection error: {}", e))?;
+
+        let subscription: Option<NewsletterSubscription> = newsletter_subscriptions::table
+            .filter(newsletter_subscriptions::email.eq(&email))
+            .first(&mut conn)
+            .optional()
+            .map_err(|e| format!("DB query error: {}", e))?;
+
+        let response = match subscription {
+            None => NewsletterStatusResponse {
+                email,
+                status: "UNSUBSCRIBED".to_string(),
+                confirmed_at: None,
+                unsubscribed_at: None,
+            },
+            Some(sub) => {
+                let confirmed_at = sub.confirmed_at.map(|dt| {
+                    chrono::DateTime::<chrono::Utc>::from_naive_utc_and_offset(dt, chrono::Utc)
+                        .to_rfc3339()
+                });
+                let unsubscribed_at = sub.unsubscribed_at.map(|dt| {
+                    chrono::DateTime::<chrono::Utc>::from_naive_utc_and_offset(dt, chrono::Utc)
+                        .to_rfc3339()
+                });
+
+                NewsletterStatusResponse {
+                    email: sub.email,
+                    status: sub.status,
+                    confirmed_at,
+                    unsubscribed_at,
+                }
+            }
+        };
+
+        Ok::<_, String>(response)
+    })
+    .await
+    .unwrap_or_else(|e| Err(format!("Task error: {}", e)));
+
+    match result {
+        Ok(response) => (StatusCode::OK, Json(Some(response))),
+        Err(e) => {
+            tracing::error!("Newsletter status error: {}", e);
+            (StatusCode::INTERNAL_SERVER_ERROR, Json(None))
+        }
+    }
+}
+
 pub fn router() -> Router<Arc<AppState>> {
     Router::new()
         .route("/subscribe", post(subscribe))
         .route("/unsubscribe", post(unsubscribe))
         .route("/confirm", post(confirm))
+        .route("/status", post(status))
 }

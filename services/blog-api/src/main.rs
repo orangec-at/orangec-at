@@ -49,11 +49,19 @@ async fn root() -> Json<ApiInfo> {
             "POST /api/auth/logout".to_string(),
             "GET  /api/auth/me".to_string(),
             "POST /api/newsletter/subscribe".to_string(),
+            "POST /api/newsletter/confirm".to_string(),
             "POST /api/newsletter/unsubscribe".to_string(),
             "POST /api/checkout/create-session".to_string(),
             "POST /api/webhook/stripe".to_string(),
             "POST /api/chat".to_string(),
             "GET  /api/search".to_string(),
+            "GET  /api/shop/products".to_string(),
+            "POST /api/shop/ink-points".to_string(),
+            "POST /api/shop/buy".to_string(),
+            "POST /api/shop/orders".to_string(),
+            "POST /api/marginalia".to_string(),
+            "POST /api/admin/dashboard".to_string(),
+            "POST /api/admin-dm".to_string(),
         ],
     })
 }
@@ -99,6 +107,10 @@ async fn main() {
         .nest("/api/chat", routes::chat::router())
         .nest("/api/search", routes::search::router())
         .nest("/api/webhook", routes::webhook::router())
+        .nest("/api/shop", routes::shop::router())
+        .nest("/api/marginalia", routes::marginalia::router())
+        .nest("/api/admin", routes::admin::router())
+        .nest("/api/admin-dm", routes::admin_dm::router())
         .layer(TraceLayer::new_for_http())
         .layer(create_cors_layer());
 

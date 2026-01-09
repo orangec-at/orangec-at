@@ -4,3 +4,7 @@ pub mod checkout;
 pub mod chat;
 pub mod search;
 pub mod webhook;
+pub mod shop;
+pub mod marginalia;
+pub mod admin;
+pub mod admin_dm;
