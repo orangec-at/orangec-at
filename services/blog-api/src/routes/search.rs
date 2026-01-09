@@ -1,0 +1,43 @@
+use axum::{
+    routing::get,
+    Router,
+    Json,
+    http::StatusCode,
+    extract::Query,
+};
+use serde::{Deserialize, Serialize};
+
+#[derive(Deserialize)]
+pub struct SearchQuery {
+    pub query: String,
+    pub locale: Option<String>,
+    pub top_k: Option<i32>,
+    pub min_similarity: Option<f32>,
+}
+
+#[derive(Serialize)]
+pub struct SearchResult {
+    pub slug: String,
+    pub title: String,
+    pub excerpt: String,
+    pub similarity: f32,
+}
+
+#[derive(Serialize)]
+pub struct SearchResponse {
+    pub results: Vec<SearchResult>,
+    pub query: String,
+}
+
+async fn search(Query(params): Query<SearchQuery>) -> (StatusCode, Json<SearchResponse>) {
+    // TODO: Proxy to RAG service at Hugging Face
+    (StatusCode::OK, Json(SearchResponse {
+        results: vec![],
+        query: params.query,
+    }))
+}
+
+pub fn router() -> Router {
+    Router::new()
+        .route("/", get(search))
+}
