@@ -6,6 +6,9 @@ use axum::{
     extract::Query,
 };
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
+
+use crate::services::AppState;
 
 #[derive(Deserialize)]
 pub struct SearchQuery {
@@ -37,7 +40,7 @@ async fn search(Query(params): Query<SearchQuery>) -> (StatusCode, Json<SearchRe
     }))
 }
 
-pub fn router() -> Router {
+pub fn router() -> Router<Arc<AppState>> {
     Router::new()
         .route("/", get(search))
 }

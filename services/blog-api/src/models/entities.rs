@@ -1,7 +1,7 @@
-use chrono::{DateTime, Utc};
+use bigdecimal::BigDecimal;
+use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-use bigdecimal::BigDecimal;
 
 use crate::schema::*;
 
@@ -39,15 +39,15 @@ pub struct User {
     pub id: String,
     pub name: Option<String>,
     pub email: Option<String>,
-    pub email_verified: Option<DateTime<Utc>>,
+    pub email_verified: Option<NaiveDateTime>,
     pub image: Option<String>,
     pub role: String,
     pub ink_points: i32,
-    pub terms_accepted_at: Option<DateTime<Utc>>,
-    pub onboarding_completed_at: Option<DateTime<Utc>>,
-    pub newsletter_opt_in_at: Option<DateTime<Utc>>,
-    pub created_at: DateTime<Utc>,
-    pub updated_at: DateTime<Utc>,
+    pub terms_accepted_at: Option<NaiveDateTime>,
+    pub onboarding_completed_at: Option<NaiveDateTime>,
+    pub newsletter_opt_in_at: Option<NaiveDateTime>,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 #[derive(Debug, Insertable)]
@@ -65,9 +65,9 @@ pub struct NewUser {
 pub struct UpdateUser {
     pub name: Option<String>,
     pub ink_points: Option<i32>,
-    pub terms_accepted_at: Option<DateTime<Utc>>,
-    pub onboarding_completed_at: Option<DateTime<Utc>>,
-    pub newsletter_opt_in_at: Option<Option<DateTime<Utc>>>,
+    pub terms_accepted_at: Option<NaiveDateTime>,
+    pub onboarding_completed_at: Option<NaiveDateTime>,
+    pub newsletter_opt_in_at: Option<Option<NaiveDateTime>>,
 }
 
 #[derive(Debug, Queryable, Selectable, Serialize)]
@@ -80,10 +80,10 @@ pub struct NewsletterSubscription {
     pub user_id: Option<String>,
     pub confirm_token_hash: Option<String>,
     pub unsubscribe_token_hash: Option<String>,
-    pub confirmed_at: Option<DateTime<Utc>>,
-    pub unsubscribed_at: Option<DateTime<Utc>>,
-    pub created_at: DateTime<Utc>,
-    pub updated_at: DateTime<Utc>,
+    pub confirmed_at: Option<NaiveDateTime>,
+    pub unsubscribed_at: Option<NaiveDateTime>,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 #[derive(Debug, Insertable)]
@@ -104,8 +104,8 @@ pub struct UpdateNewsletterSubscription {
     pub user_id: Option<Option<String>>,
     pub confirm_token_hash: Option<Option<String>>,
     pub unsubscribe_token_hash: Option<Option<String>>,
-    pub confirmed_at: Option<Option<DateTime<Utc>>>,
-    pub unsubscribed_at: Option<Option<DateTime<Utc>>>,
+    pub confirmed_at: Option<Option<NaiveDateTime>>,
+    pub unsubscribed_at: Option<Option<NaiveDateTime>>,
 }
 
 #[derive(Debug, Queryable, Selectable, Serialize)]
@@ -115,8 +115,8 @@ pub struct Thread {
     pub id: String,
     pub title: Option<String>,
     pub user_id: Option<String>,
-    pub created_at: DateTime<Utc>,
-    pub updated_at: DateTime<Utc>,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 #[derive(Debug, Insertable)]
@@ -135,7 +135,7 @@ pub struct Message {
     pub thread_id: String,
     pub role: String,
     pub content: String,
-    pub created_at: DateTime<Utc>,
+    pub created_at: NaiveDateTime,
 }
 
 #[derive(Debug, Insertable)]
@@ -159,8 +159,8 @@ pub struct Product {
     pub image: Option<String>,
     pub category: String,
     pub is_rare: bool,
-    pub created_at: DateTime<Utc>,
-    pub updated_at: DateTime<Utc>,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 #[derive(Debug, Queryable, Selectable, Serialize)]
@@ -171,7 +171,7 @@ pub struct Order {
     pub user_id: String,
     pub product_id: String,
     pub status: String,
-    pub created_at: DateTime<Utc>,
+    pub created_at: NaiveDateTime,
 }
 
 #[derive(Debug, Insertable)]
@@ -192,7 +192,7 @@ pub struct Marginalia {
     pub tags: Vec<String>,
     pub user_id: String,
     pub likes: i32,
-    pub created_at: DateTime<Utc>,
+    pub created_at: NaiveDateTime,
 }
 
 #[derive(Debug, Insertable)]

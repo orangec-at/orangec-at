@@ -8,6 +8,7 @@ use tower_http::cors::{CorsLayer, Any};
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 use std::net::SocketAddr;
+use std::sync::Arc;
 use serde::Serialize;
 
 mod schema;
@@ -85,10 +86,10 @@ async fn main() {
         ))
         .init();
 
-    let _state = AppState::new();
+    let state = Arc::new(AppState::new());
     tracing::info!("Database connection pool initialized");
 
-    let app = Router::new()
+    let router = Router::<Arc<AppState>>::new()
         .route("/", get(root))
         .route("/health", get(health))
         .nest("/api/auth", routes::auth::router())
@@ -99,6 +100,8 @@ async fn main() {
         .nest("/api/webhook", routes::webhook::router())
         .layer(TraceLayer::new_for_http())
         .layer(create_cors_layer());
+
+    let app: Router = router.with_state(state);
 
     // Run server
     let port: u16 = std::env::var("PORT")

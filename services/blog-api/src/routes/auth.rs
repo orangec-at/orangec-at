@@ -5,6 +5,9 @@ use axum::{
     http::StatusCode,
 };
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
+
+use crate::services::AppState;
 
 #[derive(Deserialize)]
 pub struct LoginRequest {
@@ -27,9 +30,7 @@ pub struct UserInfo {
     pub role: String,
 }
 
-async fn login(Json(payload): Json<LoginRequest>) -> (StatusCode, Json<AuthResponse>) {
-    // TODO: Implement Supabase Auth login
-    // For now, return placeholder
+async fn login(Json(_payload): Json<LoginRequest>) -> (StatusCode, Json<AuthResponse>) {
     (StatusCode::OK, Json(AuthResponse {
         success: true,
         message: "Login endpoint - implement with Supabase Auth".to_string(),
@@ -46,11 +47,10 @@ async fn logout() -> (StatusCode, Json<AuthResponse>) {
 }
 
 async fn me() -> (StatusCode, Json<Option<UserInfo>>) {
-    // TODO: Extract user from JWT and return info
     (StatusCode::OK, Json(None))
 }
 
-pub fn router() -> Router {
+pub fn router() -> Router<Arc<AppState>> {
     Router::new()
         .route("/login", post(login))
         .route("/logout", post(logout))

@@ -6,7 +6,10 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 use std::convert::Infallible;
+use std::sync::Arc;
 use futures::stream::{self, Stream};
+
+use crate::services::AppState;
 
 #[derive(Deserialize)]
 pub struct ChatRequest {
@@ -22,9 +25,9 @@ pub struct ChatChunk {
     pub sources: Option<Vec<String>>,
 }
 
-async fn chat(Json(payload): Json<ChatRequest>) -> Sse<impl Stream<Item = Result<Event, Infallible>>> {
+async fn chat(Json(_payload): Json<ChatRequest>) -> Sse<impl Stream<Item = Result<Event, Infallible>>> {
     // TODO: Proxy to RAG service at Hugging Face
-    let rag_url = std::env::var("RAG_SERVICE_URL")
+    let _rag_url = std::env::var("RAG_SERVICE_URL")
         .unwrap_or_else(|_| "http://localhost:7073/api/chat".to_string());
 
     // For now, return a simple response
@@ -36,7 +39,7 @@ async fn chat(Json(payload): Json<ChatRequest>) -> Sse<impl Stream<Item = Result
     Sse::new(stream)
 }
 
-pub fn router() -> Router {
+pub fn router() -> Router<Arc<AppState>> {
     Router::new()
         .route("/", post(chat))
 }

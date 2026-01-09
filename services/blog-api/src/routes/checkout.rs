@@ -5,6 +5,9 @@ use axum::{
     http::StatusCode,
 };
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
+
+use crate::services::AppState;
 
 #[derive(Deserialize)]
 pub struct CheckoutRequest {
@@ -19,7 +22,7 @@ pub struct CheckoutResponse {
     pub error: Option<String>,
 }
 
-async fn create_session(Json(payload): Json<CheckoutRequest>) -> (StatusCode, Json<CheckoutResponse>) {
+async fn create_session(Json(_payload): Json<CheckoutRequest>) -> (StatusCode, Json<CheckoutResponse>) {
     // TODO: Implement Stripe checkout session creation
     (StatusCode::OK, Json(CheckoutResponse {
         url: Some("https://checkout.stripe.com/placeholder".to_string()),
@@ -27,7 +30,7 @@ async fn create_session(Json(payload): Json<CheckoutRequest>) -> (StatusCode, Js
     }))
 }
 
-pub fn router() -> Router {
+pub fn router() -> Router<Arc<AppState>> {
     Router::new()
         .route("/create-session", post(create_session))
 }
