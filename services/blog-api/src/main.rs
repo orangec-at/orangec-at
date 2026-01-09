@@ -15,6 +15,7 @@ mod schema;
 mod routes;
 mod models;
 mod services;
+mod auth;
 
 use services::AppState;
 
