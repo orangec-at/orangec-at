@@ -1,0 +1,32 @@
+{
+  "name": "quote-style",
+  "description": "명언/인용문 스타일 템플릿",
+  "design": {
+    "background": {
+      "type": "gradient",
+      "colors": ["#1a1a2e", "#16213e"],
+      "direction": "diagonal"
+    },
+    "text": {
+      "font": "Pretendard",
+      "size": "72px",
+      "color": "#ffffff",
+      "align": "center",
+      "lineHeight": 1.4
+    },
+    "quote": {
+      "decoration": true,
+      "quoteMarks": "「」",
+      "authorPosition": "bottom",
+      "authorSize": "36px",
+      "authorColor": "#a0a0a0"
+    },
+    "padding": {
+      "top": "200px",
+      "bottom": "200px",
+      "left": "80px",
+      "right": "80px"
+    }
+  },
+  "promptTemplate": "Modern minimalist slide design for social media quote, dark gradient background from navy to dark blue, centered bold white Korean text \"{{text}}\", elegant quote marks decoration, subtle glow effect on text, 9:16 vertical aspect ratio, premium infographic aesthetic, no people, clean typography focus"
+}
