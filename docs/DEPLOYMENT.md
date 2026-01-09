@@ -60,8 +60,8 @@ Vercel 등에 배포할 때 아래 환경 변수를 설정해야 합니다.
 | `AUTH_GOOGLE_ID` | Google OAuth Client ID | Google Cloud Console 설정 |
 | `AUTH_GOOGLE_SECRET` | Google OAuth Client Secret | |
 | `RESEND_API_KEY` | Resend API 키 | 뉴스레터/이메일 로그인 필수 |
-| `RAG_SERVICE_URL` | RAG 서비스 chat 엔드포인트 | 예: `https://rag-service.railway.app/api/chat` |
-| `NEXT_PUBLIC_RAG_API_URL`| RAG 서비스 베이스 URL | 예: `https://rag-service.railway.app` |
+| `NEXT_PUBLIC_BLOG_API_URL` | Rust Blog API base URL | 예: `https://api.pizzar.ing` |
+| `BLOG_API_INTERNAL_KEY` | Internal key (server→API) | `services/blog-api`의 `INTERNAL_API_KEY`와 동일 |
 
 ### 3.2 OAuth 설정
 Google Cloud Console의 **승인된 리디렉션 URI**에 다음을 추가하세요:

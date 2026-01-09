@@ -36,7 +36,7 @@
 ### 1. 백엔드 재시작
 ```bash
 # Ctrl + C로 종료 후
-cd /Users/jaylee222/resources/projects/orangec_at/orangec-at/apps/rag-service
+cd /Users/jaylee222/resources/projects/orangec_at/orangec-at/services/rag-service
 uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 7073
 ```
 
@@ -173,7 +173,7 @@ Pay-as-you-go (종량제):
 
 ```bash
 # Ctrl + C
-cd /Users/jaylee222/resources/projects/orangec_at/orangec-at/apps/rag-service
+cd /Users/jaylee222/resources/projects/orangec_at/orangec-at/services/rag-service
 uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 7073
 ```
 

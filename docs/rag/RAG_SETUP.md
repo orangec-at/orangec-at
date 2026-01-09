@@ -65,7 +65,7 @@ uv --version
 
 ```bash
 # 1. RAG service 디렉토리로 이동
-cd apps/rag-service
+cd services/rag-service
 
 # 2. Python 3.11 설치 (uv가 자동으로 다운로드)
 uv python install 3.11
@@ -84,16 +84,24 @@ nano .env  # 또는 vscode로 열기
 ### 3. Next.js 프론트엔드 설정
 
 ```bash
-# 1. Blog 디렉토리로 이동
-cd ../blog
+# (repo root 기준)
 
-# 2. 환경 변수 설정
+# 1. Rust blog-api 디렉토리로 이동
+cd services/blog-api
+cp .env.example .env
+# .env에 RAG_SERVICE_URL=http://localhost:7073 와 CORS_ORIGINS=http://localhost:7071 등을 설정
+
+# 2. Blog 디렉토리로 이동
+cd ../../apps/blog
+
+# 3. 환경 변수 설정
 cp .env.example .env.local
 
-# 3. .env.local 파일에 추가
-echo "NEXT_PUBLIC_RAG_API_URL=http://localhost:7073" >> .env.local
-
-# Note: 프론트엔드가 포트 7071에서 실행 중이면 백엔드 CORS 설정 확인
+# 4. .env.local 파일에 추가
+# Frontend는 blog-api를 호출
+echo "NEXT_PUBLIC_BLOG_API_URL=http://localhost:8080" >> .env.local
+# server actions에서 privileged endpoints 호출 시 필요
+# echo "BLOG_API_INTERNAL_KEY=CHANGE_ME" >> .env.local
 ```
 
 ### 4. 블로그 레이아웃에 ChatWidget 추가
@@ -119,7 +127,7 @@ export default function LocaleLayout({ children }: { children: React.ReactNode }
 
 ```bash
 # RAG service 디렉토리에서 실행
-cd apps/rag-service
+cd services/rag-service
 
 # 인덱싱 실행
 uv run python scripts/generate_embeddings.py
@@ -161,7 +169,7 @@ By locale:
 
 **터미널 1: Python 백엔드**
 ```bash
-cd apps/rag-service
+cd services/rag-service
 uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 7073
 ```
 
@@ -179,9 +187,9 @@ Root `package.json`에 스크립트 추가:
 {
   "scripts": {
     "dev:blog": "pnpm --filter blog dev",
-    "dev:rag": "cd apps/rag-service && uv run uvicorn app.main:app --reload",
+    "dev:rag": "cd services/rag-service && uv run uvicorn app.main:app --reload",
     "dev:all": "concurrently \"pnpm dev:blog\" \"pnpm dev:rag\"",
-    "rag:index": "cd apps/rag-service && uv run python scripts/generate_embeddings.py"
+    "rag:index": "cd services/rag-service && uv run python scripts/generate_embeddings.py"
   }
 }
 ```
@@ -261,7 +269,7 @@ npm install -g @railway/cli
 railway login
 
 # 3. 프로젝트 생성
-cd apps/rag-service
+cd services/rag-service
 railway init
 
 # 4. 환경 변수 설정
@@ -277,7 +285,8 @@ railway up
 ```bash
 # 1. Vercel 환경 변수 설정
 # Vercel Dashboard → Settings → Environment Variables
-NEXT_PUBLIC_RAG_API_URL=https://your-rag-service.railway.app
+NEXT_PUBLIC_BLOG_API_URL=https://api.pizzar.ing
+BLOG_API_INTERNAL_KEY=CHANGE_ME
 
 # 2. 배포
 vercel --prod
@@ -289,7 +298,7 @@ vercel --prod
 
 **해결:**
 ```bash
-cd apps/rag-service
+cd services/rag-service
 cat .env  # 환경 변수 확인
 ```
 
@@ -303,7 +312,7 @@ cp .env.example .env
 
 **해결:**
 ```bash
-cd apps/rag-service
+cd services/rag-service
 uv run python scripts/generate_embeddings.py
 ```
 
@@ -311,7 +320,7 @@ uv run python scripts/generate_embeddings.py
 
 **해결:**
 
-`apps/rag-service/.env`:
+`services/rag-service/.env`:
 ```env
 CORS_ORIGINS=http://localhost:3000,https://your-blog.vercel.app
 ```
@@ -320,7 +329,7 @@ CORS_ORIGINS=http://localhost:3000,https://your-blog.vercel.app
 
 **해결:**
 ```bash
-cd apps/rag-service
+cd services/rag-service
 uv sync  # Dependencies 재설치
 ```
 

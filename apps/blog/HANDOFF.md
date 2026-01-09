@@ -84,7 +84,7 @@ Prisma 타입이 에디터에서 어긋나 보이면(예: `prisma.newsletterSubs
 - DB: `DATABASE_URL`, `DIRECT_URL`
 - Auth: `AUTH_SECRET`, `AUTH_URL`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`
 - Resend(옵션): `RESEND_API_KEY`, `AUTH_EMAIL_FROM`, `NEWSLETTER_FROM`
-- RAG: `RAG_SERVICE_URL` (예: `http://localhost:7073/api/chat`), (검색은 blog 내부 `/api/search`를 호출)
+- Blog API: `NEXT_PUBLIC_BLOG_API_URL`, `BLOG_API_INTERNAL_KEY` (RAG/Shop/Admin 요청은 Rust API로 라우팅). RAG 서비스 자체는 Blog API의 `RAG_SERVICE_URL`로 설정
 - Stripe(옵션): `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`
 
 ## 6) 운영/권한 주의사항

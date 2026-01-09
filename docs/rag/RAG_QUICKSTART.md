@@ -28,36 +28,45 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ```bash
 # Python 백엔드 환경 변수
-cd apps/rag-service
+cd services/rag-service
 cp .env.example .env
 echo "GEMINI_API_KEY=your_key_here" > .env
 
-# Next.js 환경 변수
-cd ../blog
-echo "NEXT_PUBLIC_RAG_API_URL=http://localhost:7073" >> .env.local
+# Rust blog-api 환경 변수
+cd ../blog-api
+cp .env.example .env
+# .env에 RAG_SERVICE_URL=http://localhost:7073 와 CORS_ORIGINS=http://localhost:7071 등을 설정
 
-# Python 백엔드 CORS 설정 (프론트엔드 포트 7071)
-cd ../rag-service
-echo "CORS_ORIGINS=http://localhost:7071,https://your-blog.vercel.app" >> .env
+# Next.js 환경 변수 (프론트는 blog-api를 호출)
+cd ../../apps/blog
+echo "NEXT_PUBLIC_BLOG_API_URL=http://localhost:8080" >> .env.local
+# server actions에서 privileged endpoints 호출 시 필요
+# echo "BLOG_API_INTERNAL_KEY=CHANGE_ME" >> .env.local
 ```
 
 ### 4. 인덱싱 (30초)
 
 ```bash
-cd apps/rag-service
+cd services/rag-service
 uv sync  # Dependencies 설치
 uv run python scripts/generate_embeddings.py
 ```
 
 ### 5. 실행 (10초)
 
-**터미널 1:**
+**터미널 1: RAG Service**
 ```bash
-cd apps/rag-service
-uv run uvicorn app.main:app --reload
+cd services/rag-service
+uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 7073
 ```
 
-**터미널 2:**
+**터미널 2: Rust blog-api**
+```bash
+cd services/blog-api
+cargo run
+```
+
+**터미널 3: Next.js Frontend**
 ```bash
 cd apps/blog
 pnpm dev
@@ -65,7 +74,7 @@ pnpm dev
 
 ### 6. 테스트
 
-http://localhost:3000 접속 → 우측 하단 채팅 버튼 클릭
+http://localhost:7071 접속 → 우측 하단 채팅 버튼 클릭
 
 ## 🎯 첫 번째 질문
 
@@ -85,13 +94,13 @@ http://localhost:3000 접속 → 우측 하단 채팅 버튼 클릭
 
 ### "GEMINI_API_KEY not set"
 ```bash
-cd apps/rag-service
+cd services/rag-service
 cat .env  # API Key 확인
 ```
 
 ### "No embeddings available"
 ```bash
-cd apps/rag-service
+cd services/rag-service
 uv run python scripts/generate_embeddings.py
 ```
 

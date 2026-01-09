@@ -2,7 +2,7 @@
 
 ## 🎉 완성된 시스템
 
-**Python FastAPI Backend** + **TypeScript Next.js Frontend** + **Gemini AI**
+**Rust Blog API** + **Python RAG Service (FastAPI)** + **TypeScript Next.js Frontend** + **Gemini AI**
 
 ---
 
@@ -14,20 +14,26 @@
 # Gemini API Key 발급
 # https://aistudio.google.com/app/apikey
 
-# Python 백엔드 환경 변수
-cd apps/rag-service
+# RAG Service 환경 변수
+cd services/rag-service
 cp .env.example .env
 # .env 파일 열어서 GEMINI_API_KEY=your_key_here 입력
 
-# Next.js 환경 변수
-cd ../blog
-echo "NEXT_PUBLIC_RAG_API_URL=http://localhost:7073" >> .env.local
+# Rust blog-api 환경 변수 (RAG 프록시)
+cd ../blog-api
+cp .env.example .env
+# .env에 RAG_SERVICE_URL=http://localhost:7073 와 CORS_ORIGINS=http://localhost:7071 등을 설정
+
+# Next.js 환경 변수 (프론트는 blog-api를 호출)
+cd ../../apps/blog
+echo "NEXT_PUBLIC_BLOG_API_URL=http://localhost:8080" >> .env.local
+# echo "BLOG_API_INTERNAL_KEY=CHANGE_ME" >> .env.local
 ```
 
 ### 2️⃣ 콘텐츠 인덱싱 (30초)
 
 ```bash
-cd apps/rag-service
+cd services/rag-service
 
 # Dependencies 설치
 uv sync
@@ -38,13 +44,19 @@ uv run python scripts/generate_embeddings.py
 
 ### 3️⃣ 서버 실행
 
-**터미널 1: Python 백엔드 (포트 7073)**
+**터미널 1: RAG Service (포트 7073)**
 ```bash
-cd apps/rag-service
+cd services/rag-service
 uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 7073
 ```
 
-**터미널 2: Next.js 프론트엔드 (포트 7071)**
+**터미널 2: Rust blog-api (포트 8080)**
+```bash
+cd services/blog-api
+cargo run
+```
+
+**터미널 3: Next.js 프론트엔드 (포트 7071)**
 ```bash
 cd apps/blog
 pnpm dev
@@ -53,7 +65,10 @@ pnpm dev
 ### 4️⃣ 테스트
 
 ```bash
-# Health check
+# Blog API health check
+curl http://localhost:8080/health
+
+# (옵션) RAG service health check
 curl http://localhost:7073/health
 
 # 브라우저 접속
@@ -68,7 +83,7 @@ open http://localhost:7071
 
 ### Python Backend (11개)
 ```
-apps/rag-service/
+services/rag-service/
 ├── app/
 │   ├── main.py                    ✅ FastAPI 애플리케이션
 │   ├── api/
@@ -84,6 +99,15 @@ apps/rag-service/
 ├── pyproject.toml                 ✅ uv 설정
 ├── .env.example                   ✅ 환경변수 템플릿
 └── README.md                      ✅ 문서
+```
+
+### Rust Blog API (주요)
+```
+services/blog-api/
+├── src/main.rs                    ✅ 라우팅 + CORS
+├── src/routes/chat.rs             ✅ /api/chat (SSE), /api/chat/simple
+├── src/routes/search.rs           ✅ /api/search
+└── .env.example                   ✅ 환경변수 템플릿
 ```
 
 ### TypeScript Frontend (4개)
@@ -265,7 +289,7 @@ Next.js Frontend: http://localhost:7071
 
 ```bash
 # Terminal 1
-cd apps/rag-service
+cd services/rag-service
 uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 7073
 
 # Terminal 2

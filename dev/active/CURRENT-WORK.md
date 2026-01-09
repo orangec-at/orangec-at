@@ -3,91 +3,187 @@
 > **IMPORTANT**: 모든 에이전트는 세션 시작 시 이 파일을 반드시 읽어야 합니다.
 > 작업 완료/중단 시 이 파일을 업데이트해야 합니다.
 
-**Last Updated**: 2026-01-03 21:10 KST  
-**Updated By**: opencode (task-update session)
+**Last Updated**: 2026-01-09 17:35 KST  
+**Updated By**: opencode (매직링크 인증 구현 완료, 빌드 성공)
 
 ---
 
-## Active Task
+## 🚨 Active Task: 블로그 인프라 재설계
 
-**블로그 디자인 리뉴얼 & 데이터 연동**
+**목표:** Vercel 서버리스 DB 작업 제거 → Rust API로 이관 (Static Export 안함)
 
-knowledge-shelf-blog 기능을 apps/blog로 마이그레이션하고, mock 데이터를 실제 데이터로 교체하는 작업
-
----
-
-## Overall Progress
-
-| Phase | Status | Description |
-|-------|--------|-------------|
-| Phase 1 - Infrastructure | ✅ 완료 | Docker, NextAuth v5, Prisma schema, API routes |
-| Phase 2 - Design | ✅ 완료 | Tailwind theme, 컴포넌트 포팅, Layout 통합 |
-| Phase 3A - Shop System | ✅ 완료 | UI + Server Actions + 구매 트랜잭션 |
-| Phase 3B - Admin Dashboard | ✅ 완료 | UI + 권한보호 + 실제 데이터 연동 |
-| Phase 3C - RAG Chatbot | 🔄 부분완료 | keyword marginalia만 구현, vector retrieval 미연동 |
-| Phase 4 - Mock → Real Data | 🔄 진행중 | Home, Blog, Projects 페이지 실제 데이터 연동 |
-| MDX Editor Extension | 🔄 진행중 | v0.1 Core (Completion, Preview, Registry) 구현 완료 (40%) |
+### 왜 이 작업을 하는가?
+- Vercel 서버리스 cold start 너무 느림 (실사용 불가)
+- 무료 인프라로 완전한 서비스 운영 목표
+- 총 비용: $0/월
 
 ---
 
-## Current Focus (Phase 4)
+## 🏗️ 새 아키텍처
 
-### In Progress
-- [ ] Home 페이지 featured-projects mock → 실제 프로젝트 데이터
-- [ ] Blog 목록 mock → MDX 콘텐츠 연동
-- [ ] Projects 페이지 mock → 실제 데이터
-
-### Pending
-- [ ] RAG Chatbot vector context injection (`/api/chat`)
-- [ ] DB 마이그레이션 실행 확인 (`prisma migrate dev`)
-- [ ] 전체 빌드 테스트
-
----
-
-## Key Files & Decisions
-
-### 핵심 파일
 ```
-apps/blog/
-├── src/actions/shop.ts          # Shop Server Actions (완료)
-├── src/actions/admin.ts         # Admin Server Actions (완료)
-├── src/app/[locale]/shop/       # Shop 페이지 (완료)
-├── src/app/[locale]/dashboard/  # Dashboard 페이지 (완료)
-├── src/app/api/chat/route.ts    # RAG Chatbot (부분완료)
-├── src/data/projects.ts         # 프로젝트 데이터 (mock → real 필요)
-├── src/components/home/         # Home 컴포넌트들 (mock 데이터 사용 중)
-└── prisma/schema.prisma         # DB 스키마 (정의됨)
+┌─────────────────────────────────────────────────────────────────────┐
+│                         pizzar.ing                                   │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  ┌─────────────────────┐      ┌─────────────────────┐               │
+│  │  Vercel (Free)      │      │  OCI E2.1.Micro     │               │
+│  │  ─────────────────  │      │  ─────────────────  │               │
+│  │  Next.js (SSR)      │ API  │  Rust API (Axum)   │               │
+│  │  - Vercel 배포      │─────▶│  - /api/auth/*     │               │
+│  │  - NextAuth 유지    │      │  - /api/newsletter │               │
+│  │  - DB작업 위임      │      │  - /api/checkout   │               │
+│  │                     │      │  - /api/chat       │               │
+│  │  pizzar.ing         │      │  api.pizzar.ing    │               │
+│  └─────────────────────┘      └──────────┬──────────┘               │
+│                                          │                          │
+│           ┌──────────────────────────────┼──────────────────────┐   │
+│           │                              │                      │   │
+│           ▼                              ▼                      ▼   │
+│  ┌─────────────────┐      ┌─────────────────────┐   ┌───────────┐  │
+│  │  Supabase       │      │  Hugging Face       │   │ External  │  │
+│  │  ─────────────  │      │  Spaces             │   │ Services  │  │
+│  │  - PostgreSQL   │      │  ─────────────────  │   │ ───────── │  │
+│  │  - Auth         │      │  RAG Service        │   │ - Stripe  │  │
+│  │  - Storage      │      │  (FastAPI + Gemini) │   │ - Resend  │  │
+│  └─────────────────┘      └─────────────────────┘   └───────────┘  │
+│                                                                      │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-### 기술 결정사항
-- **DB**: Supabase Postgres (Prisma 연동)
-- **Auth**: NextAuth v5 (Supabase Auth 아님, 유지)
-- **State**: URL params + React Context (Redux 사용 안함)
-- **Icons**: lucide-react
-- **Animation**: framer-motion
+---
+
+## 📋 Migration Phases
+
+| Phase | 작업 | 상태 | 예상 시간 |
+|-------|------|------|----------|
+| 0 | CURRENT-WORK.md 업데이트 | ✅ 완료 | 10분 |
+| 1 | ~~Static Export~~ (취소 - Vercel SSR 유지) | ❌ 취소 | - |
+| 2 | Rust API 기본 구조 (Axum + Diesel) | ✅ 완료 | 2시간 |
+| 3 | Diesel 스키마 (기존 Supabase DB) | ✅ 완료 | 2시간 |
+| 4 | Auth 엔드포인트 (Supabase Auth) | ✅ 완료 | 2시간 |
+| 5 | Newsletter/Checkout/Shop/Admin 엔드포인트 | ✅ 완료 | 1~2시간 |
+| 6 | RAG 프록시 엔드포인트 (chat/search) | ✅ 완료 | 30분 |
+| 7 | OCI 배포 (Rust 바이너리) | ⏳ 대기 | 30분 |
+| 8 | Vercel 배포 + 도메인 연결 | ⏳ 대기 | 30분 |
+| 9 | Hugging Face RAG 배포 | ⏳ 대기 | 1시간 |
+
+**총 예상: ~10시간 (2일)**
+
+### ✅ 최근 완료 (핵심)
+- **Magic Link 인증 구현**:
+  - Rust API: `POST /api/auth/magic-link` (토큰 생성 + SMTP 이메일 발송)
+  - Rust API: `POST /api/auth/verify` (토큰 검증 + 세션 생성)
+  - Next.js: `/login` 페이지 (커스텀 로그인 UI)
+  - Next.js: `/api/auth/callback/email` (콜백 처리 + 세션 쿠키 설정)
+  - lettre 크레이트로 SMTP 이메일 발송 (Gmail 호환)
+  - NextAuth PrismaAdapter와 호환되는 세션 테이블 사용
+- **Stripe Webhook 완전 구현**: Rust `webhook.rs`에 HMAC-SHA256 서명 검증 + checkout.session.completed 처리
+- **Next.js API routes 제거**: `/api/webhook/stripe`, `/api/knowledge-shelf/post` 삭제
+- **Prisma 직접 접근 제거**: `knowledge-shelf-marginalia.server.ts` → Rust API 호출로 교체
+
+### 📊 남은 API Routes (정리됨)
+- `apps/blog/src/app/api/auth/[...nextauth]/route.ts` - **유지** (NextAuth PrismaAdapter 필수)
+
+### 🔜 남은 작업 (우선순위)
+1) **SMTP 환경변수 설정**: Gmail App Password 발급 후 `.env`에 `SMTP_*` 추가
+2) **pg_cron 설정**: Supabase에서 만료 토큰 자동 삭제 스케줄 추가
+3) **OCI 배포**: Rust 바이너리 크로스 컴파일 및 배포
+4) **Vercel 배포**: 환경변수 설정 + 도메인 연결
+5) **Stripe Webhook URL 변경**: Dashboard에서 `api.pizzar.ing/api/webhook/stripe`로 변경
 
 ---
 
-## Blockers / Notes
+## 🔧 Key Technical Decisions
 
-1. **Supabase Free Plan 사용 중** - Postgres만 활용, Auth는 NextAuth v5 유지
-2. **RAG Service** - `services/rag-service/` 에 별도 존재, `/api/chat`에 연동 필요
-3. **Vercel 배포** - 현재 배포 상태 확인 필요
+### 1. 왜 Rust인가?
+- 메모리 사용: ~20MB (OCI 1GB에서 여유)
+- Cold start 없음 (바이너리 실행)
+- 타입 안전성 (컴파일 타임 에러)
+
+### 2. Prisma → Diesel
+- 기존 Supabase DB 유지
+- Diesel로 스키마만 정의 (마이그레이션 X)
+- cuid2 crate로 ID 생성
+
+### 3. NextAuth 유지 + Magic Link 인증
+- NextAuth PrismaAdapter로 세션 관리 (Vercel에서 동작)
+- 매직링크 발송/검증만 Rust API에서 처리 (cold start 회피)
+- 세션은 DB 기반 (JWT 아님) - NextAuth가 쿠키 검증
+
+### 4. Server Actions → Rust API
+- 모든 Server Actions을 Rust 엔드포인트로 이동
+- Stripe, Resend 호출도 Rust에서
 
 ---
 
-## Session Handoff Checklist
+## 📁 New Project Structure
+
+```
+orangec-at/
+├── apps/
+│   └── blog/                    # Next.js (Vercel SSR)
+│       ├── src/app/[locale]/login/  # 커스텀 로그인 UI
+│       └── src/                 # 프론트엔드 + NextAuth
+│
+├── services/
+│   ├── rag-service/             # FastAPI (Hugging Face)
+│   └── blog-api/                # 🆕 Rust API (OCI)
+│       ├── Cargo.toml
+│       ├── src/
+│       │   ├── main.rs
+│       │   ├── routes/
+│       │   ├── models/
+│       │   └── services/
+│       └── diesel.toml
+│
+└── ...
+```
+
+---
+
+## 🌐 Infrastructure
+
+| 서비스 | 플랫폼 | 도메인 | 비용 |
+|--------|--------|--------|------|
+| Frontend | Vercel | pizzar.ing | $0 |
+| API | OCI E2.1.Micro | api.pizzar.ing | $0 |
+| RAG | Hugging Face | - (internal) | $0 |
+| DB | Supabase | - | $0 |
+| Domain | Porkbun | pizzar.ing | ~$10/년 |
+
+---
+
+## ⚠️ Blockers / Notes
+
+1. **OCI ARM 품절** - E2.1.Micro (AMD) 사용 중
+2. **Rust 빌드** - 서버에서 불가, 로컬 크로스 컴파일 필요
+3. **기존 Phase 4 작업** - 일시 중단 (인프라 완료 후 재개)
+
+---
+
+## 📚 Related Memories (Serena)
+
+- `blog_infrastructure_redesign` - 이 작업의 상세 기술 결정
+- `project_overview` - 프로젝트 전체 개요
+- `rag_system_architecture` - RAG 시스템 설계
+
+---
+
+## 🔄 Session Handoff Checklist
 
 다음 세션 시작 시:
-1. [ ] 이 파일 (`dev/active/CURRENT-WORK.md`) 읽기
-2. [ ] `vault/projects/current-wip.md` 확인 (WIP 항목)
-3. [ ] `git status`로 uncommitted 변경사항 확인
-4. [ ] 위 "Current Focus" 섹션의 진행 중 항목 이어서 작업
+1. [ ] 이 파일 읽기
+2. [ ] 위 Phase 표에서 현재 진행 상태 확인
+3. [ ] `services/blog-api/` 디렉토리 존재 여부 확인
+4. [ ] OCI VM 상태 확인 (SSH 접속 가능 여부)
 
 ---
 
-## Reference Documents
+## 🗂️ Other Active Work (Paused)
 
-- `/Users/jaylee222/.gemini/antigravity/brain/c1638333-8efe-4207-8ea5-789d4fcfcb5c/handoff_instructions.md.resolved` - 원본 마이그레이션 계획
-- `apps/blog/DESIGN-SYSTEM.md` - 디자인 시스템 가이드
-- `apps/blog/README.md` - 블로그 프로젝트 개요
+| 프로젝트 | 상태 | 재개 시점 |
+|----------|------|----------|
+| Phase 4 (Mock → Real) | ⏸️ 일시중단 | 인프라 완료 후 |
+| MDX Editor Extension | ⏸️ 40% | 블로그 배포 후 |
+| Content Marketing Team | ⏸️ 유튜브 이슈 | 해결 후 |

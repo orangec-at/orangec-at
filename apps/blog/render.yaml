@@ -22,7 +22,7 @@ services:
         sync: false
       - key: AUTH_GOOGLE_SECRET
         sync: false
-      - key: RAG_SERVICE_URL
-        value: https://your-rag-service.up.railway.app/api/chat
-      - key: GEMINI_API_KEY
+      - key: NEXT_PUBLIC_BLOG_API_URL
+        value: https://your-api-domain.example
+      - key: BLOG_API_INTERNAL_KEY
         sync: false

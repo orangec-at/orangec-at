@@ -60,7 +60,7 @@ model_name = "models/gemini-2.0-flash-exp"
 
 ### Chat 모델
 ```python
-# apps/rag-service/app/services/gemini.py
+# services/rag-service/app/services/gemini.py
 self.chat_model_name = "models/gemini-2.0-flash"  ✅
 ```
 
@@ -75,7 +75,7 @@ self.embed_model_name = "models/text-embedding-004"  ✅
 
 ### 1. gemini.py 파일 수정
 ```python
-# apps/rag-service/app/services/gemini.py
+# services/rag-service/app/services/gemini.py
 
 self.chat_model_name = "models/gemini-2.0-flash"  # 현재
 # 또는
@@ -84,7 +84,7 @@ self.chat_model_name = "models/gemini-2.5-flash"  # 최신
 
 ### 2. 백엔드 재시작
 ```bash
-cd /Users/jaylee222/resources/projects/orangec_at/orangec-at/apps/rag-service
+cd /Users/jaylee222/resources/projects/orangec_at/orangec-at/services/rag-service
 uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 7073
 ```
 
@@ -172,6 +172,6 @@ self.chat_model_name = "models/gemini-2.5-pro"
 
 ```bash
 # Ctrl + C
-cd /Users/jaylee222/resources/projects/orangec_at/orangec-at/apps/rag-service
+cd /Users/jaylee222/resources/projects/orangec_at/orangec-at/services/rag-service
 uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 7073
 ```
