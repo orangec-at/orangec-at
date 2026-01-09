@@ -1,7 +1,8 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { blogApiUrl } from "@/lib/blog-api";
+import { blogApiServerFetch } from "@/lib/blog-api-server";
 import { revalidatePath } from "next/cache";
 
 export type Product = {
@@ -21,24 +22,53 @@ export type PurchaseResult = {
   remainingPoints?: number;
 };
 
+type ApiProduct = {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  point_price: number;
+  image: string | null;
+  category: string;
+  is_rare: boolean;
+};
+
+type ApiInkPointsResponse = {
+  ink_points: number | null;
+};
+
+type ApiPurchaseResult = {
+  success: boolean;
+  message: string;
+  remaining_points: number | null;
+};
+
+type ApiOrder = {
+  id: string;
+  status: string;
+  created_at: string;
+  product: {
+    name: string;
+    image: string | null;
+    point_price: number;
+  };
+};
+
 export async function getProducts(): Promise<Product[]> {
-  const products = await prisma.product.findMany({
-    orderBy: [
-      { isRare: "desc" },
-      { category: "asc" },
-      { name: "asc" },
-    ],
-  });
+  const res = await fetch(blogApiUrl("/api/shop/products"), { cache: "no-store" });
+  if (!res.ok) return [];
+
+  const products = (await res.json()) as ApiProduct[];
 
   return products.map((p) => ({
     id: p.id,
     name: p.name,
     description: p.description,
     price: Number(p.price),
-    pointPrice: p.pointPrice,
+    pointPrice: p.point_price,
     image: p.image,
     category: p.category,
-    isRare: p.isRare,
+    isRare: p.is_rare,
   }));
 }
 
@@ -47,12 +77,16 @@ export async function getUserInkPoints(): Promise<number | null> {
   const userId = session?.user?.id;
   if (!userId) return null;
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { inkPoints: true },
+  const res = await blogApiServerFetch("/api/shop/ink-points", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ user_id: userId }),
   });
 
-  return user?.inkPoints ?? null;
+  if (!res.ok) return null;
+
+  const data = (await res.json()) as ApiInkPointsResponse;
+  return data.ink_points ?? null;
 }
 
 export async function buyProduct(productId: string): Promise<PurchaseResult> {
@@ -66,66 +100,28 @@ export async function buyProduct(productId: string): Promise<PurchaseResult> {
     };
   }
 
-  try {
-    const result = await prisma.$transaction(async (tx) => {
-      const user = await tx.user.findUnique({
-        where: { id: userId },
-        select: { id: true, inkPoints: true },
-      });
+  const res = await blogApiServerFetch("/api/shop/buy", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ user_id: userId, product_id: productId }),
+  });
 
-      if (!user) {
-        throw new Error("사용자를 찾을 수 없습니다. (User not found)");
-      }
+  const data = (await res.json()) as ApiPurchaseResult;
 
-      const product = await tx.product.findUnique({
-        where: { id: productId },
-        select: { id: true, name: true, pointPrice: true },
-      });
-
-      if (!product) {
-        throw new Error("상품을 찾을 수 없습니다. (Product not found)");
-      }
-
-      if (user.inkPoints < product.pointPrice) {
-        throw new Error(
-          `잉크 포인트가 부족합니다. 필요: ${product.pointPrice}, 보유: ${user.inkPoints}`
-        );
-      }
-
-      const updatedUser = await tx.user.update({
-        where: { id: user.id },
-        data: { inkPoints: { decrement: product.pointPrice } },
-        select: { inkPoints: true },
-      });
-
-      await tx.order.create({
-        data: {
-          userId: user.id,
-          productId: product.id,
-          status: "COMPLETED",
-        },
-      });
-
-      return {
-        productName: product.name,
-        remainingPoints: updatedUser.inkPoints,
-      };
-    });
-
-    revalidatePath("/shop");
-
-    return {
-      success: true,
-      message: `"${result.productName}" 구매 완료! (Purchase successful)`,
-      remainingPoints: result.remainingPoints,
-    };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "구매 중 오류가 발생했습니다.";
+  if (!res.ok || !data.success) {
     return {
       success: false,
-      message,
+      message: data?.message ?? "구매 중 오류가 발생했습니다.",
     };
   }
+
+  revalidatePath("/shop");
+
+  return {
+    success: true,
+    message: data.message,
+    remainingPoints: data.remaining_points ?? undefined,
+  };
 }
 
 export async function getUserOrders() {
@@ -133,19 +129,24 @@ export async function getUserOrders() {
   const userId = session?.user?.id;
   if (!userId) return [];
 
-  const orders = await prisma.order.findMany({
-    where: { userId },
-    include: {
-      product: {
-        select: {
-          name: true,
-          image: true,
-          pointPrice: true,
-        },
-      },
-    },
-    orderBy: { createdAt: "desc" },
+  const res = await blogApiServerFetch("/api/shop/orders", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ user_id: userId }),
   });
 
-  return orders;
+  if (!res.ok) return [];
+
+  const orders = (await res.json()) as ApiOrder[];
+
+  return orders.map((o) => ({
+    id: o.id,
+    status: o.status,
+    createdAt: new Date(o.created_at),
+    product: {
+      name: o.product.name,
+      image: o.product.image,
+      pointPrice: o.product.point_price,
+    },
+  }));
 }

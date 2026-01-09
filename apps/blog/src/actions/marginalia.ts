@@ -1,39 +1,33 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { blogApiServerFetch } from "@/lib/blog-api-server";
 import { revalidatePath } from "next/cache";
+
+type ApiSaveMarginaliaResponse = {
+  success: boolean;
+  message: string;
+};
 
 export async function saveMarginalia(content: string, tags: string[] = []) {
   const session = await auth();
-  if (!session?.user?.id) {
+  const userId = session?.user?.id;
+  if (!userId) {
     return { success: false, message: "Authentication required" };
   }
 
-  try {
-    // 1. Create Marginalia record
-    await prisma.marginalia.create({
-      data: {
-        content,
-        tags,
-        userId: session.user.id,
-      },
-    });
+  const res = await blogApiServerFetch("/api/marginalia", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ user_id: userId, content, tags }),
+  });
 
-    // 2. Award Ink Points (e.g., 15 points per fragment)
-    await prisma.user.update({
-      where: { id: session.user.id },
-      data: {
-        inkPoints: {
-          increment: 15,
-        },
-      },
-    });
+  const data = (await res.json()) as ApiSaveMarginaliaResponse;
 
-    revalidatePath("/profile");
-    return { success: true, message: "Fragment saved and Ink points awarded!" };
-  } catch (error) {
-    console.error("Failed to save marginalia:", error);
-    return { success: false, message: "Failed to save fragment" };
+  if (!res.ok || !data.success) {
+    return { success: false, message: data?.message ?? "Failed to save fragment" };
   }
+
+  revalidatePath("/profile");
+  return { success: true, message: data.message };
 }

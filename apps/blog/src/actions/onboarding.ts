@@ -1,10 +1,14 @@
 "use server";
 
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
-import { subscribeNewsletter } from "@/actions/newsletter";
+import { blogApiServerFetch } from "@/lib/blog-api-server";
 
 type OnboardingResult = {
+  success: boolean;
+  message: string;
+};
+
+type ApiOnboardingResponse = {
   success: boolean;
   message: string;
 };
@@ -16,8 +20,9 @@ export async function completeOnboarding(input: {
 }): Promise<OnboardingResult> {
   const session = await auth();
   const userId = session?.user?.id;
+  const email = session?.user?.email;
 
-  if (!userId) {
+  if (!userId || !email) {
     return { success: false, message: "Login is required" };
   }
 
@@ -25,23 +30,22 @@ export async function completeOnboarding(input: {
     return { success: false, message: "Terms acceptance is required" };
   }
 
-  const now = new Date();
-
-  await prisma.user.update({
-    where: { id: userId },
-    data: {
-      termsAcceptedAt: now,
-      onboardingCompletedAt: now,
-      newsletterOptInAt: null,
-    },
+  const res = await blogApiServerFetch("/api/onboarding/complete", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      user_id: userId,
+      email,
+      accept_terms: input.acceptTerms,
+      newsletter_opt_in: input.newsletterOptIn,
+    }),
   });
 
-  if (input.newsletterOptIn) {
-    const result = await subscribeNewsletter({ locale: input.locale });
-    if (!result.success) {
-      return { success: true, message: "Onboarding saved. Newsletter opt-in failed." };
-    }
+  const data = (await res.json()) as ApiOnboardingResponse;
+
+  if (!res.ok || !data.success) {
+    return { success: false, message: data?.message ?? "Failed to complete onboarding" };
   }
 
-  return { success: true, message: "Onboarding completed" };
+  return { success: true, message: data.message };
 }

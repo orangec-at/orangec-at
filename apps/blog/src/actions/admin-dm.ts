@@ -1,9 +1,13 @@
 "use server";
 
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { blogApiServerFetch } from "@/lib/blog-api-server";
 
-const ADMIN_DM_THREAD_TITLE = "__ADMIN_DM__";
+type ApiAdminDmResponse = {
+  success: boolean;
+  message: string;
+  thread_id: string | null;
+};
 
 export async function sendAdminDM(content: string) {
   const session = await auth();
@@ -17,28 +21,21 @@ export async function sendAdminDM(content: string) {
     return { success: false, message: "Message is too short" };
   }
 
-  const thread =
-    (await prisma.thread.findFirst({
-      where: { userId, title: ADMIN_DM_THREAD_TITLE },
-    })) ??
-    (await prisma.thread.create({
-      data: {
-        userId,
-        title: ADMIN_DM_THREAD_TITLE,
-      },
-    }));
-
-  await prisma.message.create({
-    data: {
-      role: "user",
-      content,
-      threadId: thread.id,
-    },
+  const res = await blogApiServerFetch("/api/admin-dm", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ user_id: userId, content }),
   });
+
+  const data = (await res.json()) as ApiAdminDmResponse;
+
+  if (!res.ok || !data.success) {
+    return { success: false, message: data?.message ?? "Failed to deliver message" };
+  }
 
   return {
     success: true,
-    message: "Your message has been delivered to the Master's inbox.",
-    data: { threadId: thread.id },
+    message: data.message,
+    data: { threadId: data.thread_id ?? undefined },
   };
 }

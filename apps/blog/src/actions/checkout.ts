@@ -1,50 +1,42 @@
 "use server";
 
-import { getStripe } from "@/lib/stripe";
 import { auth } from "@/auth";
-import { withLocalePath } from "@/lib/locale-path";
+import { blogApiServerFetch } from "@/lib/blog-api-server";
 
-export async function createCheckoutSession(productId: string, priceId?: string, isSubscription: boolean = false) {
+type ApiCheckoutResponse = {
+  url: string | null;
+  error: string | null;
+};
+
+export async function createCheckoutSession(
+  productId: string,
+  _priceId?: string,
+  isSubscription: boolean = false
+) {
   const session = await auth();
-  if (!session?.user?.email) {
+  if (!session?.user?.email || !session?.user?.id) {
     return { error: "Authentication required" };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  const locale = "ko"; // Ideally get from current context
+  const locale = "ko";
 
-  try {
-    const stripe = getStripe();
-    const checkoutSession = await stripe.checkout.sessions.create({
-      customer_email: session.user.email,
-      line_items: [
-        {
-          // In a real app, you would use priceId from Stripe dashboard
-          // Here we use a placeholder or dynamic data for demo
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: productId, // Placeholder name
-            },
-            unit_amount: 1000, // $10.00
-            recurring: isSubscription ? { interval: "month" } : undefined,
-          },
-          quantity: 1,
-        },
-      ],
-      mode: isSubscription ? "subscription" : "payment",
-      success_url: `${baseUrl}${withLocalePath(locale, "/shop?success=true")}`,
-      cancel_url: `${baseUrl}${withLocalePath(locale, "/shop?canceled=true")}`,
-      metadata: {
-        userId: session.user.id,
-        productId,
-      },
-    });
+  const res = await blogApiServerFetch("/api/checkout/create-session", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      user_id: session.user.id,
+      email: session.user.email,
+      product_id: productId,
+      is_subscription: isSubscription,
+      locale,
+    }),
+  });
 
-    return { url: checkoutSession.url };
-  } catch (error: unknown) {
-    console.error("Stripe Error:", error);
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return { error: message };
+  const data = (await res.json()) as ApiCheckoutResponse;
+
+  if (!res.ok || !data.url) {
+    return { error: data?.error ?? "Checkout failed" };
   }
+
+  return { url: data.url };
 }

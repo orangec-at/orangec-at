@@ -1,7 +1,7 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { blogApiServerFetch } from "@/lib/blog-api-server";
 
 export type UserStats = {
   totalUsers: number;
@@ -44,6 +44,59 @@ export type DashboardData = {
   }>;
 };
 
+type ApiDashboardData = {
+  user_stats: {
+    total_users: number;
+    total_ink_points: number;
+    average_ink_points: number;
+    admin_count: number;
+  };
+  recent_orders: Array<{
+    id: string;
+    status: string;
+    created_at: string;
+    user: {
+      name: string | null;
+      email: string | null;
+      image: string | null;
+    };
+    product: {
+      name: string;
+      point_price: number;
+      image: string | null;
+    };
+  }>;
+  top_users: Array<{
+    id: string;
+    name: string | null;
+    email: string | null;
+    ink_points: number;
+    order_count: number;
+  }>;
+  product_stats: Array<{
+    id: string;
+    name: string;
+    category: string;
+    order_count: number;
+  }>;
+};
+
+type ApiSimpleResult = {
+  success: boolean;
+  message: string;
+};
+
+type ApiAdminUser = {
+  id: string;
+  name: string | null;
+  email: string | null;
+  image: string | null;
+  ink_points: number;
+  role: string;
+  created_at: string;
+  order_count: number;
+};
+
 export async function isUserAdmin(): Promise<boolean> {
   const session = await auth();
   return session?.user?.role === "ADMIN";
@@ -53,68 +106,45 @@ export async function getDashboardData(): Promise<DashboardData | null> {
   const session = await auth();
   if (session?.user?.role !== "ADMIN") return null;
 
-  const [users, orders, products] = await Promise.all([
-    prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        inkPoints: true,
-        role: true,
-        _count: { select: { orders: true } },
-      },
-      orderBy: { inkPoints: "desc" },
-      take: 10,
-    }),
-    prisma.order.findMany({
-      include: {
-        user: { select: { name: true, email: true, image: true } },
-        product: { select: { name: true, pointPrice: true, image: true } },
-      },
-      orderBy: { createdAt: "desc" },
-      take: 20,
-    }),
-    prisma.product.findMany({
-      select: {
-        id: true,
-        name: true,
-        category: true,
-        _count: { select: { orders: true } },
-      },
-      orderBy: { orders: { _count: "desc" } },
-    }),
-  ]);
+  const res = await blogApiServerFetch("/api/admin/dashboard", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ user_role: "ADMIN" }),
+  });
 
-  const totalUsers = users.length;
-  const totalInkPoints = users.reduce((sum: number, u: typeof users[number]) => sum + u.inkPoints, 0);
-  const adminCount = users.filter((u: typeof users[number]) => u.role === "ADMIN").length;
+  const data = (await res.json()) as ApiDashboardData | null;
+  if (!res.ok || !data) return null;
 
   return {
     userStats: {
-      totalUsers,
-      totalInkPoints,
-      averageInkPoints: totalUsers > 0 ? Math.round(totalInkPoints / totalUsers) : 0,
-      adminCount,
+      totalUsers: data.user_stats.total_users,
+      totalInkPoints: data.user_stats.total_ink_points,
+      averageInkPoints: data.user_stats.average_ink_points,
+      adminCount: data.user_stats.admin_count,
     },
-    recentOrders: orders.map((o: typeof orders[number]) => ({
+    recentOrders: data.recent_orders.map((o) => ({
       id: o.id,
       status: o.status,
-      createdAt: o.createdAt,
+      createdAt: new Date(o.created_at),
       user: o.user,
-      product: o.product,
+      product: {
+        name: o.product.name,
+        pointPrice: o.product.point_price,
+        image: o.product.image,
+      },
     })),
-    topUsers: users.map((u: typeof users[number]) => ({
+    topUsers: data.top_users.map((u) => ({
       id: u.id,
       name: u.name,
       email: u.email,
-      inkPoints: u.inkPoints,
-      orderCount: u._count.orders,
+      inkPoints: u.ink_points,
+      orderCount: u.order_count,
     })),
-    productStats: products.map((p: typeof products[number]) => ({
+    productStats: data.product_stats.map((p) => ({
       id: p.id,
       name: p.name,
       category: p.category,
-      orderCount: p._count.orders,
+      orderCount: p.order_count,
     })),
   };
 }
@@ -123,19 +153,26 @@ export async function getAllUsers() {
   const isAdmin = await isUserAdmin();
   if (!isAdmin) return [];
 
-  return prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      image: true,
-      inkPoints: true,
-      role: true,
-      createdAt: true,
-      _count: { select: { orders: true } },
-    },
-    orderBy: { createdAt: "desc" },
+  const res = await blogApiServerFetch("/api/admin/users", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ user_role: "ADMIN" }),
   });
+
+  if (!res.ok) return [];
+
+  const data = (await res.json()) as ApiAdminUser[];
+
+  return data.map((u) => ({
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    image: u.image,
+    inkPoints: u.ink_points,
+    role: u.role,
+    createdAt: new Date(u.created_at),
+    _count: { orders: u.order_count },
+  }));
 }
 
 export async function updateUserInkPoints(
@@ -147,13 +184,21 @@ export async function updateUserInkPoints(
     return { success: false, message: "Unauthorized" };
   }
 
-  try {
-    await prisma.user.update({
-      where: { id: userId },
-      data: { inkPoints: points },
-    });
-    return { success: true, message: "Points updated successfully" };
-  } catch {
-    return { success: false, message: "Failed to update points" };
+  const res = await blogApiServerFetch("/api/admin/users/ink-points", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      user_role: "ADMIN",
+      target_user_id: userId,
+      points,
+    }),
+  });
+
+  const data = (await res.json()) as ApiSimpleResult;
+
+  if (!res.ok) {
+    return { success: false, message: data?.message ?? "Failed to update points" };
   }
+
+  return { success: data.success, message: data.message };
 }
