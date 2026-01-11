@@ -22,7 +22,10 @@
     "todo": "./scripts/vault/new-todo.sh",
     "tweet": "./scripts/vault/new-tweet.sh",
     "morning": "./scripts/vault/morning-routine.sh",
-    "status": "./scripts/vault/status.sh"
+    "status": "./scripts/vault/status.sh",
+    "bullet": "node scripts/bullet-status.js",
+    "bullet:w": "node scripts/bullet-status.js weekly",
+    "bullet:m": "node scripts/bullet-status.js monthly"
   },
   "devDependencies": {
     "@swc/core": "^1.15.3",
