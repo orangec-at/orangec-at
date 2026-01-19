@@ -1,7 +1,7 @@
 import type { BlogPostMeta } from "@/lib/blog-utils.server";
 import { translateCategory, translateTag } from "@/types/frontmatter";
 
-import type { Fragment, Post } from "@/components/knowledge-shelf/types";
+import type { Fragment, Post } from "@/lib/types";
 
 type KnowledgeShelfData = {
   posts: Post[];

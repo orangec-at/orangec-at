@@ -1,4 +1,4 @@
-import type { Fragment } from "@/components/knowledge-shelf/types";
+import type { Fragment } from "@/lib/types";
 
 const BLOG_API_URL = process.env.NEXT_PUBLIC_BLOG_API_URL ?? "http://localhost:3001";
 const INTERNAL_API_KEY = process.env.BLOG_API_INTERNAL_KEY ?? "";
