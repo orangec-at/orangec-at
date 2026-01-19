@@ -1,0 +1,151 @@
+---
+title: "Learning from Failure as a Developer: Why Do We Try to Know Everything Before Starting?"
+description: "How developers grow through failure experiences. Why execution and learning from mistakes is more valuable than perfect preparation."
+date: "2024-12-20"
+tags: ["DevCulture", "Growth", "Mindset", "Retrospective"]
+slug: "learning-from-failure-as-developer"
+---
+
+# Learning from Failure as a Developer
+
+It was a late night wrestling with every possible error while deploying a NestJS project to Docker. I started with a "I'll just wing it" mindset, but eventually hit moments where nothing seemed to work no matter what I tried.
+
+But I made it work. And in the process, I learned more about Docker networking, multi-stage builds, and environment variable management than I would have from reading 100 documentation pages.
+
+## Confucius' Three Levels of Understanding
+
+Confucius divided enlightenment into three stages:
+
+1. **Those who know from birth** - Geniuses
+2. **Those who learn to know** - Learners
+3. **Those who experience to know** - Practitioners
+
+In my younger days, with plenty of arrogance, I thought I was at least a "learner." Now, I'm grateful if I can become someone who "learns through experience."
+
+## The Modern Developer's Trap
+
+Today, many developers want to know everything before starting:
+
+> "Let me finish the complete Docker guide first"  
+> "I'll master advanced TypeScript before starting the project"  
+> "Just one more read of the Clean Architecture book..."
+
+But knowing everything doesn't guarantee mastery. Often, those who start knowing nothing but persist through time reach the highest levels of expertise.
+
+## The Value of Moderate Failure
+
+The **determination and frustration** from moderate failure helps you reach mastery more than consuming endless information.
+
+```typescript
+// First attempt: "Why doesn't this work?"
+try {
+  await prisma.user.create({ data: userData });
+} catch (e) {
+  console.log(e); // P2002: Unique constraint failed
+  // What's a unique constraint again?
+}
+
+// Later: Patterns learned through failure
+try {
+  await prisma.user.upsert({
+    where: { email: userData.email },
+    create: userData,
+    update: userData,
+  });
+} catch (e) {
+  if (e instanceof Prisma.PrismaClientKnownRequestError) {
+    if (e.code === 'P2002') {
+      throw new ConflictException('Email already exists');
+    }
+  }
+  throw e;
+}
+```
+
+At first, I'd Google "why doesn't this work?" with the error message. After dozens of failures, I know the cause just from the error code. This isn't knowledge from reading docs—it's **knowledge learned through the body**.
+
+## Failing is a Skill Too
+
+Not all failures are valuable. Conditions for meaningful failure:
+
+### 1. Attitude Toward Producing Results
+
+```bash
+# Bad failure: Give up when error occurs
+$ docker build .
+ERROR: failed to solve...
+$ # "Whatever, I'll do it later"
+
+# Good failure: Chase it to the end
+$ docker build .
+ERROR: failed to solve...
+$ docker build . --no-cache --progress=plain 2>&1 | tee build.log
+$ # Analyze logs, check each layer, identify cause
+```
+
+### 2. Document After Failure
+
+```markdown
+## 2024-12-20 Docker Deployment Failure Log
+
+### Symptoms
+- `COPY --from=builder` stage couldn't find files
+
+### Cause
+- Multi-stage build output went to `build/` instead of `dist/`
+- Didn't verify tsconfig.json `outDir` setting
+
+### Solution
+- Explicitly set `outDir: "./dist"`
+- Match with COPY path in Dockerfile
+
+### Lessons Learned
+- Don't rely on implicit settings
+- Always explicitly verify build output paths
+```
+
+### 3. Pattern Recognition
+
+If you experience the same type of failure more than three times, it's no longer a failure—it's **wasting a learning opportunity**.
+
+## Realizations After 5 Years as a Developer
+
+What I've learned in 5 years as a developer:
+
+**Year 1**: "I don't even know what I don't know"  
+**Year 2**: "Oh, I don't know a lot"  
+**Year 3**: "I think I'm getting it now"  
+**Year 4**: "There's still so much I don't know"  
+**Year 5**: "Not knowing is normal, and I can learn"
+
+Looking at junior developers these days, they seem pressured to "be perfect from the start." But seniors face unknowns every day too. The difference is the **attitude when facing the unknown**.
+
+## Practical Guide
+
+### What You Can Do Today
+
+1. **Start building a TODO app**
+   - Don't wait for "perfect architecture"
+   - Build first, feel the gaps, then improve
+
+2. **Keep a failure log**
+   - Blog, Notion, anywhere works
+   - The goal is not repeating the same failures
+
+3. **Ask "why?" three times**
+   - Got an error → Why?
+   - Type mismatch → Why?
+   - Didn't check API response schema → Why?
+
+## Conclusion
+
+> What can you learn from failure?
+> This is something you'll never know until you actually fail.
+
+Yet the attitude and action of trying to produce results despite everything is what gives you "learning."
+
+There's no such thing as perfect preparation. Start. Fail. Document. That's growth.
+
+---
+
+*This post was written in frustration while failing at NestJS Docker deployment.* 😤
