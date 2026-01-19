@@ -48,9 +48,9 @@ export default function DocumentDetailClient({
 
   return (
     <>
-      <div className="min-h-screen bg-transparent print:bg-white">
+      <div className="min-h-screen bg-[#f4f1ea] dark:bg-black pt-28 md:pt-32 print:bg-white print:pt-0">
         {/* Toolbar - 프린트 시 숨김 */}
-        <div className="print:hidden sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+        <div className="print:hidden sticky top-20 z-10 bg-[#f4f1ea]/80 dark:bg-black/80 backdrop-blur-sm border-b border-stone-200 dark:border-stone-800">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 max-w-5xl">
             <div className="flex items-center justify-between">
               <Button asChild variant="ghost" size="sm">
@@ -75,7 +75,7 @@ export default function DocumentDetailClient({
           className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-5xl print:mx-auto print:p-0 print:m-0 document-print-container"
         >
           {/* Header */}
-          <div className="mb-8 pb-6 border-b border-gray-200 dark:border-gray-700 print:border-b-2 print:border-gray-300">
+          <div className="mb-8 pb-6 border-b border-stone-200 dark:border-stone-700 print:border-b-2 print:border-stone-300">
             <div className="flex items-center gap-2 mb-4 print:hidden">
               <Badge variant="outline">
                 {translateDocumentType(meta.type, locale)}
@@ -88,18 +88,18 @@ export default function DocumentDetailClient({
               </Badge>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white print:text-black mb-4">
+            <h1 className="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-stone-100 print:text-black mb-4">
               {meta.title}
             </h1>
 
             {meta.description && (
-              <p className="text-lg text-gray-600 dark:text-gray-400 print:text-gray-700 mb-4">
+              <p className="text-lg text-stone-600 dark:text-stone-400 print:text-stone-700 mb-4">
                 {meta.description}
               </p>
             )}
 
             {/* Meta Info */}
-            <div className="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400 print:text-gray-600">
+            <div className="flex flex-wrap gap-4 text-sm text-stone-500 dark:text-stone-400 print:text-stone-600">
               {meta.company && (
                 <div className="flex items-center gap-1">
                   <Building2 className="w-4 h-4" />
@@ -138,11 +138,11 @@ export default function DocumentDetailClient({
           {/* MDX Content */}
           <article
             className="prose prose-sm sm:prose-base lg:prose-lg max-w-none
-            prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white
-            prose-p:text-gray-700 dark:prose-p:text-gray-300
-            prose-a:text-blue-600 dark:prose-a:text-blue-400
-            prose-strong:text-gray-900 dark:prose-strong:text-white
-            prose-li:text-gray-700 dark:prose-li:text-gray-300
+            prose-headings:font-bold prose-headings:text-stone-900 dark:prose-headings:text-stone-100
+            prose-p:text-stone-700 dark:prose-p:text-stone-300
+            prose-a:text-[#FF5F1F] dark:prose-a:text-[#FF5F1F]
+            prose-strong:text-stone-900 dark:prose-strong:text-stone-100
+            prose-li:text-stone-700 dark:prose-li:text-stone-300
             print:prose-sm print:text-black print:prose-headings:text-black"
           >
             <MDXRemote {...mdxSource} components={mdxComponents} />

@@ -1,7 +1,7 @@
 "use client";
 
-import { ThreadsArchive } from "@/components/knowledge-shelf/components/ThreadsArchive";
-import { Fragment } from "@/components/knowledge-shelf/types";
+import { KineticThreads } from "@/components/kinetic/kinetic-threads";
+import { Fragment } from "@/lib/types";
 import { useTheme } from "@/contexts/theme-context";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
@@ -33,7 +33,7 @@ export default function ThreadsClient({ initialFragments }: ThreadsClientProps) 
   const themeMode = theme === "dark" ? "dark" : "light";
 
   return (
-    <ThreadsArchive
+    <KineticThreads
       threads={initialFragments}
       onBack={handleBack}
       onSearchOpen={() => {}} 

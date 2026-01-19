@@ -1,8 +1,7 @@
 "use client";
 
-import { Catalog } from "@/components/knowledge-shelf/components/Catalog";
-import { Post } from "@/components/knowledge-shelf/types";
-import { useTheme } from "@/contexts/theme-context";
+import { KineticCatalog } from "@/components/kinetic/kinetic-catalog";
+import { Post } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { withLocalePath } from "@/lib/locale-path";
@@ -12,7 +11,6 @@ interface CatalogClientProps {
 }
 
 export default function CatalogClient({ initialPosts }: CatalogClientProps) {
-  const { theme } = useTheme();
   const router = useRouter();
   const locale = useLocale();
 
@@ -24,15 +22,11 @@ export default function CatalogClient({ initialPosts }: CatalogClientProps) {
     router.push(withLocalePath(locale, `/catalog/${post.slug}`));
   };
 
-  const themeMode = theme === "dark" ? "dark" : "light";
-
   return (
-    <Catalog
+    <KineticCatalog
       posts={initialPosts}
       onPostClick={handlePostClick}
       onBack={handleBack}
-      onSearchOpen={() => {}}
-      theme={themeMode}
     />
   );
 }

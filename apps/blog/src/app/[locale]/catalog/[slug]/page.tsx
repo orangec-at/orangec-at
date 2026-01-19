@@ -1,4 +1,4 @@
-import { getBlogPostMeta } from "@/lib/blog-utils.server";
+import { getBlogPostMeta, getBlogPostsByLocale } from "@/lib/blog-utils.server";
 import { buildKnowledgeShelfDataFromBlogMeta } from "@/lib/knowledge-shelf-utils.server";
 import { promises as fs } from "fs";
 import matter from "gray-matter";
@@ -44,13 +44,29 @@ export default async function CatalogDetailPage({ params }: CatalogDetailPagePro
   const blogMeta = await getBlogPostMeta(slug, resolvedLocale);
   if (!blogMeta) notFound();
 
+  const allPostsMeta = await getBlogPostsByLocale(resolvedLocale);
+  const otherPostsMeta = allPostsMeta.filter((p) => p.slug !== slug);
+  
+  const relatedPostsMeta = otherPostsMeta
+    .filter((p) => p.category === blogMeta.category)
+    .slice(0, 3);
+  
+  const fallbackPostsMeta = relatedPostsMeta.length < 3
+    ? otherPostsMeta.filter((p) => p.category !== blogMeta.category).slice(0, 3 - relatedPostsMeta.length)
+    : [];
+
+  const finalRelatedMeta = [...relatedPostsMeta, ...fallbackPostsMeta];
+
   const { posts } = buildKnowledgeShelfDataFromBlogMeta([blogMeta], resolvedLocale);
   const shelfPost = posts[0];
+
+  const { posts: relatedPosts } = buildKnowledgeShelfDataFromBlogMeta(finalRelatedMeta, resolvedLocale);
 
   return (
     <CatalogDetailClient
       post={shelfPost}
       mdxSource={mdxSource}
+      relatedPosts={relatedPosts}
     />
   );
 }

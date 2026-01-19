@@ -47,12 +47,12 @@ export default async function ProjectDetailPage({
     relatedBlogSlugs.length > 0 ? await getBlogPostsMeta(relatedBlogSlugs) : [];
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="min-h-screen bg-[#f4f1ea] dark:bg-zinc-900">
+      <div className="container mx-auto px-4 pt-28 md:pt-32 pb-8 max-w-4xl">
         {/* Back Button */}
           <Link
             href={withLocalePath(locale, "/projects")}
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8 transition-colors"
+            className="inline-flex items-center gap-2 text-[#78716c] dark:text-gray-400 hover:text-[#1c1917] dark:hover:text-white mb-8 transition-colors"
           >
           <ArrowLeft size={20} />
           {t("backToList")}
@@ -90,14 +90,14 @@ export default async function ProjectDetailPage({
 
           {/* Tech Stack */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            <h3 className="text-lg font-semibold text-[#1c1917] dark:text-white mb-3">
               {t("techStack")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {project.techStack.map((tech) => (
                 <span
                   key={tech}
-                  className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium"
+                  className="px-3 py-1 bg-white dark:bg-zinc-800 text-[#1c1917] dark:text-gray-300 rounded-full text-sm font-medium border border-stone-200 dark:border-zinc-700"
                 >
                   {tech}
                 </span>
@@ -109,7 +109,7 @@ export default async function ProjectDetailPage({
         {/* Project Image */}
         {project.image && (
           <div className="mb-8">
-            <div className="relative w-full h-96 rounded-lg overflow-hidden bg-gray-100">
+            <div className="relative w-full h-96 rounded-lg overflow-hidden bg-white dark:bg-zinc-800">
               <Image
                 src={project.image}
                 alt={projectTitle}
@@ -210,7 +210,7 @@ export default async function ProjectDetailPage({
                       size="sm"
                       className="w-full"
                     >
-                      <Link href={withLocalePath(locale, `/blog/${post.slug}`)}>
+                      <Link href={withLocalePath(locale, `/catalog/${post.slug}`)}>
                         {t("readMore")}
                       </Link>
                     </Button>

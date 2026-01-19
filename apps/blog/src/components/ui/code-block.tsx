@@ -36,36 +36,36 @@ export function CodeBlock({ children, className = "", title }: CodeBlockProps) {
   };
 
   return (
-    <div className="relative group my-4 sm:my-6 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 max-w-full">
+    <div className="relative group my-4 sm:my-6 rounded-lg overflow-hidden border border-[#1c1917]/10 dark:border-white/10 max-w-full">
       {/* 코드 블록 헤더 */}
-      <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between px-4 py-3 bg-[#ddd9d1] dark:bg-zinc-800 border-b border-[#1c1917]/10 dark:border-white/10">
         <div className="flex items-center gap-2">
           {title && (
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-300 ml-3">
+            <span className="text-sm font-medium text-[#1c1917]/70 dark:text-white/70 ml-3">
               {title}
             </span>
           )}
-          <span className="text-xs text-gray-500 dark:text-gray-400 ml-auto mr-2">
+          <span className="text-xs text-[#1c1917]/50 dark:text-white/50 ml-auto mr-2">
             {language}
           </span>
         </div>
 
         <button
           onClick={copyToClipboard}
-          className="flex items-center gap-2 px-3 py-1.5 text-xs rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          className="flex items-center gap-2 px-3 py-1.5 text-xs rounded-md bg-[#ccc8c0] dark:bg-zinc-700 hover:bg-[#c0bcb4] dark:hover:bg-zinc-600 transition-colors"
           title="Copy code"
         >
           {copied ? (
             <>
-              <Check className="w-3 h-3 text-green-500" />
-              <span className="text-green-600 dark:text-green-400">
+              <Check className="w-3 h-3 text-green-600 dark:text-green-400" />
+              <span className="text-green-700 dark:text-green-400">
                 Copied!
               </span>
             </>
           ) : (
             <>
-              <Copy className="w-3 h-3 text-gray-500" />
-              <span className="text-gray-600 dark:text-gray-300">Copy</span>
+              <Copy className="w-3 h-3 text-[#1c1917]/50 dark:text-white/50" />
+              <span className="text-[#1c1917]/70 dark:text-white/70">Copy</span>
             </>
           )}
         </button>
@@ -79,12 +79,13 @@ export function CodeBlock({ children, className = "", title }: CodeBlockProps) {
           customStyle={{
             margin: 0,
             padding: "1rem",
-            background: "transparent",
+            background: theme === "dark" ? "#24273A" : "#F7F7F8",
             fontSize: "13px",
             lineHeight: "1.4",
             maxWidth: "100%",
             overflowX: "auto",
             wordBreak: "break-word",
+            
           }}
           showLineNumbers={true}
           lineNumberStyle={{

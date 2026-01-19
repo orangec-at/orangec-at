@@ -72,7 +72,7 @@ export default function DashboardClient({ data, locale }: DashboardClientProps) 
   };
 
   return (
-    <div className="min-h-screen paper-texture bg-[#fdfcf5] dark:bg-[#1a1a1a]">
+    <div className="min-h-screen paper-texture bg-[#fdfcf5] dark:bg-[#1a1a1a] pt-28 md:pt-32">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <Link
           href={withLocalePath(locale, "/")}

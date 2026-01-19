@@ -34,7 +34,7 @@ export default function BlogCard({
   const locale = useLocale();
 
   return (
-    <Link href={withLocalePath(locale, `/blog/${slug}`)} className="block h-full">
+    <Link href={withLocalePath(locale, `/catalog/${slug}`)} className="block h-full">
       <article className="group relative flex h-full flex-col overflow-hidden bg-transparent">
         <div className="relative aspect-[4/3] overflow-hidden bg-wood-100 dark:bg-wood-900">
           {thumbnail ? (

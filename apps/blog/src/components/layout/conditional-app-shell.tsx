@@ -1,10 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useSelectedLayoutSegment, usePathname } from "next/navigation";
-import AppNavigation from "./app-navigation";
-import ArchivesNavigation from "./archives-navigation";
-import { ChatWidget } from "@/components/rag/chat-widget";
+import { KineticNavbar, KineticGadgetToolbar } from "@/components/kinetic";
+import { BackgroundMusic } from "@/components/layout/background-music";
 
 type ConditionalAppShellProps = {
   children: ReactNode;
@@ -13,18 +11,13 @@ type ConditionalAppShellProps = {
 export default function ConditionalAppShell({
   children,
 }: ConditionalAppShellProps) {
-  const segment = useSelectedLayoutSegment();
-  const pathname = usePathname();
-
-  const standaloneSegments = [null, "knowledge-shelf", "about", "threads", "profile", "catalog"];
-  if (standaloneSegments.includes(segment as string | null) || pathname.includes("/catalog/")) {
-    return <ArchivesNavigation>{children}</ArchivesNavigation>;
-  }
-
   return (
-    <>
-      <AppNavigation>{children}</AppNavigation>
-      <ChatWidget />
-    </>
+    <BackgroundMusic>
+      <div className="min-h-screen bg-[#f4f1ea] dark:bg-black">
+        <KineticNavbar />
+        <main className="flex-1 w-full">{children}</main>
+        <KineticGadgetToolbar />
+      </div>
+    </BackgroundMusic>
   );
 }

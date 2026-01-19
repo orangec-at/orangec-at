@@ -7,7 +7,7 @@ export default function ProjectsClient() {
   const projects = PROJECTS;
 
   return (
-    <section className="w-full px-4 md:px-10 py-16">
+    <section className="w-full px-4 md:px-10 pt-28 md:pt-32 pb-16">
       <div className="space-y-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">

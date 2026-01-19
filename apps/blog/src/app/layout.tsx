@@ -1,6 +1,4 @@
 import { ThemeProvider } from "@/contexts/theme-context";
-// import { BackgroundMusic } from "@/components/layout/background-music"; // Replaced by GadgetToolbar
-import { GadgetToolbar } from "@/components/GadgetToolbar";
 import { auth } from "@/auth";
 import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
@@ -36,12 +34,6 @@ export default async function RootLayout({
         <SessionProvider session={session}>
           <ThemeProvider defaultTheme="system" storageKey="orangecat-theme">
             {children}
-            <GadgetToolbar 
-              isLoggedIn={!!session} 
-              // Theme toggle is handled by ThemeProvider mostly, but GadgetToolbar has a button for it.
-              // We might need a client wrapper to handle onThemeToggle if it requires useTheme hook access.
-              // For now, passing empty or implementing inside GadgetToolbar if it uses useTheme.
-            />
           </ThemeProvider>
         </SessionProvider>
       </body>

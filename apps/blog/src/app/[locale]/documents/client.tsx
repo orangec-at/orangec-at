@@ -59,44 +59,44 @@ export default function DocumentsClient({
   };
 
   return (
-    <div className="min-h-screen bg-transparent">
+    <div className="min-h-screen bg-[#f4f1ea] dark:bg-black pt-28 md:pt-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-6xl">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100 mb-2">
             {t.title}
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">{t.subtitle}</p>
+          <p className="text-stone-600 dark:text-stone-400">{t.subtitle}</p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Card className="p-4">
+          <Card className="p-4 bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                <FolderOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <div className="p-2 bg-stone-100 dark:bg-stone-800 rounded-lg">
+                <FolderOpen className="w-5 h-5 text-stone-600 dark:text-stone-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <p className="text-2xl font-bold text-stone-900 dark:text-stone-100">
                   {stats.total}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-stone-500 dark:text-stone-400">
                   {t.total}
                 </p>
               </div>
             </div>
           </Card>
           {DOCUMENT_TYPES.map((type) => (
-            <Card key={type} className="p-4">
+            <Card key={type} className="p-4 bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                  <FileText className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                <div className="p-2 bg-stone-100 dark:bg-stone-800 rounded-lg">
+                  <FileText className="w-5 h-5 text-stone-600 dark:text-stone-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-2xl font-bold text-stone-900 dark:text-stone-100">
                     {stats.byType[type]}
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className="text-sm text-stone-500 dark:text-stone-400">
                     {translateDocumentType(type, locale)}
                   </p>
                 </div>
@@ -108,13 +108,13 @@ export default function DocumentsClient({
         {/* Filters */}
         <div className="flex flex-wrap gap-4 mb-6">
           <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-500" />
+            <Filter className="w-4 h-4 text-stone-500" />
             <select
               value={filterType}
               onChange={(e) =>
                 setFilterType(e.target.value as DocumentType | "all")
               }
-              className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm"
+              className="px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-sm"
             >
               <option value="all">{t.allTypes}</option>
               {DOCUMENT_TYPES.map((type) => (
@@ -129,7 +129,7 @@ export default function DocumentsClient({
             onChange={(e) =>
               setFilterStatus(e.target.value as DocumentStatus | "all")
             }
-            className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm"
+            className="px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-sm"
           >
             <option value="all">{t.allStatus}</option>
             {DOCUMENT_STATUS.map((status) => (
@@ -142,9 +142,9 @@ export default function DocumentsClient({
 
         {/* Document List */}
         {filteredDocuments.length === 0 ? (
-          <Card className="p-12 text-center">
-            <FolderOpen className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">{t.noDocuments}</p>
+          <Card className="p-12 text-center bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800">
+            <FolderOpen className="w-12 h-12 mx-auto text-stone-400 mb-4" />
+            <p className="text-stone-500 dark:text-stone-400">{t.noDocuments}</p>
           </Card>
         ) : (
           <div className="grid gap-4">
@@ -172,15 +172,15 @@ function DocumentCard({
   }[doc.type];
 
   return (
-    <Card className="p-4 hover:shadow-md transition-shadow">
+    <Card className="p-4 hover:shadow-md transition-shadow bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 flex-1 min-w-0">
-          <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg shrink-0">
-            <FileText className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <div className="p-2 bg-stone-100 dark:bg-stone-800 rounded-lg shrink-0">
+            <FileText className="w-5 h-5 text-stone-600 dark:text-stone-400" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-semibold text-gray-900 dark:text-white truncate">
+              <h3 className="font-semibold text-stone-900 dark:text-stone-100 truncate">
                 {doc.title}
               </h3>
               <Badge
@@ -190,7 +190,7 @@ function DocumentCard({
                 {translateDocumentStatus(doc.status, locale)}
               </Badge>
             </div>
-            <div className="flex items-center gap-3 mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-3 mt-1 text-sm text-stone-500 dark:text-stone-400">
               <span>{translateDocumentType(doc.type, locale)}</span>
               {doc.company && (
                 <>

@@ -134,7 +134,7 @@ export default function ResumeClient() {
   const hasMilitaryData = resumeData.military.branch !== "-";
 
   return (
-    <main className="relative px-4 py-8 md:px-16 md:py-12">
+    <main className="relative px-4 pt-28 pb-8 md:px-16 md:pt-32 md:pb-12">
       <div className="max-w-5xl mx-auto space-y-6 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="muji-pegboard rounded-2xl p-5">

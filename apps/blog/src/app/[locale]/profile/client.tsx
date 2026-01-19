@@ -1,7 +1,6 @@
 "use client";
 
-import { Profile } from "@/components/knowledge-shelf/components/Profile";
-import { useTheme } from "@/contexts/theme-context";
+import { KineticProfile } from "@/components/kinetic/kinetic-profile";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { withLocalePath } from "@/lib/locale-path";
@@ -11,7 +10,6 @@ import { signOut, useSession } from "next-auth/react";
 import { getNewsletterStatus, subscribeNewsletter, unsubscribeNewsletter } from "@/actions/newsletter";
 
 export default function ProfileClient() {
-  const { theme } = useTheme();
   const router = useRouter();
   const locale = useLocale();
   const { data: session, status } = useSession();
@@ -19,8 +17,6 @@ export default function ProfileClient() {
   const [subscriptionStatus, setSubscriptionStatus] = useState<
     "ACTIVE" | "PENDING" | "UNSUBSCRIBED"
   >("UNSUBSCRIBED");
-
-  const themeMode = theme === "dark" ? "dark" : "light";
 
   useEffect(() => {
     if (!session?.user?.email) return;
@@ -74,26 +70,27 @@ export default function ProfileClient() {
 
   if (!session) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-8">
-          <h1 className="font-serif text-2xl font-bold text-stone-900 dark:text-stone-100">
-            {locale === "ko" ? "로그인이 필요합니다" : "Login required"}
+      <div className="min-h-screen bg-black flex items-center justify-center px-4">
+        <div className="max-w-md w-full bg-zinc-900 border-2 border-white/10 p-8 relative">
+          <div className="absolute top-0 left-0 w-2 h-full bg-kinetic-orange" />
+          <h1 className="font-serif text-3xl font-black uppercase tracking-tighter text-white">
+            {locale === "ko" ? "로그인이 필요합니다" : "Login Required"}
           </h1>
-          <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">
+          <p className="mt-3 font-mono text-sm text-white/60">
             {locale === "ko"
               ? "프로필과 구독 설정을 관리하려면 로그인하세요."
               : "Sign in to manage your profile and subscription settings."}
           </p>
-          <div className="mt-6 flex gap-3">
+          <div className="mt-8 flex gap-3">
             <button
               onClick={() => router.push(withLocalePath(locale, "/login"))}
-              className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium bg-stone-900 text-white hover:bg-stone-700 dark:bg-red-900 dark:hover:bg-red-800 transition-colors"
+              className="inline-flex items-center justify-center px-6 py-3 font-mono text-sm font-bold uppercase tracking-widest bg-kinetic-orange text-black hover:bg-white transition-colors"
             >
               {locale === "ko" ? "로그인" : "Sign in"}
             </button>
             <button
               onClick={handleBack}
-              className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 transition-colors"
+              className="inline-flex items-center justify-center px-6 py-3 font-mono text-sm font-bold uppercase tracking-widest bg-transparent border-2 border-white/20 text-white hover:border-kinetic-orange hover:text-kinetic-orange transition-colors"
             >
               {locale === "ko" ? "홈" : "Home"}
             </button>
@@ -106,7 +103,7 @@ export default function ProfileClient() {
   const isAdmin = session.user?.role === "ADMIN";
 
   return (
-    <Profile
+    <KineticProfile
       onBack={handleBack}
       onAdminClick={handleAdminClick}
       isAdmin={isAdmin}
@@ -116,7 +113,6 @@ export default function ProfileClient() {
       subscriptionStatus={subscriptionStatus}
       onSubscriptionToggle={handleSubscriptionToggle}
       onLogout={handleLogout}
-      theme={themeMode}
     />
   );
 }

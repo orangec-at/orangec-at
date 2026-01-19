@@ -54,7 +54,7 @@ export default async function AdminSubscribersPage({
   `;
 
   return (
-    <div className="min-h-screen paper-texture bg-[#fdfcf5] dark:bg-[#1a1a1a]">
+    <div className="min-h-screen paper-texture bg-[#fdfcf5] dark:bg-[#1a1a1a] pt-28 md:pt-32">
       <div className="max-w-6xl mx-auto px-4 py-10">
         <h1 className="font-serif text-3xl font-bold text-stone-900 dark:text-stone-100">
           {locale === "ko" ? "구독자" : "Subscribers"}

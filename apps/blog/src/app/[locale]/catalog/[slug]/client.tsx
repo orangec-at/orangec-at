@@ -1,8 +1,7 @@
 "use client";
 
-import { PostDetail } from "@/components/knowledge-shelf/components/PostDetail";
-import { Post } from "@/components/knowledge-shelf/types";
-import { useTheme } from "@/contexts/theme-context";
+import { KineticPostDetail } from "@/components/kinetic";
+import { Post } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { withLocalePath } from "@/lib/locale-path";
@@ -12,13 +11,14 @@ import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 interface CatalogDetailClientProps {
   post: Post;
   mdxSource: MDXRemoteSerializeResult;
+  relatedPosts?: Post[];
 }
 
 export default function CatalogDetailClient({
   post,
   mdxSource,
+  relatedPosts = [],
 }: CatalogDetailClientProps) {
-  const { theme } = useTheme();
   const router = useRouter();
   const locale = useLocale();
   const [highlightedTexts, setHighlightedTexts] = useState<Set<string>>(new Set());
@@ -35,17 +35,20 @@ export default function CatalogDetailClient({
     });
   };
 
-  const themeMode = theme === "dark" ? "dark" : "light";
+  const handlePostClick = (clickedPost: Post) => {
+    router.push(withLocalePath(locale, `/catalog/${clickedPost.slug}`));
+  };
 
   return (
-    <PostDetail
+    <KineticPostDetail
       post={post}
       mdxSource={mdxSource}
       isLoading={false}
       onBack={handleBack}
       highlightedTexts={highlightedTexts}
       onHighlight={handleHighlight}
-      theme={themeMode}
+      relatedPosts={relatedPosts}
+      onPostClick={handlePostClick}
     />
   );
 }
