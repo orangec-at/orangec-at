@@ -33,8 +33,8 @@ export default auth((req) => {
   }
 
   if (isDashboardRoute && req.auth && req.auth.user?.role !== "ADMIN") {
-    const profilePath = locale === "en" ? "/en/profile" : "/profile";
-    return NextResponse.redirect(new URL(profilePath, req.url));
+    const aboutPath = locale === "en" ? "/en/about" : "/about";
+    return NextResponse.redirect(new URL(aboutPath, req.url));
   }
 
   if (
@@ -56,4 +56,3 @@ export const config = {
   // Ensure we don't match static files or API routes unless intended
   matcher: ["/((?!api|_next|.*\\..*).*)"],
 };
-

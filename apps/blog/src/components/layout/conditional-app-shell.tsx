@@ -1,8 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { KineticNavbar, KineticGadgetToolbar } from "@/components/kinetic";
-import { BackgroundMusic } from "@/components/layout/background-music";
+import Footer from "@/components/layout/footer";
+import ResponsiveHeader from "@/components/layout/responsive-header";
 
 type ConditionalAppShellProps = {
   children: ReactNode;
@@ -12,12 +12,11 @@ export default function ConditionalAppShell({
   children,
 }: ConditionalAppShellProps) {
   return (
-    <BackgroundMusic>
-      <div className="min-h-screen bg-[#f4f1ea] dark:bg-black">
-        <KineticNavbar />
-        <main className="flex-1 w-full">{children}</main>
-        <KineticGadgetToolbar />
-      </div>
-    </BackgroundMusic>
+    <div className="min-h-screen bg-white dark:bg-black flex flex-col">
+      <ResponsiveHeader position="top" />
+      <main className="flex-1 w-full">{children}</main>
+      <ResponsiveHeader position="bottom" />
+      <Footer />
+    </div>
   );
 }

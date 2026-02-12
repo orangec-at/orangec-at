@@ -210,7 +210,7 @@ export default async function ProjectDetailPage({
                       size="sm"
                       className="w-full"
                     >
-                      <Link href={withLocalePath(locale, `/catalog/${post.slug}`)}>
+                      <Link href={withLocalePath(locale, `/blog/${post.slug}`)}>
                         {t("readMore")}
                       </Link>
                     </Button>

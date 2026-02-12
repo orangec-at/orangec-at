@@ -264,7 +264,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                       {project.relatedBlogPosts.map((slug) => (
                         <TypographyLink
                           key={slug}
-                          href={withLocalePath(locale, `/catalog/${slug}`)}
+                          href={withLocalePath(locale, `/blog/${slug}`)}
                           variant="s-400"
                           className="text-amber-700 hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-200"
                         >

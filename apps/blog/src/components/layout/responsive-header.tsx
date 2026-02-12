@@ -7,13 +7,8 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { withLocalePath } from "@/lib/locale-path";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
-import { Sliders } from "lucide-react";
-import { ControlCenter } from "@/components/control-center/control-center";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "@/contexts/theme-context";
 
 interface ResponsiveHeaderProps {
   position: "top" | "bottom";
@@ -30,10 +25,12 @@ export default function ResponsiveHeader({
 
   const t = useTranslations();
   const locale = useLocale();
+  const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const homeHref = withLocalePath(locale, "/");
   const isHomePage = pathname === homeHref;
   const isMobile = position === "bottom";
+  const isDark = theme === "dark";
 
   useEffect(() => {
     let handleScroll: (() => void) | null = null;
@@ -83,8 +80,6 @@ export default function ResponsiveHeader({
   };
 
   const getBackButtonSize = () => (isMobile ? 20 : 18);
-  const getDropdownSide = (): "top" | "bottom" =>
-    position === "top" ? "bottom" : "top";
 
   return (
     <>
@@ -168,20 +163,6 @@ export default function ResponsiveHeader({
                 </div>
               </nav>
 
-              <div className="hidden md:flex items-center gap-3 text-xs">
-                <Link
-                  href={withLocalePath(locale, "/terms")}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {t("legal.terms")}
-                </Link>
-                <Link
-                  href={withLocalePath(locale, "/privacy")}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {t("legal.privacy")}
-                </Link>
-              </div>
             </header>
           </div>
         ) : (
@@ -314,7 +295,7 @@ export default function ResponsiveHeader({
               </nav>
             </div>
 
-            {/* Mobile Control Center Group */}
+            {/* Mobile Theme Toggle Group */}
             <div
               className={`transition-all duration-500 ease-out rounded-full ${
                 isVerySmallScreen ? "px-2 py-2" : "px-3 py-3"
@@ -326,32 +307,20 @@ export default function ResponsiveHeader({
                   : "bg-background/60 backdrop-blur-md shadow-lg border-t border"
               }`}
             >
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    className={`flex items-center justify-center text-muted-foreground hover:text-foreground hover:scale-110 active:scale-95 transition-all duration-200 rounded-full ${
-                      isVerySmallScreen ? "w-11 h-11" : "w-12 h-12"
-                    }`}
-                    title="Control Panel (⌘⇧C)"
-                  >
-                    <Sliders
-                      className={`${isVerySmallScreen ? "h-5 w-5" : "h-6 w-6"}`}
-                    />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="p-0 border-0 bg-transparent shadow-none"
-                  side={getDropdownSide()}
-                  align="center"
-                  sideOffset={12}
-                >
-                  <ControlCenter
-                    variant="inline"
-                    className="bg-background/95 backdrop-blur-md shadow-lg border rounded-xl p-4"
-                    onAction={(action, data) => console.log(action, data)}
-                  />
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <button
+                onClick={() => setTheme(isDark ? "light" : "dark")}
+                className={`flex items-center justify-center text-muted-foreground hover:text-foreground hover:scale-110 active:scale-95 transition-all duration-200 rounded-full ${
+                  isVerySmallScreen ? "w-11 h-11" : "w-12 h-12"
+                }`}
+                aria-label="Toggle theme"
+                title="Toggle theme"
+              >
+                {isDark ? (
+                  <Sun className={`${isVerySmallScreen ? "h-5 w-5" : "h-6 w-6"}`} />
+                ) : (
+                  <Moon className={`${isVerySmallScreen ? "h-5 w-5" : "h-6 w-6"}`} />
+                )}
+              </button>
             </div>
           </div>
         )}

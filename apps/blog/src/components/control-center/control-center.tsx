@@ -4,10 +4,9 @@ import { Button } from "@orangec-at/design";
 import { useTheme } from "@/contexts/theme-context";
 import { X } from "lucide-react";
 import { useLocale } from "next-intl";
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { switchLocalePath } from "@/lib/locale-path";
-import { useBackgroundMusic } from "@/components/layout/background-music";
 import {
   defaultControlCenterConfig,
   inlineControlCenterConfig,
@@ -36,8 +35,24 @@ export function ControlCenter({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const { isPlaying, currentTrack, play, pause, next, previous } =
-    useBackgroundMusic();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTrack, setCurrentTrack] = useState("Audio removed");
+
+  const play = useCallback(() => {
+    setIsPlaying(true);
+  }, []);
+
+  const pause = useCallback(() => {
+    setIsPlaying(false);
+  }, []);
+
+  const next = useCallback(() => {
+    setCurrentTrack("Audio removed");
+  }, []);
+
+  const previous = useCallback(() => {
+    setCurrentTrack("Audio removed");
+  }, []);
 
   const switchLanguage = useCallback(
     (newLocale: string) => {

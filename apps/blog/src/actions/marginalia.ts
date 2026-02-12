@@ -28,6 +28,6 @@ export async function saveMarginalia(content: string, tags: string[] = []) {
     return { success: false, message: data?.message ?? "Failed to save fragment" };
   }
 
-  revalidatePath("/profile");
+  revalidatePath("/");
   return { success: true, message: data.message };
 }

@@ -33,7 +33,7 @@ export default async function LoginPage({
   
   const session = await auth();
   if (session?.user) {
-    redirect(withLocalePath(locale, "/profile"));
+    redirect(withLocalePath(locale, "/about"));
   }
 
   return <LoginClient locale={locale} />;
