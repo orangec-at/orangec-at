@@ -19,18 +19,12 @@ function toDisplayTags(meta: BlogPostMeta, locale: string): string[] {
 
 function toCardColor(meta: BlogPostMeta): string {
   switch (meta.category) {
-    case "dev-diary":
+    case "case-study":
       return "bg-stone-800";
-    case "tech-review":
+    case "technical":
       return "bg-stone-500";
-    case "project":
-      return "bg-stone-300";
-    case "tutorial":
-      return "bg-stone-400";
-    case "retrospective":
+    case "insight":
       return "bg-stone-600";
-    case "tech-guide":
-      return "bg-stone-700";
     default:
       return "bg-stone-500";
   }

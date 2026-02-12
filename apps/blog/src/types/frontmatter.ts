@@ -2,14 +2,7 @@ import { z } from "zod";
 
 // 카테고리 및 태그 상수 (Zod enum 사용)
 // 카테고리 key 상수
-export const BLOG_CATEGORIES = [
-  "dev-diary",
-  "tech-review",
-  "project",
-  "tutorial",
-  "retrospective",
-  "tech-guide",
-] as const;
+export const BLOG_CATEGORIES = ["case-study", "technical", "insight"] as const;
 
 // 태그 key 상수
 export const COMMON_TAGS = [
@@ -29,14 +22,13 @@ export const COMMON_TAGS = [
   "development",
   "es6",
 ] as const;
+
+export const CONTENT_CATEGORIES = ["case-study", "technical", "insight"] as const;
 // 카테고리 번역 맵핑
 export const CATEGORY_TRANSLATIONS = {
-  "dev-diary": { ko: "개발일기", en: "Dev Diary" },
-  "tech-review": { ko: "기술리뷰", en: "Tech Review" },
-  project: { ko: "프로젝트", en: "Project" },
-  tutorial: { ko: "튜토리얼", en: "Tutorial" },
-  retrospective: { ko: "회고", en: "Retrospective" },
-  "tech-guide": { ko: "기술가이드", en: "Tech Guide" },
+  "case-study": { ko: "케이스 스터디", en: "Case Study" },
+  technical: { ko: "기술", en: "Technical" },
+  insight: { ko: "인사이트", en: "Insight" },
 } as const;
 
 // 태그 번역 맵핑
@@ -100,7 +92,7 @@ export const frontmatterSchema = z.object({
     .default([]),
   description: z.string().max(300, "설명은 300자 이하여야 합니다").optional(),
   author: z.string().default("Jaeil Lee"),
-  category: z.enum(BLOG_CATEGORIES).optional(),
+  category: z.enum(CONTENT_CATEGORIES).optional(),
   readTime: z
     .string()
     .regex(
@@ -119,6 +111,7 @@ export const frontmatterSchema = z.object({
 export type MDXFrontmatter = z.infer<typeof frontmatterSchema>;
 export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
 export type CommonTag = (typeof COMMON_TAGS)[number];
+export type ContentCategory = (typeof CONTENT_CATEGORIES)[number];
 
 // MDX 파일 전체 구조
 export interface MDXPost {

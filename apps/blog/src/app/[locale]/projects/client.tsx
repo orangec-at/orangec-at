@@ -19,7 +19,7 @@ export default function ProjectsClient() {
         </div>
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
           {projects.map((project) => (
-            <div className="muji-pegboard rounded-2xl p-5" key={project.id}>
+            <div id={`project-${project.id}`} className="muji-pegboard rounded-2xl p-5" key={project.id}>
               <div className="break-inside-avoid">
                 <ProjectCard project={project} />
               </div>

@@ -1,173 +1,164 @@
 "use client";
 
+import { HOMEPAGE_CONTENT } from "@/data/homepage-content";
+import type { Project } from "@/data/projects";
 import type { BlogPostMeta } from "@/lib/blog-utils.server";
-import { FEATURED_PROJECTS } from "@/data/projects";
-import Link from "next/link";
 import { withLocalePath } from "@/lib/locale-path";
+import Link from "next/link";
 
 interface HomeClientProps {
   locale: "ko" | "en";
   recentPosts: BlogPostMeta[];
+  featuredProjects: Project[];
 }
 
-const copy = {
-  en: {
-    heroTitle: "I build products fast.",
-    heroSubtitle:
-      "Full-stack engineer shipping practical products for teams and founders.",
-    ctaProjects: "See Projects",
-    ctaContact: "Work With Me",
-    featuredProjects: "Featured Projects",
-    featuredProjectsSub: "Recent work across SaaS, mobile, and platform systems.",
-    recentPosts: "Recent Posts",
-    recentPostsSub: "Technical writing and field notes from real projects.",
-    readPost: "Read post",
-    viewAllPosts: "View all posts",
-    finalCtaTitle: "Need a frontend/full-stack partner?",
-    finalCtaBody:
-      "I help teams ship quickly with clean architecture, reliable delivery, and product-focused execution.",
-    finalCtaPrimary: "Contact",
-    finalCtaSecondary: "Newsletter",
-  },
-  ko: {
-    heroTitle: "빠르게 만들고, 실제로 배포합니다.",
-    heroSubtitle:
-      "팀과 창업가를 위해 실용적인 제품을 만드는 풀스택 엔지니어입니다.",
-    ctaProjects: "프로젝트 보기",
-    ctaContact: "협업 문의",
-    featuredProjects: "주요 프로젝트",
-    featuredProjectsSub: "SaaS, 모바일, 플랫폼 영역에서 진행한 최근 작업입니다.",
-    recentPosts: "최근 글",
-    recentPostsSub: "실무에서 얻은 기술 기록과 인사이트를 공유합니다.",
-    readPost: "글 읽기",
-    viewAllPosts: "전체 글 보기",
-    finalCtaTitle: "프로덕트 개발 파트너가 필요하신가요?",
-    finalCtaBody:
-      "클린한 구조와 빠른 실행으로, 아이디어를 실제 서비스로 연결해 드립니다.",
-    finalCtaPrimary: "문의하기",
-    finalCtaSecondary: "뉴스레터",
-  },
-} as const;
-
-export default function HomeClient({ locale, recentPosts }: HomeClientProps) {
-  const t = copy[locale];
+export default function HomeClient({
+  locale,
+  recentPosts,
+  featuredProjects,
+}: HomeClientProps) {
+  const isKo = locale === "ko";
+  const hero = HOMEPAGE_CONTENT.hero;
+  const cta = HOMEPAGE_CONTENT.cta;
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-6 py-16 md:py-24 space-y-20">
+    <div className="mx-auto w-full max-w-6xl space-y-20 px-6 py-16 md:py-24">
       <section className="space-y-6">
-        <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-foreground">
-          {t.heroTitle}
+        <h1 className="text-4xl font-semibold tracking-tight text-foreground md:text-6xl">
+          {isKo ? hero.headlineKo : hero.headline}
         </h1>
-        <p className="max-w-2xl text-lg text-muted-foreground leading-relaxed">
-          {t.heroSubtitle}
+        <p className="max-w-3xl text-lg leading-relaxed text-muted-foreground">
+          {isKo ? hero.subheadlineKo : hero.subheadline}
         </p>
         <div className="flex flex-wrap gap-3">
           <Link
-            href={withLocalePath(locale, "/projects")}
-            className="inline-flex items-center rounded-full bg-foreground text-background px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity"
+            href={withLocalePath(locale, hero.cta.primary.href)}
+            className="inline-flex items-center rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-colors hover:bg-[#FF4D00]"
           >
-            {t.ctaProjects}
+            {isKo ? hero.cta.primary.labelKo : hero.cta.primary.label}
           </Link>
           <Link
-            href={withLocalePath(locale, "/contact")}
-            className="inline-flex items-center rounded-full border border-border px-5 py-2.5 text-sm font-medium hover:bg-accent transition-colors"
+            href={withLocalePath(locale, hero.cta.secondary.href)}
+            className="inline-flex items-center rounded-full border border-border px-5 py-2.5 text-sm font-medium transition-colors hover:border-[#FF4D00] hover:text-[#FF4D00]"
           >
-            {t.ctaContact}
+            {isKo ? hero.cta.secondary.labelKo : hero.cta.secondary.label}
           </Link>
+        </div>
+      </section>
+
+      <section className="space-y-5">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {HOMEPAGE_CONTENT.socialProof.map((item) => (
+            <article key={item.number} className="rounded-2xl border border-border p-5">
+              <p className="text-2xl font-semibold text-foreground">{item.number}</p>
+              <p className="mt-1 text-sm font-medium text-foreground">
+                {isKo ? item.labelKo : item.label}
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {isKo ? item.descriptionKo : item.description}
+              </p>
+            </article>
+          ))}
         </div>
       </section>
 
       <section className="space-y-6">
         <div className="space-y-2">
-          <h2 className="text-2xl md:text-3xl font-semibold">{t.featuredProjects}</h2>
-          <p className="text-muted-foreground">{t.featuredProjectsSub}</p>
+          <h2 className="text-2xl font-semibold md:text-3xl">Featured Projects</h2>
+          <p className="text-muted-foreground">
+            {isKo
+              ? "문제를 정의하고 실제 제품으로 전달한 대표 작업입니다."
+              : "Selected projects showing end-to-end product delivery."}
+          </p>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
-          {FEATURED_PROJECTS.slice(0, 3).map((project) => {
-            const title = locale === "ko" ? project.title : project.titleEn || project.title;
-            const description =
-              locale === "ko"
-                ? project.description
-                : project.descriptionEn || project.description;
+          {featuredProjects.map((project) => {
+            const title = isKo ? project.title : project.titleEn || project.title;
+            const description = isKo
+              ? project.description
+              : project.descriptionEn || project.description;
+            const role = isKo ? project.role : project.roleEn || project.role;
+            const duration = isKo
+              ? project.duration
+              : project.durationEn || project.duration;
+            const impacts = (isKo ? project.impact : project.impactEn || project.impact) || [];
 
             return (
-              <Link
-                key={project.id}
-                href={withLocalePath(locale, `/projects/${project.id}`)}
-                className="rounded-2xl border border-border p-5 hover:border-foreground/30 hover:bg-accent/40 transition-colors"
-              >
-                <h3 className="font-semibold text-lg text-foreground line-clamp-2">{title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
-                  {description}
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {project.techStack.slice(0, 3).map((tech) => (
-                    <span
-                      key={`${project.id}-${tech}`}
-                      className="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+              <article key={project.id} className="rounded-2xl border border-border p-5">
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+                  <p className="text-sm text-muted-foreground">{description}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {[role, duration].filter(Boolean).join(" · ")}
+                  </p>
                 </div>
-              </Link>
+
+                <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+                  {impacts.slice(0, 3).map((impact) => (
+                    <li key={impact} className="flex gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#FF4D00]" />
+                      <span>{impact}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href={withLocalePath(locale, `/projects/${project.id}`)}
+                  className="mt-5 inline-flex text-sm font-medium text-foreground transition-colors hover:text-[#FF4D00]"
+                >
+                  {isKo ? "프로젝트 자세히" : "View project"}
+                </Link>
+              </article>
             );
           })}
         </div>
       </section>
 
-      <section className="space-y-6">
+      <section className="space-y-5">
         <div className="space-y-2">
-          <h2 className="text-2xl md:text-3xl font-semibold">{t.recentPosts}</h2>
-          <p className="text-muted-foreground">{t.recentPostsSub}</p>
+          <h2 className="text-2xl font-semibold md:text-3xl">
+            {isKo ? "최근 글" : "Recent Posts"}
+          </h2>
+          <p className="text-muted-foreground">
+            {isKo
+              ? "사례 중심 글과 기술 인사이트를 공유합니다."
+              : "Case studies and technical insights from real projects."}
+          </p>
         </div>
         <div className="space-y-4">
           {recentPosts.map((post) => (
             <Link
               key={post.slug}
               href={withLocalePath(locale, `/blog/${post.slug}`)}
-              className="block rounded-2xl border border-border p-5 hover:border-foreground/30 hover:bg-accent/40 transition-colors"
+              className="block rounded-2xl border border-border p-5 transition-colors hover:border-[#FF4D00]"
             >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h3 className="font-semibold text-lg text-foreground">{post.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
-                    {post.description}
-                  </p>
-                </div>
-                <span className="text-xs text-muted-foreground whitespace-nowrap">
-                  {post.date}
-                </span>
-              </div>
-              <span className="mt-3 inline-block text-sm text-foreground/80">
-                {t.readPost}
-              </span>
+              <h3 className="text-lg font-semibold text-foreground">{post.title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{post.description}</p>
+              <p className="mt-2 text-xs text-muted-foreground">{post.date}</p>
             </Link>
           ))}
         </div>
-        <Link
-          href={withLocalePath(locale, "/blog")}
-          className="inline-flex items-center text-sm font-medium text-foreground/80 hover:text-foreground"
-        >
-          {t.viewAllPosts}
-        </Link>
       </section>
 
-      <section className="rounded-3xl border border-border p-8 md:p-10 bg-accent/30 space-y-4">
-        <h2 className="text-2xl md:text-3xl font-semibold">{t.finalCtaTitle}</h2>
-        <p className="max-w-2xl text-muted-foreground">{t.finalCtaBody}</p>
-        <div className="flex flex-wrap gap-3 pt-2">
+      <section className="rounded-3xl border border-border bg-accent/30 p-8 md:p-10">
+        <h2 className="text-2xl font-semibold md:text-3xl">
+          {isKo ? cta.headlineKo : cta.headline}
+        </h2>
+        <p className="mt-3 max-w-3xl text-muted-foreground">
+          {isKo ? cta.subheadlineKo : cta.subheadline}
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
           <Link
-            href={withLocalePath(locale, "/contact")}
-            className="inline-flex items-center rounded-full bg-foreground text-background px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity"
+            href={withLocalePath(locale, cta.cta.primary.href)}
+            className="inline-flex items-center rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-colors hover:bg-[#FF4D00]"
           >
-            {t.finalCtaPrimary}
+            {isKo ? cta.cta.primary.labelKo : cta.cta.primary.label}
           </Link>
           <Link
             href={withLocalePath(locale, "/newsletter/confirm")}
-            className="inline-flex items-center rounded-full border border-border px-5 py-2.5 text-sm font-medium hover:bg-background transition-colors"
+            className="inline-flex items-center rounded-full border border-border px-5 py-2.5 text-sm font-medium transition-colors hover:border-[#FF4D00] hover:text-[#FF4D00]"
           >
-            {t.finalCtaSecondary}
+            {isKo ? cta.cta.secondary.labelKo : cta.cta.secondary.label}
           </Link>
         </div>
       </section>

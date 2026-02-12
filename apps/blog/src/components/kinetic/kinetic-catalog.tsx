@@ -33,6 +33,27 @@ export function KineticCatalog({
       .toUpperCase();
   };
 
+  const getCategoryBadgeClasses = (category?: string) => {
+    const base = "text-xs px-2 py-0.5 rounded-full font-medium";
+    if (category === "case-study") {
+      return `${base} bg-[#FF4D00]/10 text-[#FF4D00]`;
+    }
+    if (category === "technical") {
+      return `${base} bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300`;
+    }
+    if (category === "insight") {
+      return `${base} bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300`;
+    }
+    return `${base} bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-200`;
+  };
+
+  const getCategoryLabel = (category?: string) => {
+    if (category === "case-study") return "Case Study";
+    if (category === "technical") return "Technical";
+    if (category === "insight") return "Insight";
+    return category ?? "Uncategorized";
+  };
+
   return (
     <section className="min-h-screen bg-[#f4f1ea] dark:bg-black pt-32 pb-40">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -73,6 +94,7 @@ export function KineticCatalog({
           >
             <div className="flex bg-stone-200 dark:bg-stone-900 border border-stone-300 dark:border-white/10 p-1">
               <button
+                type="button"
                 onClick={() => setViewMode("grid")}
                 className={`p-3 transition-all duration-300 ${
                   viewMode === "grid"
@@ -83,6 +105,7 @@ export function KineticCatalog({
                 <LayoutGrid className="w-5 h-5" />
               </button>
               <button
+                type="button"
                 onClick={() => setViewMode("list")}
                 className={`p-3 transition-all duration-300 ${
                   viewMode === "list"
@@ -96,6 +119,7 @@ export function KineticCatalog({
 
             {onSearchOpen && (
               <button
+                type="button"
                 onClick={onSearchOpen}
                 className="group p-3 bg-stone-200 dark:bg-stone-900 border border-stone-300 dark:border-white/10 text-[#78716c] dark:text-white/40 hover:border-kinetic-orange hover:text-kinetic-orange transition-all duration-300"
               >
@@ -140,8 +164,8 @@ export function KineticCatalog({
 
                     <div className="mt-auto pt-6 border-t border-stone-300 dark:border-white/10 group-hover:border-black/20 transition-colors duration-300">
                       <div className="flex justify-between items-center">
-                        <span className="font-mono text-kinetic-orange text-[9px] uppercase tracking-widest font-bold group-hover:text-black transition-colors duration-300">
-                          {post.category}
+                        <span className={getCategoryBadgeClasses(post.category)}>
+                          {getCategoryLabel(post.category)}
                         </span>
                         <span className="font-mono text-[#78716c] dark:text-white/30 text-[9px] group-hover:text-black/50 transition-colors duration-300">
                           {toCatalogDate(post.date)}
@@ -181,8 +205,8 @@ export function KineticCatalog({
                           {post.title}
                         </h3>
                         <div className="flex items-center gap-4 mt-2">
-                          <span className="font-mono text-kinetic-orange text-[9px] uppercase tracking-widest font-bold group-hover:text-black transition-colors duration-300">
-                            {post.category}
+                          <span className={getCategoryBadgeClasses(post.category)}>
+                            {getCategoryLabel(post.category)}
                           </span>
                           <span className="font-mono text-[#78716c] dark:text-white/30 text-[9px] group-hover:text-black/50 transition-colors duration-300">
                             {toShortDate(post.date)}

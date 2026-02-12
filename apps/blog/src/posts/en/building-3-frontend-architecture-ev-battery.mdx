@@ -1,0 +1,163 @@
+---
+title: "How I Built a 3-Frontend Architecture for EV Battery Digital Passports"
+description: "Case study: designing Admin, Data Provider, and User frontends with a shared design system, unified OAuth, and optimized large data tables."
+date: "2026-02-12"
+tags: ["Case Study", "Next.js", "Architecture", "Enterprise", "Design System"]
+slug: "building-3-frontend-architecture-ev-battery"
+category: "case-study"
+---
+
+# How I Built a 3-Frontend Architecture for EV Battery Digital Passports
+
+## The Problem
+
+The project started with a compliance deadline, not a feature wishlist.
+
+Battery manufacturers and ecosystem partners were preparing for Digital Product Passport requirements, and the product team needed to support three very different user groups at once:
+
+- **Admin**: Internal operators managing users, permissions, API keys, and approval workflows.
+- **Data Provider**: Partners uploading and maintaining battery lifecycle data.
+- **User**: External consumers and downstream stakeholders reading passport information.
+
+At first glance, this can sound like one app with role-based views. In practice, the requirements pushed us toward stronger separation. Each audience had different navigation depth, security posture, and interaction patterns. Data providers needed efficient ingestion and validation flows. Admins needed auditability and role controls. Users needed high-readability access and predictable performance.
+
+The risk was obvious: if we built three isolated frontends independently, delivery speed would collapse and UX consistency would drift within weeks. If we forced everything into one heavy frontend, complexity would hide in conditional rendering and role-specific code paths, and every release would become risky.
+
+So the real problem was not just "build screens for three roles." It was:
+
+1. Ship three role-specific products quickly.
+2. Preserve a single product language across all of them.
+3. Keep auth, permissions, and data behavior coherent across deployments.
+4. Make large-scale table workflows usable without turning the UI into a laggy admin console.
+
+That framing shaped every major technical decision that followed.
+
+## My Approach
+
+I used **Next.js 15 + React 19 + TypeScript** as the common baseline for all three frontends. The key principle was "separate deployment surfaces, shared implementation foundation."
+
+Instead of cloning three apps and diverging from day one, I treated the system as a portfolio of role-targeted products with a central design and interaction contract.
+
+The approach had four pillars:
+
+1. **Three independent frontend deployments**
+   - Admin, Data Provider, and User each had their own app boundary and release cycle.
+   - This reduced role-based branching in runtime UI logic and made testing/review easier per domain.
+
+2. **Shared design system across all apps**
+   - Built with **Radix UI + Tailwind CSS + CVA**.
+   - Reusable primitives (inputs, tables, badges, dialogs, status chips) were standardized once and consumed everywhere.
+
+3. **Unified authentication and identity strategy**
+   - OAuth integrations across Google, Kakao, and Naver.
+   - KCB identity requirements integrated into the same end-to-end flow.
+   - A common auth behavior model so users did not experience different identity rules per app.
+
+4. **Data-heavy UX optimization as a first-class concern**
+   - TanStack Query for caching and state synchronization strategy.
+   - Practical table patterns for large datasets: predictable pagination, query key discipline, and render minimization.
+
+This approach gave us both autonomy and consistency: each app could move independently, while users still felt they were operating inside one coherent platform.
+
+## Key Technical Decisions
+
+### 1) Why three deployments instead of one role-heavy frontend
+
+I considered a single frontend with role-gated routes and components. It looks cheaper early, but becomes expensive as workflows diverge.
+
+Trade-off analysis:
+
+- **Single app pros**: One deploy target, one route tree, fewer repos.
+- **Single app cons**: Complex conditional rendering everywhere, higher regression risk, difficult ownership boundaries.
+
+With three deployments, we accepted slightly more CI/deploy surface area in exchange for lower cognitive load in each product. The important part was preventing code drift through shared foundations, not forcing one runtime container.
+
+### 2) Shared design system with Radix UI + Tailwind + CVA
+
+The design system was the force multiplier.
+
+- **Radix UI** gave reliable accessibility primitives.
+- **Tailwind CSS** kept implementation speed high and styles explicit.
+- **CVA** let us express component variants in a typed, maintainable pattern.
+
+This was especially useful for status-rich enterprise UI: table states, validation feedback, approval labels, permission tags, and dialog variants. Instead of every app inventing its own visual semantics, we encoded semantics once and reused them.
+
+Trade-off:
+
+- Initial design system setup adds up-front cost.
+- But without it, consistency debt grows linearly with every screen.
+
+For this project, up-front investment paid back quickly after the first major workflow set.
+
+### 3) Unified OAuth strategy across providers + KCB identity
+
+Authentication issues often appear as edge cases between providers, not in happy paths. To avoid three different auth behaviors, I treated provider login and identity verification as one policy layer with shared user-state transitions.
+
+We supported:
+
+- Google OAuth
+- Kakao OAuth
+- Naver OAuth
+- KCB identity verification
+
+The key decision was to normalize auth outcomes into a common application state model rather than directly coupling UI flows to provider-specific payload assumptions. That made failure handling and re-entry behavior more predictable across all three apps.
+
+### 4) TanStack Query strategy for large data tables
+
+Large table workflows can fail even when backend performance is good. The frontend still needs careful caching and invalidation strategy.
+
+I focused on:
+
+- Stable query key design by table dimension (filters, pagination, sort).
+- Cache behavior tuned by usage context (stale time and refetch timing).
+- Mutation boundaries aligned with workflow checkpoints, not arbitrary component events.
+
+This reduced unnecessary refetching and improved perceived responsiveness for operational users working through long table sessions.
+
+### 5) Zod + React Hook Form for complex forms
+
+Multi-step enterprise forms often break when validation is spread across local component rules.
+
+Using **Zod + React Hook Form** gave us:
+
+- Unified schema-driven validation.
+- Predictable error surfaces across apps.
+- Better resilience as requirements changed.
+
+The trade-off was stricter schema maintenance discipline, but that discipline prevented hidden inconsistencies later.
+
+## Results
+
+From an output perspective, the architecture achieved what we set out to do:
+
+- **Three frontend products delivered** (Admin, Data Provider, User) with role-specific UX.
+- **One shared design system** used across all apps, preserving consistency and lowering UI duplication.
+- **Unified OAuth and identity behavior** implemented across Google, Kakao, Naver, and KCB pathways.
+- **Large data workflows stabilized** through deliberate query caching and rendering strategy.
+- **Complex form flows standardized** using Zod + React Hook Form.
+
+What mattered most was not a single flashy feature. It was reducing operational risk while keeping delivery speed high.
+
+This project reinforced a pattern I keep applying:
+
+1. Separate product surfaces when user workflows are fundamentally different.
+2. Centralize UI and interaction contracts aggressively.
+3. Treat auth and data behavior as platform concerns, not page-level implementation details.
+
+That combination keeps teams moving fast without paying hidden complexity tax every sprint.
+
+## Tech Stack
+
+- Next.js 15
+- React 19
+- TypeScript
+- Tailwind CSS
+- Radix UI
+- CVA (Class Variance Authority)
+- TanStack Query
+- Zustand
+- Axios
+- React Hook Form
+- Zod
+- Jest
+- Testing Library

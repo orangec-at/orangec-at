@@ -14,6 +14,15 @@ export interface Project {
   challenges?: string[]; // 개발 과정의 도전과 해결책
   keyFeaturesEn?: string[]; // 주요 기능 (영문)
   challengesEn?: string[]; // 개발 과정의 도전과 해결책 (영문)
+  featured?: boolean; // Show on homepage
+  category?: string; // "enterprise" | "fullstack" | "mobile" | "internal"
+  duration?: string; // "Sep 2025 - Jan 2026"
+  durationEn?: string;
+  role?: string; // "Solo Developer" | "Frontend Lead"
+  roleEn?: string;
+  impact?: string[]; // Measurable outcome statements
+  impactEn?: string[];
+  liveUrl?: string; // Separate from github — the actual product URL
 }
 
 export const PROJECTS: Project[] = [
@@ -35,7 +44,7 @@ export const PROJECTS: Project[] = [
     ],
     url: "https://apps.apple.com/us/app/yoga-journaling-drawhatha/id6689512757",
     image: "/images/projects/drawhatha.png",
-    relatedBlogPosts: ["my-first-post", "nextjs-fullstack-development"], // 여러 개 테스트
+    relatedBlogPosts: ["from-idea-to-app-store-in-3-months"],
     keyFeatures: [
       "요가 세션 기록 및 분석",
       "개인 맞춤 통계 제공",
@@ -57,7 +66,27 @@ export const PROJECTS: Project[] = [
       "Optimized App Store submission with React Native CLI",
       "Built real-time sync between Supabase and React Native",
       "Complied with iOS review policies"
-    ]
+    ],
+    featured: true,
+    category: "mobile",
+    duration: "2024.03 - 현재",
+    durationEn: "Mar 2024 - Present",
+    role: "풀스택 단독 개발",
+    roleEn: "Solo Full-Stack Developer",
+    impact: [
+      "아이디어→App Store 출시까지 3개월 단독 개발",
+      "React Native CLI + NestJS + Docker 풀스택 아키텍처",
+      "Apple HealthKit 연동으로 요가 세션 데이터 통합",
+      "사용자 피드백 기반 지속적 개선 운영 중",
+    ],
+    impactEn: [
+      "Idea to App Store in 3 months, solo development",
+      "Full-stack architecture: React Native CLI + NestJS + Docker",
+      "Apple HealthKit integration for yoga session data",
+      "Continuous improvement driven by user feedback",
+    ],
+    liveUrl:
+      "https://apps.apple.com/kr/app/yoga-journaling-drawhatha/id6689512757",
   },
   {
     id: "2",
@@ -82,7 +111,7 @@ export const PROJECTS: Project[] = [
     url: "https://www.yogaday.love",
     github: "",
     image: "/images/projects/yogaday.png",
-    relatedBlogPosts: ["nextjs-fullstack-development"],
+    relatedBlogPosts: ["shipping-fullstack-booking-platform-solo"],
     keyFeatures: [
       "요가 클래스 조회/예약, 강사 프로필·클래스 관리",
       "이메일 기반 로그인과 역할 분리 (사용자/강사/관리자)",
@@ -106,7 +135,26 @@ export const PROJECTS: Project[] = [
       "Modeled user/instructor/class/booking domain via Prisma schema",
       "Designed session and role management without third-party OAuth",
       "Improved Core Web Vitals plus metadata and sitemap for SEO"
-    ]
+    ],
+    featured: true,
+    category: "fullstack",
+    duration: "2024.08 - 현재",
+    durationEn: "Aug 2024 - Present",
+    role: "풀스택 단독 개발",
+    roleEn: "Solo Full-Stack Developer",
+    impact: [
+      "기획→디자인→개발→배포→SEO 전 과정 단독 수행",
+      "사용자/강사/관리자 3-role 인증 시스템 설계",
+      "App Router + Prisma로 풀스택 API/DB 모델링",
+      "Core Web Vitals 최적화 및 Vercel 자동 배포",
+    ],
+    impactEn: [
+      "Solo end-to-end: planning → design → development → deployment → SEO",
+      "Designed 3-role auth system (user/instructor/admin)",
+      "Full-stack API/DB modeling with App Router + Prisma",
+      "Core Web Vitals optimization with Vercel auto-deployment",
+    ],
+    liveUrl: "https://www.yogaday.love",
   },
   {
     id: "3",
@@ -266,6 +314,7 @@ export const PROJECTS: Project[] = [
     url: "",
     github: "",
     image: "/images/projects/battery.png",
+    relatedBlogPosts: ["building-3-frontend-architecture-ev-battery"],
     keyFeatures: [
       "Admin/Data/User 3개 프론트 분리 배포 아키텍처",
       "배터리 패스포트·API 키·역할/권한·승인 워크플로우",
@@ -291,13 +340,30 @@ export const PROJECTS: Project[] = [
       "Optimized large battery data tables with virtualization/pagination",
       "Built a shared design system for consistent UI and faster delivery",
       "Validated complex multi-step forms with Zod + React Hook Form"
-    ]
+    ],
+    featured: true,
+    category: "enterprise",
+    duration: "2025.09 - 2026.01",
+    durationEn: "Sep 2025 - Jan 2026",
+    role: "프론트엔드 개발 (프리랜서)",
+    roleEn: "Frontend Developer (Freelance)",
+    impact: [
+      "Admin/Data/User 3개 프론트엔드 단독 설계 및 구현",
+      "Radix UI + Tailwind + CVA 기반 공통 디자인 시스템 구축",
+      "OAuth(Google/Kakao/Naver) + KCB 본인인증 통합 설계",
+      "TanStack Query 캐싱 전략으로 대용량 테이블 렌더링 최적화",
+    ],
+    impactEn: [
+      "Sole architect & developer for 3 separate frontend deployments",
+      "Built shared design system with Radix UI + Tailwind + CVA",
+      "Unified OAuth (Google/Kakao/Naver) + KCB identity across all apps",
+      "Optimized large data tables with TanStack Query caching strategy",
+    ],
   },
 ];
 
 export const FEATURED_PROJECTS: Project[] = [
-  PROJECTS[0], // Drawhatha
-  PROJECTS[1], // Yogaday
-  PROJECTS[2], // SaaS 협업 플랫폼
-  // 필요하다면 PROJECTS[4] 대시보드도 추가 가능
+  PROJECTS.find((p) => p.id === "7")!, // DPP — Enterprise
+  PROJECTS.find((p) => p.id === "2")!, // YogaDay — Full-stack
+  PROJECTS.find((p) => p.id === "1")!, // Drawhatha — Mobile
 ];

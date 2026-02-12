@@ -1,5 +1,7 @@
 import { getBlogPostMeta, getBlogPostsByLocale } from "@/lib/blog-utils.server";
 import { buildKnowledgeShelfDataFromBlogMeta } from "@/lib/knowledge-shelf-utils.server";
+import { PROJECTS } from "@/data/projects";
+import { getRelatedProjectIds } from "@/data/connections";
 import { promises as fs } from "fs";
 import matter from "gray-matter";
 import { serialize } from "next-mdx-remote/serialize";
@@ -61,12 +63,15 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const shelfPost = posts[0];
 
   const { posts: relatedPosts } = buildKnowledgeShelfDataFromBlogMeta(finalRelatedMeta, resolvedLocale);
+  const relatedProjectId = getRelatedProjectIds(slug)[0];
+  const relatedProject = PROJECTS.find((project) => project.id === relatedProjectId);
 
   return (
     <BlogDetailClient
       post={shelfPost}
       mdxSource={mdxSource}
       relatedPosts={relatedPosts}
+      relatedProject={relatedProject}
     />
   );
 }

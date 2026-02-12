@@ -1,0 +1,160 @@
+---
+title: "Shipping a Full-Stack Booking Platform Solo in 8 Weeks"
+description: "Case study: building YogaDay from concept to production — Next.js App Router, Prisma, 3-role auth, and SEO optimization as a solo developer."
+date: "2026-02-11"
+tags: ["Case Study", "Next.js", "Full-Stack", "Solo Development", "Prisma"]
+slug: "shipping-fullstack-booking-platform-solo"
+category: "case-study"
+---
+
+# Shipping a Full-Stack Booking Platform Solo in 8 Weeks
+
+## The Problem
+
+Yoga studios around me were doing business with modern expectations and old tooling.
+
+Class updates happened in chat rooms, booking status lived in spreadsheets, and instructor schedules were managed by manual copy-paste. This worked at very small scale, but every growth step added friction:
+
+- double booking risk,
+- missed updates,
+- no clean role boundaries,
+- and almost no reliable view of operational state.
+
+I wanted to test whether a focused full-stack product could replace that operational chaos with a workflow that felt simple for both users and studio operators.
+
+The constraint: I was building it solo, end to end, while keeping delivery speed high.
+
+That meant the product had to be scoped as a practical MVP with room for expansion, not a perfect platform from day one. The core requirement was clear:
+
+1. Make booking and class management reliable.
+2. Support role-specific experiences for user, instructor, and admin.
+3. Keep SEO and performance good enough to grow organic discovery.
+4. Ship fast enough to validate the product direction in the real world.
+
+The output target became realistic and measurable: launch a working production system in roughly eight weeks as a solo developer.
+
+## My Approach
+
+I built YogaDay with a stack optimized for product delivery speed and maintainability:
+
+- **Next.js App Router** for server/client separation and metadata control.
+- **Prisma + PostgreSQL** for clear domain modeling and migration discipline.
+- **Role-aware auth flow** for user/instructor/admin.
+- **Tailwind + component primitives** for rapid UI iteration.
+
+I treated this as a systems design problem, not just UI implementation.
+
+At a high level, the flow was:
+
+1. Design domain entities around booking lifecycle, not around pages.
+2. Implement the minimum role permissions to unblock real workflows.
+3. Ship complete slices (API + UI + state + validation) instead of isolated layers.
+4. Add SEO and performance hygiene early, not after launch.
+
+The solo-development trade-off was constant context switching. To handle that, I used strict feature slicing and avoided speculative architecture. If a pattern did not improve this week’s shipping speed or reliability, it did not go in.
+
+## Key Technical Decisions
+
+### 1) Why App Router over Pages Router
+
+For this project, App Router’s server-first capabilities aligned better with the product goals.
+
+- Metadata and route-level structure were easier to reason about.
+- Server Components reduced client bundle pressure for content-heavy pages.
+- Route handlers and colocation helped keep feature slices cohesive.
+
+Trade-off:
+
+- App Router patterns require clearer boundaries between server and client logic.
+- But that clarity improved long-term maintainability, especially in a role-based product where data access paths matter.
+
+### 2) Prisma schema for a multi-role booking domain
+
+The most important backend decision was schema design that reflected real operations:
+
+- user profile and identity,
+- instructor profile and class ownership,
+- booking record and lifecycle state,
+- admin-managed control surfaces.
+
+Prisma provided typed queries and migration structure that kept iteration safe while requirements evolved.
+
+Trade-off:
+
+- You pay up front in schema design thoughtfulness.
+- In return, you avoid hidden inconsistencies when adding new role behaviors later.
+
+### 3) Session and role management without overengineering
+
+A booking product can be "mostly working" and still fail if authorization boundaries are ambiguous.
+
+I prioritized role clarity:
+
+- users can browse/book/manage own bookings,
+- instructors can manage their classes and schedules,
+- admins can manage operational and moderation workflows.
+
+The decision was to keep auth behavior explicit and boring. No clever access abstraction before real need. That reduced debugging time and made route-level authorization logic easier to validate.
+
+### 4) SEO strategy from week one
+
+Because discovery matters for local service products, SEO was not postponed.
+
+I implemented:
+
+- route-level metadata,
+- sitemap generation,
+- clean URL structure,
+- and Core Web Vitals-aware rendering decisions.
+
+Trade-off:
+
+- It adds work during MVP stage.
+- But deferring SEO often creates expensive retrofitting. For YogaDay, integrating it early kept architecture cleaner.
+
+### 5) Solo execution strategy: slice by value, not by layer
+
+A common solo-dev trap is building "perfect foundations" before users can test anything.
+
+I used vertical slices:
+
+- build one complete role flow,
+- validate behavior,
+- then expand to adjacent flow.
+
+This kept momentum high and exposed real integration issues earlier than a layer-by-layer strategy would.
+
+## Results
+
+The product shipped to production at **yogaday.love** in about eight weeks as a solo effort.
+
+Outcome highlights:
+
+- End-to-end role system implemented for user/instructor/admin flows.
+- Booking domain and operational controls modeled in a maintainable schema.
+- Production-ready SEO baseline in place (metadata + sitemap + CWV-aware choices).
+- Practical UI workflow for booking and class operations delivered without a large team.
+
+Just as important, the project created a reusable development playbook for future products:
+
+1. Define core domain constraints first.
+2. Choose frameworks that reduce interface debt.
+3. Enforce role boundaries early.
+4. Keep iteration loops short and observable.
+
+The system is still evolving, including product-direction changes toward broader wellness discovery. But the foundational architecture held up: the initial decisions made it possible to pivot without rewriting everything.
+
+For me, that is the real success criterion for solo product engineering: not shipping one release, but shipping an architecture that can survive product reality.
+
+## Tech Stack
+
+- Next.js
+- TypeScript
+- Prisma
+- PostgreSQL
+- Supabase
+- NextAuth
+- Tailwind CSS
+- shadcn/ui
+- Zustand
+- React Query

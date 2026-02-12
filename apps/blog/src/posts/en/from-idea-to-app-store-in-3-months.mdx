@@ -1,0 +1,149 @@
+---
+title: "From Idea to App Store in 3 Months: Building a Yoga Journaling App Solo"
+description: "Case study: how I built Drawhatha with React Native, NestJS, and Docker - from scratching my own itch to a live App Store product."
+date: "2026-02-10"
+tags: ["Case Study", "React Native", "Mobile", "App Store", "Solo Development"]
+slug: "from-idea-to-app-store-in-3-months"
+category: "case-study"
+---
+
+# From Idea to App Store in 3 Months
+
+## The Problem
+
+Drawhatha started as frustration, not ambition.
+
+I practice yoga consistently, and I wanted a better way to journal sessions: what I practiced, what improved, what felt blocked, and what patterns I should focus on next. I tried existing apps, but they all had one or more mismatches with what I needed:
+
+- generic fitness logging instead of yoga-first workflows,
+- shallow reflection UX,
+- weak progress tracking for long-term practice,
+- and no practical integration with health data I already had.
+
+This was the trigger for a simple decision: build the app I wished existed.
+
+The constraint was equally clear: I would do it solo, from idea to production release.
+
+That meant every decision had to optimize for one person shipping quickly without building fragile foundations. I needed speed, but not at the cost of future maintainability. I also needed enough backend structure to support sync, analytics, and iterative feature upgrades after launch.
+
+So the project goal became:
+
+1. Build a yoga-focused journaling experience with real daily usability.
+2. Deliver iOS production quality, not just prototype polish.
+3. Keep architecture simple enough for one developer to operate.
+4. Reach App Store release in a tight time window.
+
+The timeline target was aggressive: roughly three months from first concept to App Store.
+
+## My Approach
+
+I chose a full-stack architecture that balanced execution speed and long-term control:
+
+- **React Native CLI** for mobile app implementation.
+- **NestJS + Prisma** for backend logic and data modeling.
+- **PostgreSQL** as system-of-record database.
+- **Docker** for repeatable local and deployment environments.
+- **Supabase** for sync-oriented workflows.
+- **Apple HealthKit integration** for richer context from user health activity.
+
+The key was to avoid overbuilding while still protecting core product quality.
+
+I structured delivery around vertical slices:
+
+1. Daily practice log and timeline foundation.
+2. Session details + notes + consistency tracking.
+3. Sync reliability and backend robustness.
+4. HealthKit integration and production hardening.
+5. App Store submission compliance and release pipeline.
+
+This sequence helped me keep momentum. Instead of chasing architectural perfection, I shipped user-visible value every week and improved from real usage signals.
+
+## Key Technical Decisions
+
+### 1) Why React Native CLI over Expo
+
+Expo is excellent for many products, but for this project I needed tighter native control and predictable iOS integration behavior over time.
+
+Trade-off:
+
+- **Expo pros**: Faster early setup, smoother defaults.
+- **CLI pros (chosen)**: Lower abstraction for native integration constraints and release-specific control.
+
+For a long-lived product where I expected deeper native work (including HealthKit nuance), React Native CLI gave me confidence in platform-level flexibility.
+
+### 2) Backend architecture: NestJS + Prisma + Docker
+
+As a solo developer, I needed a backend stack that stayed understandable under change.
+
+- **NestJS** gave clear modular boundaries.
+- **Prisma** provided typed schema workflows and migration clarity.
+- **Docker** removed environment drift from local-to-deploy transitions.
+
+The main trade-off was setup overhead compared to serverless shortcuts. I accepted that overhead because operational predictability matters more once real users are involved.
+
+### 3) Offline-aware sync strategy with Supabase
+
+Practice logging often happens in imperfect connectivity conditions. Losing entries would destroy trust immediately.
+
+I treated sync reliability as a product feature, not infrastructure detail:
+
+- local-first interaction behavior,
+- safe retry expectations,
+- and clear sync assumptions around session data.
+
+The lesson here is simple: wellness products need calm UX. Sync uncertainty creates cognitive noise users do not forgive.
+
+### 4) HealthKit integration as meaningful context, not gimmick
+
+HealthKit integration was not added for marketing language. It was intended to improve reflection context for practice sessions.
+
+The challenge was data interpretation and UX clarity: health-adjacent data can confuse users if surfaced without actionable framing.
+
+I kept integration scoped to practical utility and avoided overcomplicated dashboards in early releases.
+
+### 5) App Store review and compliance discipline
+
+Shipping to App Store solo is partly a technical challenge and partly a process challenge.
+
+I had to handle:
+
+- policy compliance,
+- metadata and privacy expectations,
+- and release quality standards under limited team resources.
+
+A major decision was to reduce novelty in risky areas before submission and keep core flows stable. The fastest route to release was not adding more features; it was reducing review friction.
+
+## Results
+
+Drawhatha shipped to the App Store in about three months as a solo full-stack project.
+
+What this delivered in concrete output terms:
+
+- **Idea -> production App Store release** in a tight solo timeline.
+- **End-to-end full-stack implementation** across mobile app, backend, data model, and deployment setup.
+- **HealthKit integration** to support richer session context.
+- **Live product operations** with ongoing feedback-driven iteration after launch.
+
+Beyond launch, the project gave me full lifecycle ownership experience:
+
+1. Product framing,
+2. architecture decisions,
+3. implementation,
+4. deployment,
+5. release compliance,
+6. post-launch iteration.
+
+For freelance and product work, this matters because clients rarely need just code output. They need someone who can make practical decisions under constraints and deliver reliable product outcomes.
+
+Drawhatha proved that with disciplined scope and decision-focused execution, one developer can ship and operate a meaningful product in a short window.
+
+## Tech Stack
+
+- React Native CLI
+- TypeScript
+- NestJS
+- Prisma
+- Docker
+- PostgreSQL
+- Supabase
+- Oracle Cloud

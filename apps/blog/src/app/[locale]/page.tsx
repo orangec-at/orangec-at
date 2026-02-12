@@ -1,4 +1,5 @@
 import HomeClient from "./client";
+import { FEATURED_PROJECTS } from "@/data/projects";
 import { getBlogPostsByLocale } from "@/lib/blog-utils.server";
 
 interface HomePageProps {
@@ -11,5 +12,11 @@ export default async function HomePage({ params }: HomePageProps) {
 
   const blogPosts = await getBlogPostsByLocale(resolvedLocale);
 
-  return <HomeClient locale={resolvedLocale} recentPosts={blogPosts.slice(0, 3)} />;
+  return (
+    <HomeClient
+      locale={resolvedLocale}
+      recentPosts={blogPosts.slice(0, 3)}
+      featuredProjects={FEATURED_PROJECTS}
+    />
+  );
 }

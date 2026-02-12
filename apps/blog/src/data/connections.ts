@@ -2,15 +2,19 @@
 export const PROJECT_BLOG_CONNECTIONS = [
   {
     projectId: "1", // Drawhatha
-    blogSlugs: ["my-first-post"]
+    blogSlugs: ["from-idea-to-app-store-in-3-months"]
   },
   {
     projectId: "2", // Yogaday  
-    blogSlugs: ["nextjs-fullstack-development"]
+    blogSlugs: ["shipping-fullstack-booking-platform-solo"]
   },
   {
     projectId: "3", // SaaS 플랫폼
     blogSlugs: ["my-first-post"] // 여러 프로젝트가 같은 블로그 참조 가능
+  },
+  {
+    projectId: "7", // DPP
+    blogSlugs: ["building-3-frontend-architecture-ev-battery"]
   }
 ];
 
