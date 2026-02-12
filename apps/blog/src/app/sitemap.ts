@@ -7,57 +7,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 모든 포스트 slug 가져오기
   const allPostSlugs = await getAllPostSlugs();
 
-  // 정적 페이지들
-  const staticPages = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/en`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/en/blog`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/projects`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/en/projects`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: "yearly" as const,
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/en/contact`,
-      lastModified: new Date(),
-      changeFrequency: "yearly" as const,
-      priority: 0.5,
-    },
+  const staticRoutes = [
+    { path: "", changeFrequency: "monthly" as const, priority: 1 },
+    { path: "/blog", changeFrequency: "weekly" as const, priority: 0.8 },
+    { path: "/projects", changeFrequency: "monthly" as const, priority: 0.8 },
+    { path: "/resume", changeFrequency: "monthly" as const, priority: 0.7 },
+    { path: "/design", changeFrequency: "monthly" as const, priority: 0.7 },
+    { path: "/about", changeFrequency: "yearly" as const, priority: 0.6 },
+    { path: "/contact", changeFrequency: "yearly" as const, priority: 0.5 },
+    { path: "/privacy", changeFrequency: "yearly" as const, priority: 0.4 },
+    { path: "/terms", changeFrequency: "yearly" as const, priority: 0.4 },
   ];
+
+  const staticPages = staticRoutes.flatMap((route) => {
+    const koUrl = `${baseUrl}${route.path}`;
+    const enUrl = `${baseUrl}/en${route.path}`;
+
+    return [
+      {
+        url: koUrl,
+        lastModified: new Date(),
+        changeFrequency: route.changeFrequency,
+        priority: route.priority,
+      },
+      {
+        url: enUrl,
+        lastModified: new Date(),
+        changeFrequency: route.changeFrequency,
+        priority: route.priority,
+      },
+    ];
+  });
 
   // 블로그 포스트들
   const blogPages = allPostSlugs.map(({ slug, locale }) => {

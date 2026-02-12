@@ -75,7 +75,7 @@ export const Marginalia: React.FC<MarginaliaProps> = ({
   };
 
   return (
-    <section className="py-24 relative overflow-hidden bg-[#fdfcf5] dark:bg-[#121212] transition-colors duration-500" onClick={() => setTooltip(null)}>
+    <section className="relative overflow-hidden bg-surface py-24 transition-colors duration-500" onClick={() => setTooltip(null)}>
       {/* Tooltip Menu */}
       <AnimatePresence>
         {tooltip && (

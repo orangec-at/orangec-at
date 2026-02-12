@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Heading, Title, Body, Detail } from "../ui/typography";
 
 interface Experience {
   company: string;
@@ -19,58 +18,51 @@ export default function CareerTimeline() {
   const experiences = t.raw("experiences") as Experience[];
 
   return (
-    <section className="max-w-3xl mx-auto space-y-8">
-      <Heading variant="s-700" className="text-center text-gray-900 dark:text-white">
-        {t("title")}
-      </Heading>
+    <section className="container-narrow py-section space-y-10">
+      <h2 className="text-h2 font-serif text-center text-foreground">{t("title")}</h2>
 
-      <div className="space-y-8">
+      <div className="border-l border-border pl-6 md:pl-8">
         {experiences.map((exp, index) => (
-          <div key={index} className="border-l-4 border-gray-200 dark:border-gray-700 pl-6 relative">
-            {/* Timeline dot */}
-            <div className="absolute -left-2 top-0 w-4 h-4 bg-gray-400 dark:bg-gray-500 rounded-full"></div>
+          <div key={`${exp.company}-${exp.period}`} className="relative pb-10 last:pb-0">
+            <span className="absolute -left-[1.72rem] top-1 h-2.5 w-2.5 rounded-full bg-ember-accent" aria-hidden />
+            {index === 0 ? (
+              <span
+                className="absolute -left-[1.98rem] top-[-0.1rem] h-4 w-4 rounded-full border border-ember-accent/40 animate-ping"
+                aria-hidden
+              />
+            ) : null}
 
             <div className="space-y-3">
-              {/* Header */}
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                 <div>
-                  <Title variant="l-700" className="text-gray-900 dark:text-white">
-                    {exp.company}
-                  </Title>
-                  <Body variant="s-400" className="text-gray-600 dark:text-gray-400">
+                  <h3 className="text-h3 text-foreground">{exp.company}</h3>
+                  <p className="text-small text-muted-foreground">
                     {exp.team} | {exp.role}
-                  </Body>
+                  </p>
                 </div>
-                <Detail variant="s-700" className="text-gray-500 dark:text-gray-400 mt-1 md:mt-0">
+                <p className="text-micro font-mono uppercase tracking-wide text-muted-foreground md:mt-1">
                   {exp.period}
-                </Detail>
+                </p>
               </div>
 
-              {/* Description */}
-              <Body variant="m-400" className="text-gray-700 dark:text-gray-300">
-                {exp.description}
-              </Body>
+              <p className="text-body text-muted-foreground">{exp.description}</p>
 
-              {/* Highlights */}
               <ul className="space-y-1">
-                {exp.highlights.map((highlight, i) => (
-                  <li key={i} className="flex items-start">
-                    <span className="text-gray-400 mr-2 mt-1 flex-shrink-0">•</span>
-                    <Detail variant="s-400" className="text-gray-600 dark:text-gray-400">
-                      {highlight}
-                    </Detail>
+                {exp.highlights.map((highlight) => (
+                  <li key={highlight} className="flex items-start">
+                    <span className="mr-2 mt-1 flex-shrink-0 text-muted-foreground">•</span>
+                    <p className="text-small text-muted-foreground">{highlight}</p>
                   </li>
                 ))}
               </ul>
 
-              {/* Tech Stack */}
-              <div className="pt-2">
-                <Detail variant="s-700" className="text-gray-500 dark:text-gray-400">
+              <div className="pt-1">
+                <p className="text-micro uppercase tracking-wide text-muted-foreground">
                   {t("techLabel")}:{" "}
-                </Detail>
-                <Detail variant="s-400" className="text-gray-600 dark:text-gray-400">
+                </p>
+                <p className="text-small text-muted-foreground">
                   {exp.techStack}
-                </Detail>
+                </p>
               </div>
             </div>
           </div>

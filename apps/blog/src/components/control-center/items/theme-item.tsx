@@ -15,7 +15,7 @@ export function ThemeItemComponent({ item }: ThemeItemProps) {
   const nextTheme = normalizedTheme === "light" ? "dark" : "light";
 
   return (
-    <div className="col-span-4 muji-control-card rounded-xl p-4">
+    <div className="col-span-4 rounded-xl border border-border bg-card p-4 shadow-sm">
       <div className="space-y-3">
         {/* Title Row */}
         <div className="flex items-center gap-3">
@@ -38,7 +38,7 @@ export function ThemeItemComponent({ item }: ThemeItemProps) {
         <button
           type="button"
           onClick={() => item.onThemeChange(nextTheme)}
-          className="muji-pill-button w-full justify-center"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
           aria-label={`Toggle theme to ${nextTheme}`}
         >
           {normalizedTheme === "light" ? (

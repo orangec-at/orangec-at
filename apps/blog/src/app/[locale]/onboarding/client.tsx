@@ -53,7 +53,7 @@ export default function OnboardingClient({
   };
 
   return (
-    <div className="min-h-screen paper-texture bg-[#fdfcf5] dark:bg-[#1a1a1a]">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-xl mx-auto px-4 py-16">
         <h1 className="font-serif text-3xl font-bold text-stone-900 dark:text-stone-100">
           {locale === "ko" ? "회원가입 완료" : "Finish setup"}
@@ -170,6 +170,7 @@ export default function OnboardingClient({
           <div className="mt-8 flex flex-wrap gap-3">
             {step === 2 && (
               <button
+                type="button"
                 onClick={() => setStep(1)}
                 disabled={isSubmitting}
                 className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 transition-colors"
@@ -179,6 +180,7 @@ export default function OnboardingClient({
             )}
 
             <button
+              type="button"
               onClick={() => (step === 1 ? setStep(2) : void onSubmit())}
               disabled={isSubmitting || (step === 1 && !acceptTerms)}
               className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium bg-stone-900 text-white hover:bg-stone-700 disabled:opacity-50 disabled:pointer-events-none dark:bg-red-900 dark:hover:bg-red-800 transition-colors"
@@ -197,6 +199,7 @@ export default function OnboardingClient({
             </button>
 
             <button
+              type="button"
               onClick={() => void signOut({ callbackUrl: withLocalePath(locale, "/") })}
               disabled={isSubmitting}
               className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 transition-colors"

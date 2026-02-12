@@ -17,6 +17,12 @@ const badgeVariants = cva(
           "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+        ember:
+          "border-transparent bg-ember-accent text-white [a&]:hover:bg-ember-accent-dim",
+        "ember-outline":
+          "border-ember-accent/30 text-ember-accent [a&]:hover:bg-ember-accent-bg [a&]:hover:text-ember-accent-bright",
+        "ember-subtle":
+          "border-transparent bg-ember-accent-bg text-ember-accent [a&]:hover:bg-ember-accent-bg-hover [a&]:hover:text-ember-accent-bright",
       },
     },
     defaultVariants: {

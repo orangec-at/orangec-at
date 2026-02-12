@@ -36,13 +36,13 @@ export default function MusicPlayerItemComponent({
   };
 
   return (
-    <div className="col-span-4 muji-control-card rounded-xl p-4">
+    <div className="col-span-4 rounded-xl border border-border bg-card p-4 shadow-sm">
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={item.isPlaying ? handlePause : handlePlay}
-            className="muji-pill-button flex-1 justify-between"
+            className="inline-flex flex-1 items-center justify-between gap-2 rounded-full border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent"
             data-active={item.isPlaying}
           >
             <span className="flex items-center gap-2 min-w-0">
@@ -60,7 +60,7 @@ export default function MusicPlayerItemComponent({
           <button
             type="button"
             onClick={handlePrevious}
-            className="muji-icon-button h-9 w-9"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50"
             disabled={!item.onPrevious}
             aria-label="Previous track"
           >
@@ -69,7 +69,7 @@ export default function MusicPlayerItemComponent({
           <button
             type="button"
             onClick={handleNext}
-            className="muji-icon-button h-9 w-9"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50"
             disabled={!item.onNext}
             aria-label="Next track"
           >

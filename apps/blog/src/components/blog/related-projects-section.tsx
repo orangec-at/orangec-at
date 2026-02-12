@@ -24,7 +24,7 @@ export function RelatedProjectsSection({
   }
 
   return (
-    <div className="mt-12 sm:mt-16 p-4 sm:p-6 lg:p-8 muji-panel">
+    <div className="mt-12 rounded-2xl border border-border bg-card/80 p-4 shadow-sm sm:mt-16 sm:p-6 lg:p-8">
       <Title
         variant="xl-700"
         as="h3"
@@ -42,7 +42,7 @@ export function RelatedProjectsSection({
         {projects.map((project) => (
           <div
             key={project.id}
-            className="p-4 sm:p-6 muji-shelf-cell"
+            className="rounded-xl border border-border bg-card/70 p-4 shadow-sm sm:p-6"
           >
             <Title
               variant="s-700"
@@ -62,7 +62,7 @@ export function RelatedProjectsSection({
                 <Detail
                   key={tech}
                   variant="s-400"
-                  className="muji-label px-2 py-1 text-[11px] tracking-wide"
+                  className="rounded-full border border-border bg-secondary px-2 py-1 text-[11px] tracking-wide text-secondary-foreground"
                 >
                   {tech}
                 </Detail>

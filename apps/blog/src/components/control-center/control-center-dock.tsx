@@ -15,17 +15,17 @@ export default function ControlCenterDock() {
 
   return (
     <aside className="hidden md:block fixed right-6 bottom-6 z-40 w-[320px] max-w-[calc(100vw-3rem)]">
-      <div className="muji-dock rounded-2xl border border-wood-300/70 dark:border-gray-800 overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-wood-300/60 dark:border-gray-800">
-          <div className="flex items-center gap-2 text-sm font-semibold text-wood-800 dark:text-gray-100">
-            <span className="inline-flex h-2 w-2 rounded-full bg-wood-600 dark:bg-wood-300" />
+      <div className="overflow-hidden rounded-2xl border border-border bg-card/90 shadow-lg backdrop-blur-md">
+        <div className="flex items-center justify-between border-b border-border px-4 py-3">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <span className="inline-flex h-2 w-2 rounded-full bg-ember-accent" />
             {t("title")}
           </div>
           <div className="flex items-center gap-2">
-            <Sliders className="h-4 w-4 text-wood-700 dark:text-gray-300" />
+            <Sliders className="h-4 w-4 text-muted-foreground" />
             <button
               type="button"
-              className="muji-icon-button h-7 w-7"
+              className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-card text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
               aria-expanded={!isCollapsed}
               aria-label={isCollapsed ? "Expand panel" : "Collapse panel"}
               onClick={() => setIsCollapsed((prev) => !prev)}
@@ -46,7 +46,7 @@ export default function ControlCenterDock() {
                 href="https://github.com/yourusername"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="muji-icon-button h-10 w-10"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                 aria-label="GitHub"
               >
                 <FaGithub className="h-4 w-4" />
@@ -55,7 +55,7 @@ export default function ControlCenterDock() {
                 href="https://linkedin.com/in/yourprofile"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="muji-icon-button h-10 w-10"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                 aria-label="LinkedIn"
               >
                 <FaLinkedin className="h-4 w-4" />
@@ -63,7 +63,7 @@ export default function ControlCenterDock() {
               <button
                 type="button"
                 onClick={() => setShowContact(true)}
-                className="muji-icon-button h-10 w-10"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                 aria-label="Email / Contact form"
               >
                 <FaEnvelope className="h-4 w-4" />
@@ -72,7 +72,7 @@ export default function ControlCenterDock() {
                 href="https://twitter.com/yourusername"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="muji-icon-button h-10 w-10"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                 aria-label="X (Twitter)"
               >
                 <FaXTwitter className="h-4 w-4" />
@@ -88,15 +88,15 @@ export default function ControlCenterDock() {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setShowContact(false)}
           />
-            <div className="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700">
+            <div className="relative w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-2xl">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                <h3 className="text-lg font-semibold text-foreground">
                   {t("title")} · Contact
                 </h3>
                 <button
                 type="button"
                 onClick={() => setShowContact(false)}
-                className="muji-icon-button h-9 w-9"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                 aria-label="Close contact form"
               >
                 ×
@@ -104,12 +104,12 @@ export default function ControlCenterDock() {
             </div>
             <ContactForm />
             <div className="mt-4 text-right">
-              <a
-                href={`mailto:${ownerEmail}`}
-                className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white underline"
-              >
-                Email: {ownerEmail}
-              </a>
+                <a
+                  href={`mailto:${ownerEmail}`}
+                  className="text-sm text-muted-foreground underline hover:text-foreground"
+                >
+                  Email: {ownerEmail}
+                </a>
             </div>
           </div>
         </div>

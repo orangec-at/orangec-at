@@ -23,16 +23,9 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <head>
-        <link
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"
-          rel="stylesheet"
-          type="text/css"
-        />
-      </head>
-      <body className="font-sans antialiased paper-texture transition-colors duration-500">
+      <body className="font-sans antialiased bg-background text-foreground transition-colors duration-200">
         <SessionProvider session={session}>
-          <ThemeProvider defaultTheme="system" storageKey="orangecat-theme">
+          <ThemeProvider defaultTheme="dark" storageKey="orangecat-theme">
             {children}
           </ThemeProvider>
         </SessionProvider>

@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { PROJECTS } from "@/data/projects";
 import { Button } from "@orangec-at/design";
-import { designTokens } from "@/lib/design-tokens";
 import { getBlogPostsMeta } from "@/lib/blog-utils.server";
 import { getRelatedBlogSlugs } from "@/data/connections";
 import Link from "next/link";
@@ -47,27 +46,24 @@ export default async function ProjectDetailPage({
     relatedBlogSlugs.length > 0 ? await getBlogPostsMeta(relatedBlogSlugs) : [];
 
   return (
-    <div className="min-h-screen bg-[#f4f1ea] dark:bg-zinc-900">
-      <div className="container mx-auto px-4 pt-28 md:pt-32 pb-8 max-w-4xl">
-        {/* Back Button */}
+    <div className="container-narrow py-section">
+      <div className="space-y-8">
           <Link
             href={withLocalePath(locale, "/projects")}
-            className="inline-flex items-center gap-2 text-[#78716c] dark:text-gray-400 hover:text-[#1c1917] dark:hover:text-white mb-8 transition-colors"
+            className="inline-flex items-center gap-2 text-small text-muted-foreground transition-colors hover:text-foreground"
           >
           <ArrowLeft size={20} />
           {t("backToList")}
         </Link>
 
-        {/* Project Header */}
-        <div className="mb-8">
-          <h1 className={`${designTokens.typography.hero} mb-4`}>
+        <div className="space-y-6">
+          <h1 className="text-display font-serif tracking-tight text-foreground">
             {projectTitle}
           </h1>
 
-          {/* Project Links */}
-          <div className="flex gap-4 mb-6">
+          <div className="flex flex-wrap gap-4">
             {project.url && (
-              <Button asChild>
+              <Button asChild className="rounded-full">
                 <a href={project.url} target="_blank" rel="noopener noreferrer">
                   <ExternalLink size={16} />
                   {t("liveSite")}
@@ -75,7 +71,7 @@ export default async function ProjectDetailPage({
               </Button>
             )}
             {project.github && (
-              <Button asChild variant="secondary">
+              <Button asChild variant="secondary" className="rounded-full">
                 <a
                   href={project.github}
                   target="_blank"
@@ -88,16 +84,15 @@ export default async function ProjectDetailPage({
             )}
           </div>
 
-          {/* Tech Stack */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold text-[#1c1917] dark:text-white mb-3">
+          <div className="space-y-3">
+            <h3 className="text-h3 text-foreground">
               {t("techStack")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {project.techStack.map((tech) => (
                 <span
                   key={tech}
-                  className="px-3 py-1 bg-white dark:bg-zinc-800 text-[#1c1917] dark:text-gray-300 rounded-full text-sm font-medium border border-stone-200 dark:border-zinc-700"
+                  className="rounded-full border border-border bg-accent/40 px-3 py-1 text-small font-medium text-foreground"
                 >
                   {tech}
                 </span>
@@ -106,10 +101,9 @@ export default async function ProjectDetailPage({
           </div>
         </div>
 
-        {/* Project Image */}
         {project.image && (
-          <div className="mb-8">
-            <div className="relative w-full h-96 rounded-lg overflow-hidden bg-white dark:bg-zinc-800">
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <div className="relative h-96 w-full overflow-hidden rounded-xl bg-surface">
               <Image
                 src={project.image}
                 alt={projectTitle}
@@ -121,29 +115,25 @@ export default async function ProjectDetailPage({
           </div>
         )}
 
-        {/* Project Description */}
-        <div className="prose max-w-none">
-          <h2 className={`${designTokens.typography.section} mb-4`}>
+        <div className="space-y-8">
+          <h2 className="text-h2 font-serif text-foreground">
             {t("overview")}
           </h2>
-          <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-8">
+          <p className="text-body leading-relaxed text-muted-foreground">
             {projectDescription}
           </p>
 
-          {/* Key Features & Challenges */}
-          <div className="grid md:grid-cols-2 gap-8 mt-12">
-            <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-              <h3
-                className={`${designTokens.typography.cardTitle} mb-3 text-gray-900 dark:text-white`}
-              >
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            <div className="rounded-2xl border border-border bg-card p-6">
+              <h3 className="mb-3 text-h3 text-foreground">
                 {t("keyFeatures")}
               </h3>
-              <div className="text-gray-700 dark:text-gray-300">
+              <div className="text-small text-muted-foreground">
                 {projectKeyFeatures && projectKeyFeatures.length > 0 ? (
                   <ul className="space-y-2">
-                    {projectKeyFeatures.map((feature, index) => (
-                      <li key={index} className="flex items-start">
-                        <span className="text-blue-500 mr-2">✓</span>
+                    {projectKeyFeatures.map((feature) => (
+                      <li key={feature} className="flex items-start">
+                        <span className="mr-2 text-ember-accent">✓</span>
                         {feature}
                       </li>
                     ))}
@@ -154,18 +144,16 @@ export default async function ProjectDetailPage({
               </div>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-              <h3
-                className={`${designTokens.typography.cardTitle} mb-3 text-gray-900 dark:text-white`}
-              >
+            <div className="rounded-2xl border border-border bg-card p-6">
+              <h3 className="mb-3 text-h3 text-foreground">
                 {t("challenges")}
               </h3>
-              <div className="text-gray-700 dark:text-gray-300">
+              <div className="text-small text-muted-foreground">
                 {projectChallenges && projectChallenges.length > 0 ? (
                   <ul className="space-y-2">
-                    {projectChallenges.map((challenge, index) => (
-                      <li key={index} className="flex items-start">
-                        <span className="text-orange-500 mr-2">⚡</span>
+                    {projectChallenges.map((challenge) => (
+                      <li key={challenge} className="flex items-start">
+                        <span className="mr-2 text-ember-accent">⚡</span>
                         {challenge}
                       </li>
                     ))}
@@ -177,28 +165,25 @@ export default async function ProjectDetailPage({
             </div>
           </div>
 
-          {/* Related Blog Posts */}
           {blogPostsMeta.length > 0 && (
-            <div className="mt-12 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-500">
-              <h3
-                className={`${designTokens.typography.cardTitle} mb-4 text-gray-900 dark:text-white`}
-              >
+            <div className="mt-12 rounded-2xl border border-ember-accent/30 bg-accent/30 p-6">
+              <h3 className="mb-4 text-h3 text-foreground">
                 {t("relatedPosts")}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className="mb-4 text-small text-muted-foreground">
                 {t("relatedPostsDescription")}
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {blogPostsMeta.map((post) => (
                   <div
                     key={post.slug}
-                    className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
+                    className="rounded-xl border border-border bg-card p-4 transition-colors hover:border-ember-accent/40"
                   >
-                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                    <h4 className="mb-2 text-small font-semibold text-foreground">
                       {post.title}
                     </h4>
                     {post.date && (
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                      <p className="mb-3 text-micro text-muted-foreground">
                         {new Date(post.date).toLocaleDateString(
                           locale === "ko" ? "ko-KR" : "en-US"
                         )}
