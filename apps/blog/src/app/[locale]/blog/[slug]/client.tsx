@@ -95,10 +95,6 @@ export function BlogIndexClient({ initialPosts }: BlogIndexClientProps) {
   const router = useRouter();
   const locale = useLocale();
 
-  const handleBack = () => {
-    router.push(withLocalePath(locale, "/"));
-  };
-
   const handlePostClick = (post: Post) => {
     router.push(withLocalePath(locale, `/blog/${post.slug}`));
   };
@@ -107,7 +103,6 @@ export function BlogIndexClient({ initialPosts }: BlogIndexClientProps) {
     <BlogCatalog
       posts={initialPosts}
       onPostClick={handlePostClick}
-      onBack={handleBack}
     />
   );
 }

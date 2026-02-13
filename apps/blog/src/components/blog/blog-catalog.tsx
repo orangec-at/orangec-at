@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ArrowUpRight, LayoutGrid, Search, SquareStack, Table } from "lucide-react";
+import { ArrowUpRight, LayoutGrid, Search, SquareStack, Table } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { type ComponentType, useMemo, useState } from "react";
@@ -13,7 +13,6 @@ type ViewMode = "table" | "grid" | "card";
 interface BlogCatalogProps {
   posts: Post[];
   onPostClick?: (post: Post) => void;
-  onBack?: () => void;
   onSearchOpen?: () => void;
 }
 
@@ -51,22 +50,12 @@ const getCategoryLabel = (category?: string) => {
 export function BlogCatalog({
   posts,
   onPostClick,
-  onBack,
   onSearchOpen,
 }: BlogCatalogProps) {
   const router = useRouter();
   const locale = useLocale();
   const prefersReducedMotion = useReducedMotion();
   const [viewMode, setViewMode] = useState<ViewMode>("table");
-
-  const handleBack = () => {
-    if (onBack) {
-      onBack();
-      return;
-    }
-
-    router.push(withLocalePath(locale, "/"));
-  };
 
   const handlePostClick = (post: Post) => {
     if (onPostClick) {
@@ -85,18 +74,6 @@ export function BlogCatalog({
   return (
     <section className="min-h-screen bg-background pt-28 pb-20 md:pt-32">
       <div className="container-wide">
-        <motion.button
-          type="button"
-          onClick={handleBack}
-          initial={prefersReducedMotion ? false : { opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2 }}
-          className="group mb-10 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:border-ember-accent/40 hover:text-ember-accent"
-        >
-          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-          Back
-        </motion.button>
-
         <div className="mb-8 flex flex-col gap-6 border-b border-border pb-8 lg:flex-row lg:items-end lg:justify-between">
           <motion.div
             initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
