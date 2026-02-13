@@ -1,0 +1,296 @@
+---
+title: "Why Every SaaS Looks the Same Under the Hood: The Architecture That Yoga Studios and EdTech Share"
+description: "A yoga booking platform and an EdTech LMS use the same database patterns, the same auth flows, and the same multi-tenant architecture. Here's the universal SaaS blueprint."
+date: "2026-02-13"
+tags: ["SaaS", "Architecture", "PostgreSQL", "Multi-tenant", "Supabase"]
+slug: "saas-architecture-universality"
+category: "insight"
+author: "Jaeil Lee"
+featured: false
+seo:
+  keywords: ["SaaS architecture patterns", "multi-tenant database design", "booking system architecture", "SaaS database schema", "Supabase multi-tenant"]
+---
+
+# Why Every SaaS Looks the Same Under the Hood
+
+Last month I bid on three completely different Upwork projects: a yoga studio booking platform, an EdTech course management system, and a construction finance SaaS. I proposed the same architecture for all three.
+
+This is not laziness. It is pattern recognition.
+
+After building YogaDay (a yoga studio booking platform, live at yogaday.love) and applying the same patterns to enterprise admin dashboards, I realized something: 80% of SaaS applications are the same application wearing different skins. The database schema, the auth flow, the admin dashboard, the notification system. They are structurally identical. The only thing that changes is the vocabulary.
+
+## 1. The Universal SaaS Blueprint
+
+Every multi-tenant SaaS has the same six building blocks:
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                      Universal SaaS                          │
+├───────────┬───────────┬───────────┬───────────┬─────────────┤
+│   Auth    │  Tenants  │ Resources │  Actions  │    Admin    │
+│           │           │           │           │             │
+│  Users    │  Orgs     │  Classes  │ Bookings  │  Dashboard  │
+│  Roles    │  Members  │  Courses  │ Payments  │  Analytics  │
+│  Sessions │  Plans    │  Projects │ Reviews   │  Settings   │
+└───────────┴───────────┴───────────┴───────────┴─────────────┘
+```
+
+1. **Users and Auth**: Sign up, login, roles, sessions.
+2. **Organizations (Tenants)**: Data isolation between customers.
+3. **Resources**: The "thing" users manage. Yoga classes, courses, invoices, projects.
+4. **Actions**: What users do with resources. Book a class, enroll in a course, submit an invoice.
+5. **Admin Dashboard**: Manage all of the above.
+6. **Notifications**: Email, push, in-app.
+
+If you strip the CSS and the copy, a yoga booking platform and a construction finance tool are the same application. The entities have different names. The relationships between them are identical.
+
+## 2. The Database Schema That Powers Everything
+
+Here is the schema I reuse across every SaaS project. Four tables. One pattern.
+
+```sql
+-- 1. Organizations (tenants)
+CREATE TABLE organizations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'pro', 'enterprise')),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- 2. Members (users belong to organizations with roles)
+CREATE TABLE members (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) NOT NULL,
+  org_id UUID REFERENCES organizations(id) NOT NULL,
+  role TEXT DEFAULT 'member' CHECK (role IN ('owner', 'admin', 'member')),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE (user_id, org_id)
+);
+
+-- 3. Resources (the domain-specific "thing")
+CREATE TABLE resources (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  org_id UUID REFERENCES organizations(id) NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  type TEXT NOT NULL,
+  capacity INTEGER,
+  price DECIMAL(10, 2),
+  metadata JSONB DEFAULT '{}',
+  status TEXT DEFAULT 'active',
+  starts_at TIMESTAMPTZ,
+  ends_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- 4. Bookings/Transactions (user actions on resources)
+CREATE TABLE bookings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  resource_id UUID REFERENCES resources(id) NOT NULL,
+  user_id UUID REFERENCES auth.users(id) NOT NULL,
+  org_id UUID REFERENCES organizations(id) NOT NULL,
+  status TEXT DEFAULT 'confirmed'
+    CHECK (status IN ('pending', 'confirmed', 'cancelled', 'completed')),
+  amount DECIMAL(10, 2),
+  metadata JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+```
+
+Now look at what this schema becomes in each domain:
+
+| Universal | Yoga Studio | EdTech | Construction Finance |
+|-----------|------------|--------|---------------------|
+| `organization` | Studio | School | Company |
+| `resource` | Yoga Class | Course | Project |
+| `booking` | Reservation | Enrollment | Invoice |
+| `member` (role) | instructor / student | teacher / student | manager / worker |
+| `resource.metadata` | `{instructor, style, level}` | `{subject, modules, duration}` | `{budget, deadline, phase}` |
+
+Same four tables. Different labels. The `resources` table holds yoga classes in one deployment and university courses in another. The `bookings` table tracks class reservations or course enrollments or invoice submissions. The shape of the data does not change. Only the words do.
+
+## 3. RLS: One Policy, All Tenants
+
+The magic that makes multi-tenancy work without application-level filtering is Supabase Row Level Security. The same two policies handle tenant isolation for every domain.
+
+```sql
+-- Resources: members can only see their organization's data
+CREATE POLICY "Org isolation" ON resources
+  FOR ALL
+  USING (
+    org_id IN (
+      SELECT org_id FROM members
+      WHERE user_id = auth.uid()
+    )
+  );
+
+-- Bookings: same pattern
+CREATE POLICY "Org isolation" ON bookings
+  FOR ALL
+  USING (
+    org_id IN (
+      SELECT org_id FROM members
+      WHERE user_id = auth.uid()
+    )
+  );
+```
+
+This single pattern handles every domain:
+- A yoga instructor sees only their studio's classes.
+- An EdTech admin sees only their school's courses.
+- A construction manager sees only their company's projects.
+
+No if-statements in your application code. No `WHERE org_id = ?` scattered across fifty queries. The database enforces isolation at the row level, regardless of what the application asks for.
+
+I wrote a detailed post about why this matters for AI-powered applications: [Secure Tool Calling with Supabase RLS](/blog/secure-ai-chatbot-supabase-rls). The short version is that RLS protects your data even when an AI chatbot generates unfiltered queries.
+
+## 4. The Metadata Column: Your Domain Flexibility Layer
+
+The `metadata JSONB` column is what makes a universal schema practical. Instead of creating domain-specific tables for every new SaaS, you store the domain-specific fields in a flexible JSON column.
+
+```typescript
+// Yoga: Creating a class
+await supabase.from("resources").insert({
+  org_id: studioId,
+  title: "Morning Vinyasa Flow",
+  type: "yoga_class",
+  capacity: 20,
+  price: 25.0,
+  starts_at: "2026-02-15T08:00:00Z",
+  metadata: {
+    instructor: "Sarah Kim",
+    style: "vinyasa",
+    level: "intermediate",
+    room: "Studio A",
+  },
+});
+
+// EdTech: Creating a course
+await supabase.from("resources").insert({
+  org_id: schoolId,
+  title: "Introduction to Machine Learning",
+  type: "course",
+  capacity: 50,
+  price: 299.0,
+  starts_at: "2026-03-01T00:00:00Z",
+  ends_at: "2026-05-01T00:00:00Z",
+  metadata: {
+    subject: "Computer Science",
+    modules: 12,
+    duration_weeks: 8,
+    prerequisites: ["Python Basics"],
+  },
+});
+
+// Construction: Creating a project
+await supabase.from("resources").insert({
+  org_id: companyId,
+  title: "Highway Bridge Renovation",
+  type: "project",
+  price: 450000.0,
+  starts_at: "2026-04-01T00:00:00Z",
+  ends_at: "2026-12-31T00:00:00Z",
+  metadata: {
+    budget_code: "INF-2026-042",
+    phase: "planning",
+    compliance: ["OSHA", "EPA"],
+    project_manager: "James Park",
+  },
+});
+```
+
+Same table. Same insert operation. Different metadata.
+
+The rule for deciding between a dedicated column and metadata is simple: if you need to filter or sort by it in the database, make it a column. If it is display-only or domain-specific, put it in `metadata`. Fields like `title`, `status`, `price`, and `starts_at` are columns because every domain queries by them. Fields like `instructor`, `subject`, and `budget_code` are metadata because they only matter within their specific domain.
+
+You can still query JSONB with PostgreSQL operators when you need to:
+
+```sql
+-- Find all intermediate yoga classes
+SELECT * FROM resources
+WHERE type = 'yoga_class'
+  AND metadata->>'level' = 'intermediate';
+
+-- Find all courses with prerequisites
+SELECT * FROM resources
+WHERE type = 'course'
+  AND metadata->'prerequisites' IS NOT NULL;
+```
+
+## 5. The Admin Dashboard Is the Same Dashboard
+
+This is where the pattern becomes visually obvious. The admin dashboard for every SaaS has the same four pages:
+
+1. **Overview**: Stats cards showing totals and trends.
+2. **Resource management**: A data table with CRUD operations.
+3. **User management**: Member list with role assignment.
+4. **Settings**: Organization details, billing, integrations.
+
+The only thing that changes is the labels.
+
+```typescript
+// One stats component, every domain
+interface StatsConfig {
+  resource: string;
+  action: string;
+  member: string;
+}
+
+const domainLabels: Record<string, StatsConfig> = {
+  yoga: { resource: "Classes", action: "Reservations", member: "Students" },
+  edtech: { resource: "Courses", action: "Enrollments", member: "Students" },
+  construction: { resource: "Projects", action: "Invoices", member: "Workers" },
+};
+
+function DashboardStats({ domain }: { domain: string }) {
+  const labels = domainLabels[domain];
+  const { data } = useQuery({
+    queryKey: ["stats", domain],
+    queryFn: () => fetchOrgStats(),
+  });
+
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      <StatCard label={`Total ${labels.resource}`} value={data?.resources} />
+      <StatCard label={`Active ${labels.action}`} value={data?.actions} />
+      <StatCard label={labels.member} value={data?.members} />
+    </div>
+  );
+}
+```
+
+When I built the DPP admin platform (EV battery passport management), I reused the same dashboard layout from YogaDay. The stat cards went from "Total Classes" and "Active Reservations" to "Total Products" and "Active Passports." The data table component was identical. The RBAC permission UI was identical. The settings page was identical.
+
+The time saved is significant. The DPP admin dashboard took weeks, not months, because 60% of the components already existed. I changed the labels, adjusted the metadata fields, and added domain-specific business rules. The architecture did not change.
+
+## 6. When the Pattern Breaks
+
+This universal schema does not work for everything. It breaks when:
+
+**The core data model is not resource-action.** A real-time chat application, a video editing tool, or a social network has fundamentally different data relationships. Not everything is "users manage resources and take actions on them."
+
+**Performance requires denormalization.** If you need sub-millisecond queries on millions of rows with complex aggregations, a normalized multi-tenant schema with RLS policies will be too slow. You will need materialized views, read replicas, or a different database entirely.
+
+**Compliance requires physical data isolation.** Some enterprise clients (healthcare, finance, government) require that their data lives in a separate database instance, not just a separate row in a shared table. RLS is logical isolation, not physical isolation.
+
+For the vast majority of SaaS applications, though, these exceptions do not apply. If your product manages resources and lets users take actions on them, this pattern works.
+
+## The Takeaway
+
+Stop building SaaS applications from scratch. The pattern is the same every time:
+
+1. **Auth**: Supabase Auth with JWT sessions.
+2. **Tenants**: Organizations table with member roles.
+3. **Resources**: One table with a `type` column and `metadata` JSONB.
+4. **Actions**: Bookings/transactions referencing resources.
+5. **Isolation**: RLS policies filtering by organization membership.
+6. **Admin**: Dashboard with stats, data tables, user management, settings.
+
+The things that change between projects are the domain vocabulary, the metadata schema, the business rules, and the UI copy. The architecture does not change. The database schema does not change. The auth flow does not change.
+
+This is why experienced SaaS developers can estimate projects in hours, not weeks. They have built this architecture before. They are just changing the labels.
+
+---
+
+*Need a multi-tenant SaaS built on proven architecture? I have shipped this pattern across yoga, enterprise, and mobile platforms. [Let's talk](mailto:your@email.com).*
