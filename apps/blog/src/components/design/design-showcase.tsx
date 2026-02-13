@@ -72,13 +72,43 @@ export function DesignShowcase() {
 
           <section id="typography" className="scroll-mt-24 space-y-5">
             <h2 className="text-h2 font-serif text-foreground">Typography</h2>
-            <div className="space-y-3 rounded-2xl border border-border bg-card p-6">
-              <p className="text-display font-serif tracking-tight">Display / text-display</p>
-              <p className="text-h2 font-serif">Heading / text-h2</p>
-              <p className="text-h3">Subheading / text-h3</p>
-              <p className="text-body">Body / text-body for readable content blocks.</p>
-              <p className="text-small text-muted-foreground">Small / text-small with muted context.</p>
-              <p className="text-micro text-muted-foreground">Micro / text-micro for utility labels.</p>
+            <p className="text-small text-muted-foreground">
+              Type scale and editorial usage patterns for blog catalog pages, metadata labels, and links.
+            </p>
+            <div className="space-y-6 rounded-2xl border border-border bg-card p-6">
+              <div className="space-y-3">
+                <p className="text-display font-serif tracking-tight text-foreground">Display / text-display</p>
+                <p className="text-h1 font-serif tracking-tight text-foreground">H1 / text-h1</p>
+                <p className="text-h2 font-serif text-foreground">H2 / text-h2</p>
+                <p className="text-h3 text-foreground">H3 / text-h3</p>
+                <p className="text-body text-foreground">Body / text-body for long-form and explanatory copy.</p>
+                <p className="text-small text-muted-foreground">Small / text-small for supporting context.</p>
+                <p className="text-micro text-muted-foreground">Micro / text-micro for utility labels and timestamps.</p>
+              </div>
+
+              <div className="space-y-2 border-t border-border pt-5">
+                <p className="text-small font-medium text-foreground">Pattern References</p>
+                <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
+                  Engineering Notes · Jan 2026 · 8 min read
+                </p>
+                <p className="text-small text-muted-foreground">
+                  Link pattern: 
+                  <Link href="/blog" className="ember-link ml-1">
+                    Explore blog index
+                  </Link>
+                </p>
+              </div>
+
+              <div className="space-y-3 rounded-xl border border-border bg-background p-5">
+                <p className="text-xs uppercase tracking-[0.26em] text-ember-accent">Catalog Feature</p>
+                <h3 className="text-h1 font-serif tracking-tight text-foreground">
+                  Designing an Editorial Catalog that Feels Product-Grade
+                </h3>
+                <p className="max-w-3xl text-body text-muted-foreground">
+                  This sample block demonstrates the recommended eyebrow + headline + support copy rhythm used on
+                  home and index sections.
+                </p>
+              </div>
             </div>
           </section>
 

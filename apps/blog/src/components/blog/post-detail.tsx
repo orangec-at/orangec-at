@@ -106,32 +106,24 @@ export function BlogPostDetail({
     >
       <AnimatePresence>
         {tooltip && (
-          <motion.div
+          <motion.button
             initial={{ opacity: 0, y: 10, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.9 }}
             style={{ left: tooltip.x, top: tooltip.y }}
-            className="fixed z-[100] -translate-x-1/2 flex items-center gap-3 border border-border bg-ember-accent px-4 py-2 text-black shadow-md transition-all"
+            type="button"
+            className="fixed z-[100] -translate-x-1/2 flex items-center gap-3 border border-border bg-ember-accent px-4 py-2 text-black shadow-md transition-colors"
             onClick={(e) => {
               e.stopPropagation();
               void confirmHighlight();
             }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                e.stopPropagation();
-                void confirmHighlight();
-              }
-            }}
-            role="button"
-            tabIndex={0}
           >
             <Highlighter className="h-4 w-4" />
             <span className="font-mono text-[10px] font-bold uppercase tracking-widest">
               Mark as Fragment
             </span>
             <div className="absolute -bottom-2 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-b border-r border-border bg-ember-accent" />
-          </motion.div>
+          </motion.button>
         )}
       </AnimatePresence>
 
@@ -142,16 +134,16 @@ export function BlogPostDetail({
         />
       </div>
 
-      <header className="relative border-b border-border px-4 pb-16 pt-28 md:pb-24 md:pt-32">
-        <div className="container mx-auto max-w-6xl">
+      <header className="relative border-b border-border pb-16 pt-28 md:pb-24 md:pt-32">
+        <div className="container-wide">
           <motion.button
             onClick={onBack}
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="group mb-12 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground transition-all duration-300 hover:text-ember-accent focus-visible:outline-none focus-visible:text-ember-accent"
+            className="group mb-12 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors duration-300 hover:text-ember-accent focus-visible:outline-none focus-visible:text-ember-accent"
           >
-            <span className="flex h-10 w-10 items-center justify-center border border-border transition-all duration-300 group-hover:border-ember-accent group-hover:bg-ember-accent group-hover:text-black group-focus-visible:border-ember-accent group-focus-visible:bg-ember-accent group-focus-visible:text-black">
+            <span className="flex h-10 w-10 items-center justify-center border border-border transition-[color,background-color,border-color] duration-300 group-hover:border-ember-accent group-hover:bg-ember-accent group-hover:text-black group-focus-visible:border-ember-accent group-focus-visible:bg-ember-accent group-focus-visible:text-black">
               <ArrowLeft className="h-4 w-4" />
             </span>
             <span className="transition-transform duration-300 group-hover:translate-x-2">
@@ -197,14 +189,14 @@ export function BlogPostDetail({
             <button
               type="button"
               aria-label="Share this post"
-              className="group flex h-12 w-12 items-center justify-center border border-border text-muted-foreground transition-all duration-300 hover:border-ember-accent hover:bg-ember-accent hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="group flex h-12 w-12 items-center justify-center border border-border text-muted-foreground transition-[color,background-color,border-color] duration-300 hover:border-ember-accent hover:bg-ember-accent hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <Share2 className="h-5 w-5" />
             </button>
             <button
               type="button"
               aria-label="Bookmark this post"
-              className="group flex h-12 w-12 items-center justify-center border border-border text-muted-foreground transition-all duration-300 hover:border-ember-accent hover:bg-ember-accent hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="group flex h-12 w-12 items-center justify-center border border-border text-muted-foreground transition-[color,background-color,border-color] duration-300 hover:border-ember-accent hover:bg-ember-accent hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <Bookmark className="h-5 w-5" />
             </button>
@@ -222,8 +214,8 @@ export function BlogPostDetail({
         <div className="absolute bottom-0 left-0 h-1 w-32 bg-ember-accent" />
       </header>
 
-      <main className="px-4 py-16 md:py-24">
-        <div className="container mx-auto max-w-4xl">
+      <main className="py-16 md:py-24">
+        <div className="container-narrow mx-auto max-w-4xl">
           {post.content.trim() !== "" && (
             <motion.div
               initial={{ y: 30, opacity: 0 }}
@@ -237,11 +229,11 @@ export function BlogPostDetail({
                   e.stopPropagation();
                   handleTextClick(e, post.content);
                 }}
-                className={`relative w-full cursor-pointer px-4 py-2 text-left font-serif text-2xl italic leading-relaxed text-muted-foreground transition-all duration-300 md:text-3xl ${
-                  highlightedTexts.has(post.content)
-                    ? ""
-                    : "-mx-4 hover:bg-ember-accent/10 hover:text-foreground"
-                }`}
+                 className={`relative w-full cursor-pointer px-4 py-2 text-left font-serif text-2xl italic leading-relaxed text-muted-foreground transition-[color,background-color] duration-300 md:text-3xl ${
+                   highlightedTexts.has(post.content)
+                     ? ""
+                     : "-mx-4 hover:bg-ember-accent/10 hover:text-foreground"
+                 }`}
               >
                 {highlightedTexts.has(post.content) && (
                   <motion.span
@@ -264,7 +256,7 @@ export function BlogPostDetail({
             {isLoading && (
               <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-ember-accent">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-ember-accent border-t-transparent" />
-                Loading content...
+                Loading content…
               </div>
             )}
 
@@ -291,8 +283,8 @@ export function BlogPostDetail({
                   <button
                     key={tag}
                     type="button"
-                    className="border border-border px-4 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground transition-all duration-300 hover:border-ember-accent hover:bg-ember-accent/10 hover:text-ember-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                  >
+                     className="border border-border px-4 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground transition-[color,background-color,border-color] duration-300 hover:border-ember-accent hover:bg-ember-accent/10 hover:text-ember-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                   >
                     {tag}
                   </button>
                 ))}
@@ -303,8 +295,8 @@ export function BlogPostDetail({
       </main>
 
       {relatedPosts.length > 0 && (
-        <section className="border-t border-border bg-surface px-4 py-16 md:py-24">
-          <div className="container mx-auto max-w-6xl">
+        <section className="border-t border-border bg-surface py-16 md:py-24">
+          <div className="container-wide">
             <div className="mb-12 flex items-center justify-between">
               <div>
                 <span className="mb-2 block font-mono text-xs uppercase tracking-widest text-ember-accent">
@@ -318,22 +310,15 @@ export function BlogPostDetail({
 
             <div className="grid grid-cols-1 gap-1 md:grid-cols-2 lg:grid-cols-3">
               {relatedPosts.slice(0, 3).map((relatedPost, idx) => (
-                <motion.article
+                <motion.button
                   key={relatedPost.id}
+                  type="button"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1 }}
                   onClick={() => onPostClick?.(relatedPost)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      onPostClick?.(relatedPost);
-                    }
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  className="group relative flex min-h-[240px] cursor-pointer flex-col overflow-hidden border border-border bg-background p-6 transition-all duration-500 hover:bg-ember-accent md:p-8"
+                  className="group relative flex min-h-[240px] cursor-pointer flex-col overflow-hidden border border-border bg-background p-6 text-left transition-colors duration-500 hover:bg-ember-accent md:p-8"
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
@@ -342,7 +327,7 @@ export function BlogPostDetail({
                       <span className="font-mono text-[10px] uppercase tracking-wider text-ember-accent transition-colors duration-300 group-hover:text-black">
                         {relatedPost.category}
                       </span>
-                      <ArrowUpRight className="h-5 w-5 text-muted-foreground transition-all duration-300 group-hover:rotate-45 group-hover:scale-125 group-hover:text-black" />
+                      <ArrowUpRight className="h-5 w-5 text-muted-foreground transition-[color,transform] duration-300 group-hover:rotate-45 group-hover:scale-125 group-hover:text-black" />
                     </div>
 
                     <div className="flex-1">
@@ -360,21 +345,21 @@ export function BlogPostDetail({
                       </span>
                     </div>
                   </div>
-                </motion.article>
+                </motion.button>
               ))}
             </div>
           </div>
         </section>
       )}
 
-      <div className="border-t border-border px-4 py-16">
-        <div className="container mx-auto max-w-6xl">
+      <div className="border-t border-border py-16">
+        <div className="container-wide">
           <motion.button
             onClick={onBack}
             whileHover={{ x: -10 }}
             className="group flex items-center gap-4 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors duration-300 hover:text-ember-accent focus-visible:outline-none focus-visible:text-ember-accent"
           >
-            <span className="flex h-12 w-12 items-center justify-center border border-border bg-surface transition-all duration-300 group-hover:border-ember-accent group-hover:bg-ember-accent group-hover:text-black group-focus-visible:border-ember-accent group-focus-visible:bg-ember-accent group-focus-visible:text-black">
+            <span className="flex h-12 w-12 items-center justify-center border border-border bg-surface transition-[color,background-color,border-color] duration-300 group-hover:border-ember-accent group-hover:bg-ember-accent group-hover:text-black group-focus-visible:border-ember-accent group-focus-visible:bg-ember-accent group-focus-visible:text-black">
               <ArrowLeft className="h-5 w-5" />
             </span>
             Back to Catalog

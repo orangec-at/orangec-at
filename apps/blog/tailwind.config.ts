@@ -79,8 +79,8 @@ const config: Config = {
       },
       // MUJI-inspired systematic spacing (8px base unit)
       spacing: {
-        'section': '4rem',      // 64px - Major sections
-        'subsection': '3rem',   // 48px - Subsections
+        'section': '5rem',      // 80px - Major sections
+        'subsection': '4rem',   // 64px - Subsections
         'card': '2rem',         // 32px - Card padding
         'element': '1.5rem',    // 24px - Element spacing
         'tight': '1rem',        // 16px - Tight spacing

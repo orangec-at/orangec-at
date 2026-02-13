@@ -114,29 +114,30 @@ export default async function ContactPage({ params }: Props) {
   ];
 
   return (
-    <div className="container-narrow py-section space-y-16 md:space-y-20">
+    <div className="container-narrow pb-section space-y-16 md:space-y-20">
       <section className="space-y-10">
         <div className="space-y-6">
-          <div className="flex items-center gap-2 mb-8">
+          <div className="mb-8 border-b border-border pb-8">
+            <p className="text-xs uppercase tracking-[0.26em] text-ember-accent">Contact</p>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+              {t.heading}
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm text-muted-foreground sm:text-base">
+              {t.description}
+            </p>
+          </div>
+
+          <p className="text-body text-muted-foreground">{t.subheading}</p>
+
+          <div className="flex items-center gap-2">
             <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-ember-accent/35"></span>
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-ember-accent"></span>
             </span>
-            <span className="text-micro font-medium tracking-wide uppercase text-muted-foreground">
+            <span className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
               {t.availability}
             </span>
           </div>
-
-          <h1 className="text-display font-serif tracking-tight text-foreground leading-[1.1]">
-            {t.heading}
-            <span className="mt-2 block text-h2 font-serif text-ember-accent/85">
-              {t.subheading}
-            </span>
-          </h1>
-
-          <p className="max-w-2xl text-body leading-relaxed text-muted-foreground">
-            {t.description}
-          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
@@ -146,20 +147,20 @@ export default async function ContactPage({ params }: Props) {
               href={method.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative flex h-48 flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card p-8 transition-all duration-300 ease-out hover:border-ember-accent/40 hover:bg-accent/30 md:h-56"
+              className="group relative flex h-48 flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card p-8 transition-[background-color,border-color] duration-300 ease-out hover:border-ember-accent/40 hover:bg-accent/30 md:h-56"
             >
               <div className="flex justify-between items-start">
                 <div className="rounded-xl border border-border bg-background p-3 shadow-sm transition-transform duration-300 group-hover:scale-110">
                   <method.icon className="h-6 w-6 text-foreground" strokeWidth={1.5} />
                 </div>
-                <ArrowUpRight className="h-5 w-5 text-muted-foreground transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-ember-accent" />
+                <ArrowUpRight className="h-5 w-5 text-muted-foreground transition-[color,transform] duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-ember-accent" />
               </div>
 
               <div className="space-y-1 z-10">
-                <h3 className="text-h3 text-foreground">
+                <h3 className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
                   {method.label}
                 </h3>
-                <p className="text-small font-medium text-muted-foreground transition-colors group-hover:text-foreground">
+                <p className="text-small text-muted-foreground transition-colors group-hover:text-foreground">
                   {method.action}
                 </p>
               </div>

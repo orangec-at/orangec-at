@@ -36,14 +36,20 @@ export default function AboutClient({ locale }: AboutClientProps) {
   const labels = stackLabels[locale];
 
   return (
-    <div className="container-narrow py-section space-y-16 md:space-y-20">
-      <section className="space-y-4">
-        <p className="text-small text-muted-foreground">{ABOUT_CONTENT.name}</p>
-        <h1 className="text-display font-serif tracking-tight text-foreground">
-          {isKo ? ABOUT_CONTENT.titleKo : ABOUT_CONTENT.title}
-        </h1>
+    <div className="container-narrow pb-section space-y-16 md:space-y-20">
+      <section className="space-y-6">
+        <div className="mb-8 border-b border-border pb-8">
+          <p className="text-xs uppercase tracking-[0.26em] text-ember-accent">About</p>
+          <h1 className="mt-3 text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+            {isKo ? ABOUT_CONTENT.titleKo : ABOUT_CONTENT.title}
+          </h1>
+          <p className="mt-3 text-sm text-muted-foreground sm:text-base">
+            {(isKo ? ABOUT_CONTENT.storyKo : ABOUT_CONTENT.story)[0]}
+          </p>
+        </div>
+
         <div className="space-y-4 text-body leading-relaxed text-muted-foreground">
-          {(isKo ? ABOUT_CONTENT.storyKo : ABOUT_CONTENT.story).map((paragraph) => (
+          {(isKo ? ABOUT_CONTENT.storyKo : ABOUT_CONTENT.story).slice(1).map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>
@@ -52,25 +58,25 @@ export default function AboutClient({ locale }: AboutClientProps) {
       <section className="space-y-5">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <article className="rounded-2xl border border-border bg-card p-5">
-            <h2 className="text-small font-semibold text-foreground">{labels.frontend}</h2>
+            <h2 className="text-micro font-mono uppercase tracking-wide text-foreground">{labels.frontend}</h2>
             <p className="mt-2 text-small text-muted-foreground">
               {ABOUT_CONTENT.techStack.frontend.join(" · ")}
             </p>
           </article>
           <article className="rounded-2xl border border-border bg-card p-5">
-            <h2 className="text-small font-semibold text-foreground">{labels.backend}</h2>
+            <h2 className="text-micro font-mono uppercase tracking-wide text-foreground">{labels.backend}</h2>
             <p className="mt-2 text-small text-muted-foreground">
               {ABOUT_CONTENT.techStack.backend.join(" · ")}
             </p>
           </article>
           <article className="rounded-2xl border border-border bg-card p-5">
-            <h2 className="text-small font-semibold text-foreground">{labels.infrastructure}</h2>
+            <h2 className="text-micro font-mono uppercase tracking-wide text-foreground">{labels.infrastructure}</h2>
             <p className="mt-2 text-small text-muted-foreground">
               {ABOUT_CONTENT.techStack.infrastructure.join(" · ")}
             </p>
           </article>
           <article className="rounded-2xl border border-border bg-card p-5">
-            <h2 className="text-small font-semibold text-foreground">{labels.ai}</h2>
+            <h2 className="text-micro font-mono uppercase tracking-wide text-foreground">{labels.ai}</h2>
             <p className="mt-2 text-small text-muted-foreground">
               {ABOUT_CONTENT.techStack.ai.join(" · ")}
             </p>
@@ -86,7 +92,7 @@ export default function AboutClient({ locale }: AboutClientProps) {
           {ABOUT_CONTENT.career.map((item) => (
             <article key={`${item.year}-${item.company}`} className="relative rounded-xl border border-border p-4">
               <span className="absolute -left-[1.72rem] top-5 h-2.5 w-2.5 rounded-full bg-ember-accent" />
-              <p className="text-micro text-muted-foreground">{item.year}</p>
+              <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">{item.year}</p>
               <h3 className="mt-1 text-h3 text-foreground">
                 {isKo ? item.roleKo : item.role} - {item.company}
               </h3>

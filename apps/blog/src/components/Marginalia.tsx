@@ -84,7 +84,7 @@ export const Marginalia: React.FC<MarginaliaProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.9 }}
             style={{ left: tooltip.x, top: tooltip.y }}
-            className="fixed z-[100] -translate-x-1/2 flex items-center gap-3 bg-stone-900 text-white px-4 py-2 rounded-lg shadow-2xl cursor-pointer hover:bg-stone-700 transition-colors border border-stone-700"
+            className="fixed z-[100] flex -translate-x-1/2 cursor-pointer items-center gap-3 rounded-lg border border-border bg-foreground px-4 py-2 text-background shadow-2xl transition-colors hover:bg-ember-accent hover:text-primary-foreground"
             onClick={(e) => {
               e.stopPropagation();
               confirmHighlight();
@@ -92,26 +92,26 @@ export const Marginalia: React.FC<MarginaliaProps> = ({
           >
             <Highlighter className="w-4 h-4 text-yellow-400" />
             <span className="text-[10px] font-bold uppercase tracking-widest">Ink this thought?</span>
-            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-stone-900 rotate-45" />
+            <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-foreground" />
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Background Decorative Element */}
       <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none select-none overflow-hidden">
-        <span className="text-[20rem] font-serif font-bold absolute -top-20 -left-20 dark:text-white">MEMO</span>
+        <span className="absolute -left-20 -top-20 text-[20rem] font-serif font-bold text-foreground">MEMO</span>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-stone-200 dark:border-stone-800 pb-8">
+        <div className="mb-16 flex flex-col justify-between gap-4 border-b border-border pb-8 md:flex-row md:items-end">
           <div>
-            <span className="text-xs tracking-[0.4em] uppercase text-stone-400 dark:text-stone-500 block mb-2">Section 03</span>
-            <h2 className="text-4xl font-serif italic text-stone-800 dark:text-stone-200">Marginalia.</h2>
-            <p className="text-stone-500 dark:text-stone-400 text-sm mt-2 font-light">여백에 남긴 짤막한 생각들과 기술적 단상들</p>
+            <span className="mb-2 block text-xs uppercase tracking-[0.4em] text-muted-foreground">Section 03</span>
+            <h2 className="text-4xl font-serif italic text-foreground">Marginalia.</h2>
+            <p className="mt-2 text-sm font-light text-muted-foreground">여백에 남긴 짤막한 생각들과 기술적 단상들</p>
           </div>
           <button 
             onClick={onViewAll}
-            className="flex items-center gap-2 text-[10px] tracking-widest uppercase font-bold text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 transition-colors"
+            className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground transition-colors hover:text-ember-accent"
           >
             View All Threads <Paperclip className="w-3 h-3" />
           </button>
@@ -129,14 +129,14 @@ export const Marginalia: React.FC<MarginaliaProps> = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 style={{ rotate: snippet.rotation }}
-                className="bg-white dark:bg-stone-900 p-8 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)] border border-stone-100 dark:border-stone-800 relative group cursor-pointer transition-colors"
+                className="group relative cursor-pointer border border-border bg-card p-8 text-foreground shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)] transition-colors"
               >
                 {/* Tape Effect */}
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-stone-200/40 dark:bg-stone-700/40 backdrop-blur-sm -rotate-2 group-hover:bg-stone-300/40 transition-colors" />
+                <div className="absolute -top-3 left-1/2 h-6 w-16 -translate-x-1/2 -rotate-2 bg-border/40 backdrop-blur-sm transition-colors group-hover:bg-border/70" />
                 
                 <div className="flex flex-col h-full">
                   <div className="flex justify-between items-start mb-6">
-                    <span className="text-[9px] font-bold text-stone-400 dark:text-stone-500 tracking-widest">{snippet.date}</span>
+                    <span className="text-[9px] font-bold tracking-widest text-muted-foreground">{snippet.date}</span>
                     <AnimatePresence>
                       {isLiked && (
                         <motion.div 
@@ -161,33 +161,33 @@ export const Marginalia: React.FC<MarginaliaProps> = ({
                         className="absolute inset-0 bg-yellow-200/50 -z-10 mix-blend-multiply dark:mix-blend-overlay" 
                       />
                     )}
-                    <p className={`text-stone-800 dark:text-stone-300 font-handwriting text-base leading-relaxed transition-all ${isHighlighted ? '' : 'hover:underline hover:decoration-dotted hover:decoration-stone-300 hover:underline-offset-4'}`}>
+                    <p className={`font-handwriting text-base leading-relaxed text-foreground transition-all ${isHighlighted ? '' : 'hover:underline hover:decoration-dotted hover:decoration-border hover:underline-offset-4'}`}>
                       {snippet.content}
                     </p>
                   </div>
 
                   <div className="flex flex-wrap gap-2 mb-6">
                     {snippet.tags.map(tag => (
-                      <span key={tag} className="text-[9px] text-stone-400 dark:text-stone-600 uppercase tracking-tighter">
+                      <span key={tag} className="text-[9px] uppercase tracking-tighter text-muted-foreground">
                         {tag}
                       </span>
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-stone-50 dark:border-stone-800">
+                  <div className="flex items-center justify-between border-t border-border/60 pt-4">
                     <div className="flex gap-4">
                       <button 
                         onClick={(e) => { e.stopPropagation(); handleLikeClick(snippet.id); }}
-                        className={`transition-colors flex items-center gap-1 ${isLiked ? 'text-pink-500 scale-110' : 'text-stone-300 dark:text-stone-600 hover:text-pink-400'}`}
+                        className={`flex items-center gap-1 transition-colors ${isLiked ? 'scale-110 text-pink-500' : 'text-muted-foreground hover:text-pink-400'}`}
                       >
                         <Heart className={`w-3.5 h-3.5 ${isLiked ? 'fill-pink-500' : ''}`} />
                         {isLiked && <span className="text-[8px] font-bold">1</span>}
                       </button>
-                      <button className="text-stone-300 dark:text-stone-600 hover:text-stone-900 dark:hover:text-stone-400 transition-colors">
+                      <button className="text-muted-foreground transition-colors hover:text-ember-accent">
                         <MessageSquare className="w-3.5 h-3.5" />
                       </button>
                     </div>
-                    <Share2 className="w-3.5 h-3.5 text-stone-300 dark:text-stone-600 hover:text-stone-900 dark:hover:text-stone-400 cursor-pointer transition-colors" />
+                    <Share2 className="h-3.5 w-3.5 cursor-pointer text-muted-foreground transition-colors hover:text-ember-accent" />
                   </div>
                 </div>
               </motion.div>

@@ -14,6 +14,7 @@ function getLocaleFromPathname(pathname: string) {
 
 export default auth((req) => {
   const pathname = req.nextUrl.pathname;
+
   const locale = getLocaleFromPathname(pathname);
   const onboardingPath = locale === "en" ? "/en/onboarding" : "/onboarding";
 

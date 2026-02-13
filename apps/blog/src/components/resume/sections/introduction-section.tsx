@@ -12,8 +12,8 @@ export function IntroductionSection({ content }: IntroductionSectionProps) {
 
   return (
     <ResumeSection title={t("title")}>
-      <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-        <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+      <div className="rounded-lg bg-surface p-4">
+        <p className="whitespace-pre-line leading-relaxed text-foreground/85">
           {content}
         </p>
       </div>

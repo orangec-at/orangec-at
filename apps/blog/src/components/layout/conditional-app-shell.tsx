@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import Footer from "@/components/layout/footer";
 import ResponsiveHeader from "@/components/layout/responsive-header";
 
@@ -11,6 +12,12 @@ type ConditionalAppShellProps = {
 export default function ConditionalAppShell({
   children,
 }: ConditionalAppShellProps) {
+  const pathname = usePathname();
+  const isBlogRoute = /^\/(ko|en)\/blog(?:\/.*)?$/.test(pathname ?? "");
+  const mainContentClassName = isBlogRoute
+    ? "flex-1 w-full"
+    : "flex-1 w-full pt-24 md:pt-28 pb-24 md:pb-12";
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <a
@@ -20,7 +27,7 @@ export default function ConditionalAppShell({
         Skip to content
       </a>
       <ResponsiveHeader position="top" />
-      <main id="main-content" className="flex-1 w-full">
+      <main id="main-content" className={mainContentClassName}>
         {children}
       </main>
       <ResponsiveHeader position="bottom" />

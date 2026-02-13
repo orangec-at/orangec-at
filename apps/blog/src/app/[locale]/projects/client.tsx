@@ -7,13 +7,14 @@ export default function ProjectsClient() {
   const projects = PROJECTS;
 
   return (
-    <section className="container-default py-section space-y-8">
+    <section className="container-default pb-section space-y-8">
       <div className="space-y-6">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-display font-serif tracking-tight text-foreground">
+        <div className="mb-8 border-b border-border pb-8">
+          <p className="text-xs uppercase tracking-[0.26em] text-ember-accent">Projects</p>
+          <h1 className="mt-3 text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl md:text-6xl">
             {t("title")}
           </h1>
-          <p className="text-body text-muted-foreground">
+          <p className="mt-3 text-sm text-muted-foreground sm:text-base">
             {t("subtitle")}
           </p>
         </div>

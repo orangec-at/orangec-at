@@ -46,7 +46,7 @@ export default async function ProjectDetailPage({
     relatedBlogSlugs.length > 0 ? await getBlogPostsMeta(relatedBlogSlugs) : [];
 
   return (
-    <div className="container-narrow py-section">
+    <div className="container-narrow pb-section">
       <div className="space-y-8">
           <Link
             href={withLocalePath(locale, "/projects")}

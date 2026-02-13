@@ -132,7 +132,7 @@ export default function ResumeClient() {
   const hasMilitaryData = resumeData.military.branch !== "-";
 
   return (
-    <main className="container-default py-section space-y-8">
+    <main className="container-default pb-section space-y-8">
       <div className="mx-auto mb-10 max-w-5xl space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="rounded-2xl border border-border bg-card p-5">

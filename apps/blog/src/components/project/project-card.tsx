@@ -4,8 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Project } from "@/data/projects";
 import { Card } from "@orangec-at/design";
 import { Badge } from "@orangec-at/design";
-import { Title, Body, TypographyLink } from "@orangec-at/design/blog";
 import Image from "next/image";
+import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { withLocalePath } from "@/lib/locale-path";
 import { MdClose } from "react-icons/md";
@@ -59,12 +59,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             />
           )}
           <div className="flex-1 p-4 space-y-3">
-            <Title variant="l-700" className="text-foreground">
-              {title}
-            </Title>
-            <Body variant="m-400" className="leading-relaxed text-muted-foreground">
-              {description}
-            </Body>
+            <h3 className="text-h3 text-foreground">{title}</h3>
+            <p className="text-body leading-relaxed text-muted-foreground">{description}</p>
             {project.techStack.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {project.techStack.slice(0, 4).map((tech) => (
@@ -84,17 +80,16 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             )}
           </div>
           <div className="px-4 pb-4 flex justify-end">
-            <TypographyLink
+            <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
                 setOpen(true);
               }}
-              variant="m-400"
-              className="text-muted-foreground hover:text-ember-accent"
+              className="text-small font-medium text-muted-foreground transition-colors hover:text-ember-accent"
             >
               {t("viewMore")}
-            </TypographyLink>
+            </a>
           </div>
         </div>
       </Card>
@@ -172,22 +167,18 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
               <div className="space-y-5">
                 <div className="space-y-2">
-                  <Title variant="xl-700" className="text-foreground">
-                    {title}
-                  </Title>
-                  <Body variant="m-400" className="leading-relaxed text-muted-foreground">
-                    {description}
-                  </Body>
+                  <h3 className="text-h3 text-foreground">{title}</h3>
+                  <p className="text-body leading-relaxed text-muted-foreground">{description}</p>
                 </div>
 
                 {project.techStack.length > 0 && (
                   <div className="space-y-2">
-                    <Body variant="s-700" className="uppercase tracking-wide text-muted-foreground">
+                    <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
                       {t("techStack")}
-                    </Body>
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       {project.techStack.map((tech) => (
-                         <Badge key={tech} className="rounded-full border border-border bg-accent/40 px-3 py-1 text-micro font-medium text-foreground">
+                          <Badge key={tech} className="rounded-full border border-border bg-accent/40 px-3 py-1 text-micro font-medium text-foreground">
                            {tech}
                          </Badge>
                       ))}
@@ -197,13 +188,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
                 {project.keyFeatures && project.keyFeatures.length > 0 && (
                   <div className="space-y-3">
-                    <Body variant="s-700" className="uppercase tracking-wide text-muted-foreground">
+                    <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
                       {t("keyFeatures")}
-                    </Body>
-                    <div className="space-y-2 text-muted-foreground">
+                    </p>
+                    <div className="space-y-2 text-small text-muted-foreground">
                       {(locale === "ko" ? project.keyFeatures : project.keyFeaturesEn || project.keyFeatures).map((feature) => (
                         <div key={feature} className="flex items-start gap-2 leading-relaxed">
-                          <span className="mt-[6px] inline-block h-2 w-2 rounded-full bg-gray-500 dark:bg-gray-400" />
+                          <span className="mt-[6px] inline-block h-2 w-2 rounded-full bg-ember-accent" />
                           <span>{feature}</span>
                         </div>
                       ))}
@@ -213,13 +204,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
                 {project.challenges && project.challenges.length > 0 && (
                   <div className="space-y-3">
-                    <Body variant="s-700" className="uppercase tracking-wide text-muted-foreground">
+                    <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
                       {t("challenges")}
-                    </Body>
-                    <div className="space-y-2 text-muted-foreground">
+                    </p>
+                    <div className="space-y-2 text-small text-muted-foreground">
                       {(locale === "ko" ? project.challenges : project.challengesEn || project.challenges).map((challenge) => (
                         <div key={challenge} className="flex items-start gap-2 leading-relaxed">
-                          <span className="mt-[6px] inline-block h-2 w-2 rounded-full bg-gray-500 dark:bg-gray-400" />
+                          <span className="mt-[6px] inline-block h-2 w-2 rounded-full bg-ember-accent" />
                           <span>{challenge}</span>
                         </div>
                       ))}
@@ -230,45 +221,42 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 {(project.url || project.github) && (
                   <div className="flex flex-wrap gap-4">
                     {project.url && (
-                      <TypographyLink
+                      <a
                         href={project.url}
                         target="_blank"
                         rel="noreferrer"
-                        variant="m-400"
-                        className="text-ember-accent hover:text-ember-accent-dim"
+                        className="text-small font-medium text-ember-accent transition-colors hover:text-ember-accent-dim"
                       >
                         {t("liveSite")}
-                      </TypographyLink>
+                      </a>
                     )}
                     {project.github && (
-                      <TypographyLink
+                      <a
                         href={project.github}
                         target="_blank"
                         rel="noreferrer"
-                        variant="m-400"
-                        className="text-ember-accent hover:text-ember-accent-dim"
+                        className="text-small font-medium text-ember-accent transition-colors hover:text-ember-accent-dim"
                       >
                         {t("github")}
-                      </TypographyLink>
+                      </a>
                     )}
                   </div>
                 )}
 
                 {project.relatedBlogPosts && project.relatedBlogPosts.length > 0 && (
                   <div className="space-y-2">
-                    <Body variant="s-700" className="uppercase tracking-wide text-muted-foreground">
+                    <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
                       {t("relatedPosts")}
-                    </Body>
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       {project.relatedBlogPosts.map((slug) => (
-                        <TypographyLink
+                        <Link
                           key={slug}
                           href={withLocalePath(locale, `/blog/${slug}`)}
-                          variant="s-400"
-                          className="text-ember-accent hover:text-ember-accent-dim"
+                          className="text-small font-medium text-ember-accent transition-colors hover:text-ember-accent-dim"
                         >
                           {t("readMore")}
-                        </TypographyLink>
+                        </Link>
                       ))}
                     </div>
                   </div>
