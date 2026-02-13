@@ -14,6 +14,7 @@ function getLocaleFromPathname(pathname: string) {
 
 export default auth((req) => {
   const pathname = req.nextUrl.pathname;
+  const hasAuthenticatedUser = Boolean(req.auth?.user?.id);
 
   const locale = getLocaleFromPathname(pathname);
   const onboardingPath = locale === "en" ? "/en/onboarding" : "/onboarding";
@@ -39,8 +40,8 @@ export default auth((req) => {
   }
 
   if (
-    req.auth &&
-    !req.auth.user?.onboardingCompleted &&
+    hasAuthenticatedUser &&
+    req.auth?.user?.onboardingCompleted === false &&
     !isOnboardingRoute &&
     !isLegalRoute &&
     !isNewsletterRoute
