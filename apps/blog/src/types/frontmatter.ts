@@ -105,6 +105,8 @@ export const frontmatterSchema = z.object({
   thumbnail: z.string().optional(), // URL 또는 상대 경로 허용
   draft: z.boolean().default(false),
   seo: seoSchema,
+  layout: z.enum(["shared", "custom"]).default("shared"),
+  shellMode: z.enum(["default", "sidebar-nav"]).optional(),
 });
 
 // 타입 추론
@@ -118,6 +120,12 @@ export interface MDXPost {
   frontmatter: MDXFrontmatter;
   content: string;
   slug: string;
+}
+
+// TSX 포스트 모듈 타입
+export interface TsxPostModule {
+  meta: MDXFrontmatter;
+  default: React.ComponentType;
 }
 
 // Zod 검증 및 파싱 함수

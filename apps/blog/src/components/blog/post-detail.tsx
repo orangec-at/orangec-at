@@ -32,6 +32,7 @@ interface BlogPostDetailProps {
   onHighlight: (text: string) => void;
   relatedPosts?: Post[];
   onPostClick?: (post: Post) => void;
+  children?: React.ReactNode;
 }
 
 export function BlogPostDetail({
@@ -43,6 +44,7 @@ export function BlogPostDetail({
   onHighlight,
   relatedPosts = [],
   onPostClick,
+  children,
 }: BlogPostDetailProps) {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -263,6 +265,8 @@ export function BlogPostDetail({
             {!isLoading && mdxSource && (
               <MDXRemote {...mdxSource} components={mdxComponents} lazy />
             )}
+
+            {!isLoading && !mdxSource && children}
           </motion.article>
 
           {tags.length > 0 && (

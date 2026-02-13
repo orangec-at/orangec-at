@@ -9,13 +9,14 @@ import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import Link from "next/link";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 
 interface BlogDetailClientProps {
   post: Post;
-  mdxSource: MDXRemoteSerializeResult;
+  mdxSource: MDXRemoteSerializeResult | null;
   relatedPosts?: Post[];
   relatedProject?: Project;
+  children?: ReactNode;
 }
 
 export default function BlogDetailClient({
@@ -23,6 +24,7 @@ export default function BlogDetailClient({
   mdxSource,
   relatedPosts = [],
   relatedProject,
+  children,
 }: BlogDetailClientProps) {
   const router = useRouter();
   const locale = useLocale();
@@ -55,7 +57,9 @@ export default function BlogDetailClient({
         onHighlight={handleHighlight}
         relatedPosts={relatedPosts}
         onPostClick={handlePostClick}
-      />
+      >
+        {children}
+      </BlogPostDetail>
       {relatedProject && (
         <section className="pb-16">
           <div className="container-narrow">
