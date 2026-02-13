@@ -28,7 +28,6 @@ export default function ResponsiveHeader({
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const homeHref = withLocalePath(locale, "/");
-  const isHomePage = pathname === homeHref;
   const isMobile = position === "bottom";
   const isDark = theme === "dark";
   const pillClass = "bg-surface/80 backdrop-blur-md border border-border";
@@ -80,8 +79,6 @@ export default function ResponsiveHeader({
     };
   };
 
-  const getBackButtonSize = () => (isMobile ? 20 : 18);
-
   const getNavLinkClass = (isActive: boolean) =>
     `transition-all duration-200 font-medium rounded-full ${
       isActive
@@ -104,29 +101,7 @@ export default function ResponsiveHeader({
               isScrolled ? "max-w-fit gap-3" : "gap-4 md:gap-6"
             }`}
           >
-            <div className="flex items-center gap-3 md:gap-4">
-              {!isHomePage && (
-                <button
-                  type="button"
-                  onClick={() => window.history.back()}
-                  aria-label="Go back"
-                  className="text-muted-foreground hover:text-ember-accent hover:bg-ember-accent-bg p-2 rounded-full transition-all duration-200"
-                >
-                  <svg
-                    width={getBackButtonSize()}
-                    height={getBackButtonSize()}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="md:w-5 md:h-5"
-                    aria-hidden="true"
-                    focusable="false"
-                  >
-                    <polyline points="15,18 9,12 15,6" />
-                  </svg>
-                </button>
-              )}
+            <div className="flex items-center gap-2 md:gap-3">
               <Link
                 href={homeHref}
                 className="transition-all duration-200 hover:scale-110 hover:opacity-80"
@@ -180,33 +155,9 @@ export default function ResponsiveHeader({
           >
             <div
               className={`flex items-center ${
-                isVerySmallScreen ? "gap-2" : "gap-3 md:gap-4"
+                isVerySmallScreen ? "gap-1" : "gap-2 md:gap-3"
               }`}
             >
-              {!isHomePage && (
-                <button
-                  type="button"
-                  onClick={() => window.history.back()}
-                  aria-label="Go back"
-                  className={`text-muted-foreground hover:text-ember-accent hover:bg-ember-accent-bg rounded-full transition-all duration-200 ${
-                    isVerySmallScreen ? "p-1" : "p-2"
-                  }`}
-                >
-                  <svg
-                    width={isVerySmallScreen ? 16 : getBackButtonSize()}
-                    height={isVerySmallScreen ? 16 : getBackButtonSize()}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className={!isMobile ? "md:w-5 md:h-5" : ""}
-                    aria-hidden="true"
-                    focusable="false"
-                  >
-                    <polyline points="15,18 9,12 15,6" />
-                  </svg>
-                </button>
-              )}
               <Link
                 href={homeHref}
                 className="transition-all duration-200 hover:scale-110 hover:opacity-80"
