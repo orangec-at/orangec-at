@@ -5,7 +5,6 @@ export { KineticPosts } from "./kinetic-posts";
 export { KineticMarginalia } from "./kinetic-marginalia";
 export { KineticCatalog } from "./kinetic-catalog";
 export { KineticSearchModal } from "./kinetic-search-modal";
-export { KineticPostDetail } from "./kinetic-post-detail";
 export { KineticProjects } from "./kinetic-projects";
 export { KineticAbout } from "./kinetic-about";
 export { KineticProfile } from "./kinetic-profile";

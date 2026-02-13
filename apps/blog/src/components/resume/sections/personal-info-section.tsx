@@ -35,7 +35,7 @@ export function PersonalInfoSection({ data }: PersonalInfoSectionProps) {
               <TdValue isLast>
                 <div className="flex flex-wrap gap-2">
                   {data.sns && (
-                    <span className="muji-tile muji-tile-pill muji-tile-small">
+                    <span className="inline-flex items-center rounded-full border border-border bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground">
                       {data.sns}
                     </span>
                   )}
@@ -44,7 +44,7 @@ export function PersonalInfoSection({ data }: PersonalInfoSectionProps) {
                       href={data.twitter}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="muji-tile muji-tile-pill muji-tile-small text-blue-700"
+                      className="inline-flex items-center rounded-full border border-border bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     >
                       {t("twitter")}
                     </a>
@@ -54,7 +54,7 @@ export function PersonalInfoSection({ data }: PersonalInfoSectionProps) {
                       href={data.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="muji-tile muji-tile-pill muji-tile-small text-blue-700"
+                      className="inline-flex items-center rounded-full border border-border bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     >
                       {t("linkedin")}
                     </a>
@@ -64,7 +64,7 @@ export function PersonalInfoSection({ data }: PersonalInfoSectionProps) {
                       href={data.blog}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="muji-tile muji-tile-pill muji-tile-small text-blue-700"
+                      className="inline-flex items-center rounded-full border border-border bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     >
                       {t("blog")}
                     </a>

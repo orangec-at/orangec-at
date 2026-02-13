@@ -2,11 +2,22 @@ import { type Config } from "tailwindcss";
 import typography from "@tailwindcss/typography";
 
 const config: Config = {
-  content: ["./src/**/*.{ts,tsx,js,jsx}"],
+  darkMode: "class",
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "../../packages/design/src/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     extend: {
       // Design token system for MUJI-inspired minimal aesthetic
       colors: {
+        ember: {
+          accent: "var(--ember-accent)",
+          "accent-dim": "var(--ember-accent-dim)",
+          "accent-bright": "var(--ember-accent-bright)",
+          "accent-hover": "var(--ember-accent-hover)",
+          "accent-bg": "var(--ember-accent-bg)",
+        },
         // Semantic color aliases that map to your grayscale scheme
         brand: {
           primary: "var(--primary)",
@@ -55,14 +66,21 @@ const config: Config = {
       },
       // Typography scale following your existing patterns
       fontSize: {
+        display: ["clamp(2.5rem, 5vw, 4rem)", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
+        h1: ["clamp(1.75rem, 3vw, 2.5rem)", { lineHeight: "1.2", letterSpacing: "-0.01em" }],
+        h2: ["clamp(1.25rem, 2vw, 1.75rem)", { lineHeight: "1.3" }],
+        h3: ["1.125rem", { lineHeight: "1.4" }],
+        body: ["0.9375rem", { lineHeight: "1.7" }],
+        small: ["0.8125rem", { lineHeight: "1.5" }],
+        micro: ["0.6875rem", { lineHeight: "1.4" }],
         'hero': ['3rem', { lineHeight: '1.1', fontWeight: '700' }],
         'section': ['1.875rem', { lineHeight: '1.2', fontWeight: '600' }],
         'card-title': ['1.25rem', { lineHeight: '1.3', fontWeight: '600' }],
       },
       // MUJI-inspired systematic spacing (8px base unit)
       spacing: {
-        'section': '4rem',      // 64px - Major sections
-        'subsection': '3rem',   // 48px - Subsections
+        'section': '5rem',      // 80px - Major sections
+        'subsection': '4rem',   // 64px - Subsections
         'card': '2rem',         // 32px - Card padding
         'element': '1.5rem',    // 24px - Element spacing
         'tight': '1rem',        // 16px - Tight spacing
@@ -70,9 +88,34 @@ const config: Config = {
         'grid-gap': '1.5rem',   // 24px - Grid gaps
       },
       fontFamily: {
-        serif: ['Playfair Display', 'serif'],
+        sans: ["var(--font-sans)", "Inter", "sans-serif"],
+        serif: ["var(--font-serif)", "Playfair Display", "serif"],
+        mono: ["var(--font-mono)", "JetBrains Mono", "monospace"],
         handwriting: ['Architects Daughter', 'cursive'],
-        sans: ['Inter', 'sans-serif'],
+      },
+      maxWidth: {
+        narrow: "var(--container-narrow)",
+        default: "var(--container-default)",
+        wide: "var(--container-wide)",
+      },
+      borderRadius: {
+        sm: "var(--radius-sm)",
+        DEFAULT: "var(--radius)",
+        lg: "var(--radius-lg)",
+        full: "var(--radius-full)",
+      },
+      boxShadow: {
+        sm: "var(--shadow-sm)",
+        DEFAULT: "var(--shadow-md)",
+        lg: "var(--shadow-lg)",
+      },
+      transitionTimingFunction: {
+        ember: "var(--ease-out)",
+      },
+      transitionDuration: {
+        fast: "var(--duration-fast)",
+        normal: "var(--duration-normal)",
+        slow: "var(--duration-slow)",
       },
       backgroundImage: {
         'paper-texture': "url('/images/paper-texture.png')", // Fallback or utility usage

@@ -65,9 +65,9 @@ export default function LoginClient({ locale }: LoginClientProps) {
 
   if (state === "sent") {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center px-4">
+      <div className="min-h-[80vh] flex items-center justify-center px-4 py-section">
         <div className={`max-w-md w-full rounded-lg p-8 text-center ${
-          isDark ? "bg-stone-900 border-stone-800" : "bg-white border-stone-200"
+          isDark ? "bg-card border-border" : "bg-card border-border"
         } border`}>
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
             <svg className="w-8 h-8 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,17 +75,17 @@ export default function LoginClient({ locale }: LoginClientProps) {
             </svg>
           </div>
           <h1 className={`font-serif text-2xl font-bold mb-3 ${
-            isDark ? "text-stone-100" : "text-stone-900"
+            isDark ? "text-foreground" : "text-foreground"
           }`}>
             {isKo ? "이메일을 확인하세요" : "Check your email"}
           </h1>
-          <p className={`text-sm mb-6 ${isDark ? "text-stone-400" : "text-stone-600"}`}>
+          <p className={`text-sm mb-6 ${isDark ? "text-muted-foreground" : "text-muted-foreground"}`}>
             {isKo 
               ? `${email}로 로그인 링크를 보냈습니다.`
               : `We sent a login link to ${email}.`
             }
           </p>
-          <p className={`text-xs ${isDark ? "text-stone-500" : "text-stone-500"}`}>
+          <p className={`text-xs ${isDark ? "text-muted-foreground/80" : "text-muted-foreground/80"}`}>
             {isKo 
               ? "이메일이 보이지 않으면 스팸 폴더를 확인하세요."
               : "If you don't see it, check your spam folder."
@@ -93,7 +93,7 @@ export default function LoginClient({ locale }: LoginClientProps) {
           </p>
           <button
             onClick={handleBack}
-            className={`mt-8 text-sm underline ${isDark ? "text-stone-400 hover:text-stone-300" : "text-stone-600 hover:text-stone-800"}`}
+            className={`mt-8 text-sm underline ${isDark ? "text-muted-foreground hover:text-foreground" : "text-muted-foreground hover:text-foreground"}`}
           >
             {isKo ? "홈으로 돌아가기" : "Back to home"}
           </button>
@@ -103,16 +103,16 @@ export default function LoginClient({ locale }: LoginClientProps) {
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-section">
       <div className={`max-w-md w-full rounded-lg p-8 ${
-        isDark ? "bg-stone-900 border-stone-800" : "bg-white border-stone-200"
+        isDark ? "bg-card border-border" : "bg-card border-border"
       } border`}>
         <h1 className={`font-serif text-2xl font-bold mb-2 ${
-          isDark ? "text-stone-100" : "text-stone-900"
+          isDark ? "text-foreground" : "text-foreground"
         }`}>
           {isKo ? "심야 서고에 오신 것을 환영합니다" : "Welcome to Midnight Archives"}
         </h1>
-        <p className={`text-sm mb-8 ${isDark ? "text-stone-400" : "text-stone-600"}`}>
+        <p className={`text-sm mb-8 ${isDark ? "text-muted-foreground" : "text-muted-foreground"}`}>
           {isKo 
             ? "이메일을 입력하면 로그인 링크를 보내드립니다."
             : "Enter your email and we'll send you a login link."
@@ -123,7 +123,7 @@ export default function LoginClient({ locale }: LoginClientProps) {
           <div>
             <label 
               htmlFor="email" 
-              className={`block text-sm font-medium mb-2 ${isDark ? "text-stone-300" : "text-stone-700"}`}
+              className={`block text-sm font-medium mb-2 ${isDark ? "text-foreground/85" : "text-foreground/85"}`}
             >
               {isKo ? "이메일" : "Email"}
             </label>
@@ -136,14 +136,14 @@ export default function LoginClient({ locale }: LoginClientProps) {
               disabled={state === "sending"}
               className={`w-full px-4 py-3 rounded-lg border text-sm transition-colors ${
                 isDark 
-                  ? "bg-stone-800 border-stone-700 text-stone-100 placeholder:text-stone-500 focus:border-stone-500" 
-                  : "bg-white border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-500"
-              } focus:outline-none focus:ring-1 focus:ring-stone-500 disabled:opacity-50`}
+                  ? "bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-ember-accent" 
+                  : "bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-ember-accent"
+              } focus:outline-none focus:ring-1 focus:ring-ember-accent/40 disabled:opacity-50`}
             />
           </div>
 
           {state === "error" && (
-            <p className="text-sm text-red-500 dark:text-red-400">
+            <p className="text-sm text-destructive">
               {errorMessage}
             </p>
           )}
@@ -153,8 +153,8 @@ export default function LoginClient({ locale }: LoginClientProps) {
             disabled={state === "sending"}
             className={`w-full py-3 rounded-lg text-sm font-medium transition-colors ${
               isDark
-                ? "bg-stone-100 text-stone-900 hover:bg-stone-200 disabled:bg-stone-700 disabled:text-stone-500"
-                : "bg-stone-900 text-white hover:bg-stone-700 disabled:bg-stone-300 disabled:text-stone-500"
+                ? "bg-foreground text-background hover:bg-ember-accent hover:text-primary-foreground disabled:opacity-50 disabled:pointer-events-none"
+                : "bg-foreground text-background hover:bg-ember-accent hover:text-primary-foreground disabled:opacity-50 disabled:pointer-events-none"
             }`}
           >
             {state === "sending" 
@@ -164,10 +164,10 @@ export default function LoginClient({ locale }: LoginClientProps) {
           </button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-stone-200 dark:border-stone-800">
+        <div className="mt-6 pt-6 border-t border-border">
           <button
             onClick={handleBack}
-            className={`w-full py-2 text-sm ${isDark ? "text-stone-400 hover:text-stone-300" : "text-stone-600 hover:text-stone-800"}`}
+            className={`w-full py-2 text-sm ${isDark ? "text-muted-foreground hover:text-ember-accent" : "text-muted-foreground hover:text-ember-accent"}`}
           >
             {isKo ? "← 홈으로 돌아가기" : "← Back to home"}
           </button>

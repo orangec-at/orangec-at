@@ -1,6 +1,6 @@
+import { BlogCatalog } from "@/components/blog/blog-catalog";
 import { getBlogPostsByLocale } from "@/lib/blog-utils.server";
 import { buildKnowledgeShelfDataFromBlogMeta } from "@/lib/knowledge-shelf-utils.server";
-import { BlogIndexClient } from "./[slug]/client";
 
 export async function generateMetadata({
   params,
@@ -29,8 +29,8 @@ export default async function BlogPage({
   const blogPosts = await getBlogPostsByLocale(resolvedLocale);
   const { posts } = buildKnowledgeShelfDataFromBlogMeta(
     blogPosts,
-    resolvedLocale
+    resolvedLocale,
   );
 
-  return <BlogIndexClient initialPosts={posts} />;
+  return <BlogCatalog posts={posts} />;
 }

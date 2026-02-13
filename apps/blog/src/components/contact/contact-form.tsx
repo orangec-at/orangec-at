@@ -5,24 +5,26 @@ export default function ContactForm() {
   const t = useTranslations("contact.form");
 
   return (
-    <section className="max-w-md mx-auto">
-      <form>
+    <section className="w-full">
+      <form className="space-y-3 rounded-2xl border border-border bg-card p-5">
         <input
           type="text"
           placeholder={t("name")}
-          className="w-full mb-2 p-2 border rounded bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-small text-foreground placeholder:text-muted-foreground focus:border-ember-accent focus:outline-none"
         />
         <input
           type="email"
           placeholder={t("email")}
-          className="w-full mb-2 p-2 border rounded bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-small text-foreground placeholder:text-muted-foreground focus:border-ember-accent focus:outline-none"
         />
         <textarea
           placeholder={t("message")}
-          className="w-full mb-2 p-2 border rounded bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-small text-foreground placeholder:text-muted-foreground focus:border-ember-accent focus:outline-none"
           rows={5}
         />
-        <Button type="submit">{t("send")}</Button>
+        <Button type="submit" className="rounded-full">
+          {t("send")}
+        </Button>
       </form>
     </section>
   );

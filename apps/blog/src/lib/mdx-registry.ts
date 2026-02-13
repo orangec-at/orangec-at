@@ -50,8 +50,8 @@ import {
 
 // 디자인 시스템 컴포넌트
 import {
-  KRDSHeading,
-  KRDSBody,
+  KRDSHeading as EmberHeading,
+  KRDSBody as EmberBody,
   Title,
   Body,
   Input,
@@ -563,28 +563,28 @@ export const MDX_COMPONENT_REGISTRY: Record<string, MDXComponentDefinition> = {
   // ----------------------------------------
   // 디자인 시스템 - Typography
   // ----------------------------------------
-  KRDSHeading: {
-    component: KRDSHeading,
+  EmberHeading: {
+    component: EmberHeading,
     meta: {
-      id: "ds-krds-heading",
-      name: "KRDS Heading",
-      nameKo: "KRDS 제목",
+      id: "ds-ember-heading",
+      name: "Ember Heading",
+      nameKo: "Ember 제목",
       icon: "Heading1",
       category: "ui",
-      template: `<KRDSHeading variant="large">제목 텍스트</KRDSHeading>`,
+      template: `<EmberHeading variant="large">제목 텍스트</EmberHeading>`,
       description: "variant: xlarge, large, medium, small, xsmall, xxsmall",
     },
   },
 
-  KRDSBody: {
-    component: KRDSBody,
+  EmberBody: {
+    component: EmberBody,
     meta: {
-      id: "ds-krds-body",
-      name: "KRDS Body",
-      nameKo: "KRDS 본문",
+      id: "ds-ember-body",
+      name: "Ember Body",
+      nameKo: "Ember 본문",
       icon: "Type",
       category: "ui",
-      template: `<KRDSBody variant="medium">본문 텍스트</KRDSBody>`,
+      template: `<EmberBody variant="medium">본문 텍스트</EmberBody>`,
       description: "variant: large, medium, small, xsmall",
     },
   },
@@ -1017,8 +1017,8 @@ export function getComponentBlocks(): ComponentMeta[] {
     "Avatar",
     "SplitText",
     // 디자인 시스템 - Typography
-    "KRDSHeading",
-    "KRDSBody",
+    "EmberHeading",
+    "EmberBody",
     "Title",
     "Body",
     // 디자인 시스템 - Form

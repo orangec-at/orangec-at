@@ -4,8 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Project } from "@/data/projects";
 import { Card } from "@orangec-at/design";
 import { Badge } from "@orangec-at/design";
-import { Title, Body, TypographyLink } from "@orangec-at/design/blog";
 import Image from "next/image";
+import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { withLocalePath } from "@/lib/locale-path";
 import { MdClose } from "react-icons/md";
@@ -46,7 +46,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         tabIndex={0}
         onClick={() => setOpen(true)}
         onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setOpen(true)}
-        className="w-full mx-auto muji-tile muji-tile-rounded p-0 overflow-hidden border-none shadow-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/60"
+        className="mx-auto w-full cursor-pointer overflow-hidden rounded-2xl border border-border bg-card p-0 shadow-none focus:outline-none focus:ring-2 focus:ring-ember-accent/60"
       >
         <div className="flex flex-col h-full">
           {project.image && (
@@ -59,24 +59,20 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             />
           )}
           <div className="flex-1 p-4 space-y-3">
-            <Title variant="l-700" className="text-gray-900 dark:text-white">
-              {title}
-            </Title>
-            <Body variant="m-400" className="text-gray-700 dark:text-gray-200 leading-relaxed">
-              {description}
-            </Body>
+            <h3 className="text-h3 text-foreground">{title}</h3>
+            <p className="text-body leading-relaxed text-muted-foreground">{description}</p>
             {project.techStack.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {project.techStack.slice(0, 4).map((tech) => (
                   <Badge
                     key={tech}
-                    className="muji-tile muji-tile-pill muji-tile-small bg-white/90 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200"
+                    className="rounded-full border border-border bg-accent/40 px-3 py-1 text-micro font-medium text-foreground"
                   >
                     {tech}
                   </Badge>
                 ))}
                 {project.techStack.length > 4 && (
-                  <Badge className="muji-tile muji-tile-pill muji-tile-small bg-white/90 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200">
+                  <Badge className="rounded-full border border-border bg-accent/40 px-3 py-1 text-micro font-medium text-foreground">
                     +{project.techStack.length - 4}
                   </Badge>
                 )}
@@ -84,40 +80,41 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             )}
           </div>
           <div className="px-4 pb-4 flex justify-end">
-            <TypographyLink
+            <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
                 setOpen(true);
               }}
-              variant="m-400"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+              className="text-small font-medium text-muted-foreground transition-colors hover:text-ember-accent"
             >
               {t("viewMore")}
-            </TypographyLink>
+            </a>
           </div>
         </div>
       </Card>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-          <div
+          <button
+            type="button"
+            aria-label="Close modal backdrop"
             className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
             onClick={() => setOpen(false)}
           />
-          <Card className="relative z-10 w-full max-w-4xl max-h-[90vh] muji-tile muji-tile-rounded overflow-hidden bg-white dark:bg-gray-950 border border-gray-200/70 dark:border-gray-800 shadow-2xl">
+          <Card className="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
             <button
               type="button"
               aria-label="Close"
               onClick={() => setOpen(false)}
-              className="absolute right-3 top-3 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-100"
+              className="absolute right-3 top-3 text-muted-foreground transition-colors hover:text-foreground"
             >
               <MdClose size={22} />
             </button>
 
             <div className="flex flex-col gap-4 p-6 overflow-y-auto">
               <div className="flex justify-center">
-                <div className="relative w-full max-w-2xl aspect-[4/3] bg-gray-100 dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200/70 dark:border-gray-800">
+                <div className="relative aspect-[4/3] w-full max-w-2xl overflow-hidden rounded-xl border border-border bg-surface">
                   {images.length > 0 ? (
                     <>
                       <Image
@@ -135,7 +132,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                         <>
                           <button
                             type="button"
-                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/85 dark:bg-gray-900/85 rounded-full p-2 shadow hover:bg-white dark:hover:bg-gray-800"
+                            className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-border bg-background/85 p-2 shadow transition-colors hover:bg-background"
                             onClick={() => setSlide((prev) => (prev - 1 + images.length) % images.length)}
                             aria-label="Previous"
                           >
@@ -143,7 +140,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                           </button>
                           <button
                             type="button"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/85 dark:bg-gray-900/85 rounded-full p-2 shadow hover:bg-white dark:hover:bg-gray-800"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-border bg-background/85 p-2 shadow transition-colors hover:bg-background"
                             onClick={() => setSlide((prev) => (prev + 1) % images.length)}
                             aria-label="Next"
                           >
@@ -153,7 +150,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                             {images.map((_, idx) => (
                               <span
                                 key={`${project.id}-dot-${idx}`}
-                                className={`h-2 w-2 rounded-full ${idx === slide ? "bg-amber-600" : "bg-white/70 dark:bg-gray-700"}`}
+                                 className={`h-2 w-2 rounded-full ${idx === slide ? "bg-ember-accent" : "bg-muted"}`}
                               />
                             ))}
                           </div>
@@ -161,7 +158,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                       )}
                     </>
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
                       {t("viewDetails")}
                     </div>
                   )}
@@ -170,27 +167,20 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
               <div className="space-y-5">
                 <div className="space-y-2">
-                  <Title variant="xl-700" className="text-gray-900 dark:text-white">
-                    {title}
-                  </Title>
-                  <Body variant="m-400" className="text-gray-700 dark:text-gray-200 leading-relaxed">
-                    {description}
-                  </Body>
+                  <h3 className="text-h3 text-foreground">{title}</h3>
+                  <p className="text-body leading-relaxed text-muted-foreground">{description}</p>
                 </div>
 
                 {project.techStack.length > 0 && (
                   <div className="space-y-2">
-                    <Body variant="s-700" className="text-gray-600 dark:text-gray-300 uppercase tracking-wide">
+                    <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
                       {t("techStack")}
-                    </Body>
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       {project.techStack.map((tech) => (
-                        <Badge
-                          key={tech}
-                          className="muji-tile muji-tile-pill muji-tile-small bg-white/90 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200"
-                        >
-                          {tech}
-                        </Badge>
+                          <Badge key={tech} className="rounded-full border border-border bg-accent/40 px-3 py-1 text-micro font-medium text-foreground">
+                           {tech}
+                         </Badge>
                       ))}
                     </div>
                   </div>
@@ -198,13 +188,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
                 {project.keyFeatures && project.keyFeatures.length > 0 && (
                   <div className="space-y-3">
-                    <Body variant="s-700" className="text-gray-600 dark:text-gray-300 uppercase tracking-wide">
+                    <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
                       {t("keyFeatures")}
-                    </Body>
-                    <div className="space-y-2 text-gray-700 dark:text-gray-200">
+                    </p>
+                    <div className="space-y-2 text-small text-muted-foreground">
                       {(locale === "ko" ? project.keyFeatures : project.keyFeaturesEn || project.keyFeatures).map((feature) => (
                         <div key={feature} className="flex items-start gap-2 leading-relaxed">
-                          <span className="mt-[6px] inline-block h-2 w-2 rounded-full bg-gray-500 dark:bg-gray-400" />
+                          <span className="mt-[6px] inline-block h-2 w-2 rounded-full bg-ember-accent" />
                           <span>{feature}</span>
                         </div>
                       ))}
@@ -214,13 +204,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
                 {project.challenges && project.challenges.length > 0 && (
                   <div className="space-y-3">
-                    <Body variant="s-700" className="text-gray-600 dark:text-gray-300 uppercase tracking-wide">
+                    <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
                       {t("challenges")}
-                    </Body>
-                    <div className="space-y-2 text-gray-700 dark:text-gray-200">
+                    </p>
+                    <div className="space-y-2 text-small text-muted-foreground">
                       {(locale === "ko" ? project.challenges : project.challengesEn || project.challenges).map((challenge) => (
                         <div key={challenge} className="flex items-start gap-2 leading-relaxed">
-                          <span className="mt-[6px] inline-block h-2 w-2 rounded-full bg-gray-500 dark:bg-gray-400" />
+                          <span className="mt-[6px] inline-block h-2 w-2 rounded-full bg-ember-accent" />
                           <span>{challenge}</span>
                         </div>
                       ))}
@@ -231,45 +221,42 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 {(project.url || project.github) && (
                   <div className="flex flex-wrap gap-4">
                     {project.url && (
-                      <TypographyLink
+                      <a
                         href={project.url}
                         target="_blank"
                         rel="noreferrer"
-                        variant="m-400"
-                        className="text-amber-700 hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-200"
+                        className="text-small font-medium text-ember-accent transition-colors hover:text-ember-accent-dim"
                       >
                         {t("liveSite")}
-                      </TypographyLink>
+                      </a>
                     )}
                     {project.github && (
-                      <TypographyLink
+                      <a
                         href={project.github}
                         target="_blank"
                         rel="noreferrer"
-                        variant="m-400"
-                        className="text-amber-700 hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-200"
+                        className="text-small font-medium text-ember-accent transition-colors hover:text-ember-accent-dim"
                       >
                         {t("github")}
-                      </TypographyLink>
+                      </a>
                     )}
                   </div>
                 )}
 
                 {project.relatedBlogPosts && project.relatedBlogPosts.length > 0 && (
                   <div className="space-y-2">
-                    <Body variant="s-700" className="text-gray-600 dark:text-gray-300 uppercase tracking-wide">
+                    <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
                       {t("relatedPosts")}
-                    </Body>
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       {project.relatedBlogPosts.map((slug) => (
-                        <TypographyLink
+                        <Link
                           key={slug}
                           href={withLocalePath(locale, `/blog/${slug}`)}
-                          variant="s-400"
-                          className="text-amber-700 hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-200"
+                          className="text-small font-medium text-ember-accent transition-colors hover:text-ember-accent-dim"
                         >
                           {t("readMore")}
-                        </TypographyLink>
+                        </Link>
                       ))}
                     </div>
                   </div>

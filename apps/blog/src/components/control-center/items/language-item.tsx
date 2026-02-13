@@ -30,7 +30,7 @@ export function LanguageItemComponent({
   };
 
   return (
-    <div className="col-span-4 muji-control-card rounded-xl p-4">
+    <div className="col-span-4 rounded-xl border border-border bg-card p-4 shadow-sm">
       <div className="space-y-3">
         {/* Title Row */}
         <div className="flex items-center gap-3">
@@ -62,7 +62,7 @@ export function LanguageItemComponent({
                     onAction?.("language_changed", { locale: language.code });
                   }
                 }}
-                className="muji-radio"
+                className="inline-flex items-center gap-2 rounded-full border border-border px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-accent/70 before:h-2.5 before:w-2.5 before:rounded-full before:border before:border-border before:content-[''] data-[active=true]:border-foreground/30 data-[active=true]:bg-accent data-[active=true]:before:border-foreground/30 data-[active=true]:before:bg-foreground/70"
                 data-active={isActive}
                 aria-pressed={isActive}
               >

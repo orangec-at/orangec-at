@@ -10,18 +10,18 @@ export default async function TermsPage({
   const { locale } = await params;
 
   return (
-    <div className="min-h-screen paper-texture bg-[#fdfcf5] dark:bg-[#1a1a1a]">
-      <div className="max-w-3xl mx-auto px-4 py-16">
-        <h1 className="font-serif text-3xl font-bold text-stone-900 dark:text-stone-100">
+    <div className="container-narrow py-section">
+      <div className="space-y-8">
+        <h1 className="text-h2 font-serif text-foreground">
           {locale === "ko" ? "이용약관" : "Terms"}
         </h1>
-        <p className="mt-4 text-sm text-stone-700 dark:text-stone-300">
+        <p className="text-body text-muted-foreground">
           {locale === "ko"
             ? "이 페이지는 이용약관을 안내합니다."
             : "This page describes the terms of use."}
         </p>
 
-        <div className="mt-8 text-sm text-stone-600 dark:text-stone-400 space-y-4">
+        <div className="space-y-4 text-small text-muted-foreground">
           <p>
             {locale === "ko"
               ? "현재는 초기 구축 단계이며, 정식 약관 문서는 추후 업데이트됩니다."
@@ -34,16 +34,16 @@ export default async function TermsPage({
           </p>
         </div>
 
-        <div className="mt-10 flex gap-3">
+        <div className="flex gap-3">
           <Link
             href={withLocalePath(locale, "/")}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 transition-colors"
+            className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-small font-medium text-muted-foreground transition-colors hover:border-ember-accent hover:text-ember-accent"
           >
             {locale === "ko" ? "홈" : "Home"}
           </Link>
           <Link
             href={withLocalePath(locale, "/#contact")}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-stone-900 text-white hover:bg-stone-700 dark:bg-red-900 dark:hover:bg-red-800 transition-colors"
+            className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-small font-medium text-background transition-colors hover:bg-ember-accent hover:text-primary-foreground"
           >
             {locale === "ko" ? "문의" : "Contact"}
           </Link>

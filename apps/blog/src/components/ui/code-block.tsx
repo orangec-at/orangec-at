@@ -36,23 +36,23 @@ export function CodeBlock({ children, className = "", title }: CodeBlockProps) {
   };
 
   return (
-    <div className="relative group my-4 sm:my-6 rounded-lg overflow-hidden border border-[#1c1917]/10 dark:border-white/10 max-w-full">
+    <div className="group relative my-4 max-w-full overflow-hidden rounded-lg border border-border sm:my-6">
       {/* 코드 블록 헤더 */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#ddd9d1] dark:bg-zinc-800 border-b border-[#1c1917]/10 dark:border-white/10">
+      <div className="flex items-center justify-between border-b border-border bg-surface-elevated px-4 py-3">
         <div className="flex items-center gap-2">
           {title && (
-            <span className="text-sm font-medium text-[#1c1917]/70 dark:text-white/70 ml-3">
+            <span className="ml-3 text-sm font-medium text-foreground/80">
               {title}
             </span>
           )}
-          <span className="text-xs text-[#1c1917]/50 dark:text-white/50 ml-auto mr-2">
+          <span className="ml-auto mr-2 text-xs text-muted-foreground">
             {language}
           </span>
         </div>
 
         <button
           onClick={copyToClipboard}
-          className="flex items-center gap-2 px-3 py-1.5 text-xs rounded-md bg-[#ccc8c0] dark:bg-zinc-700 hover:bg-[#c0bcb4] dark:hover:bg-zinc-600 transition-colors"
+          className="flex items-center gap-2 rounded-md border border-border bg-secondary px-3 py-1.5 text-xs text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
           title="Copy code"
         >
           {copied ? (
@@ -64,8 +64,8 @@ export function CodeBlock({ children, className = "", title }: CodeBlockProps) {
             </>
           ) : (
             <>
-              <Copy className="w-3 h-3 text-[#1c1917]/50 dark:text-white/50" />
-              <span className="text-[#1c1917]/70 dark:text-white/70">Copy</span>
+              <Copy className="h-3 w-3 text-muted-foreground" />
+              <span className="text-foreground/80">Copy</span>
             </>
           )}
         </button>
@@ -79,7 +79,7 @@ export function CodeBlock({ children, className = "", title }: CodeBlockProps) {
           customStyle={{
             margin: 0,
             padding: "1rem",
-            background: theme === "dark" ? "#24273A" : "#F7F7F8",
+            background: theme === "dark" ? "var(--surface-elevated)" : "var(--surface)",
             fontSize: "13px",
             lineHeight: "1.4",
             maxWidth: "100%",
@@ -91,10 +91,8 @@ export function CodeBlock({ children, className = "", title }: CodeBlockProps) {
           lineNumberStyle={{
             minWidth: "2.5em",
             paddingRight: "0.75em",
-            color: theme === "dark" ? "#6b7280" : "#9ca3af",
-            borderRight: `1px solid ${
-              theme === "dark" ? "#374151" : "#e5e7eb"
-            }`,
+            color: "var(--muted-foreground)",
+            borderRight: "1px solid var(--border)",
             marginRight: "0.75em",
             fontSize: "12px",
           }}
@@ -116,7 +114,7 @@ export function InlineCode({
 }: React.HTMLAttributes<HTMLElement>) {
   return (
     <code
-      className="relative rounded bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 text-sm font-mono text-gray-900 dark:text-gray-100"
+      className="relative rounded bg-secondary px-1.5 py-0.5 text-sm font-mono text-secondary-foreground"
       {...props}
     >
       {children}

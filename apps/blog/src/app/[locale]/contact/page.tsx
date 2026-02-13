@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { Mail, Linkedin, Github, Calendar, ArrowUpRight } from "lucide-react";
-import { colors, typography, spacing, grid } from "@/lib/design-tokens";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -90,7 +89,6 @@ export default async function ContactPage({ params }: Props) {
       value: t.email.value,
       action: t.email.action,
       href: "mailto:radio941016@gmail.com",
-      color: "hover:text-blue-500 dark:hover:text-blue-400",
     },
     {
       icon: Linkedin,
@@ -98,7 +96,6 @@ export default async function ContactPage({ params }: Props) {
       value: t.linkedin.value,
       action: t.linkedin.action,
       href: "https://linkedin.com/in/orangec-at",
-      color: "hover:text-blue-600 dark:hover:text-blue-500",
     },
     {
       icon: Github,
@@ -106,89 +103,79 @@ export default async function ContactPage({ params }: Props) {
       value: t.github.value,
       action: t.github.action,
       href: "https://github.com/orangec-at",
-      color: "hover:text-purple-600 dark:hover:text-purple-400",
     },
     {
       icon: Calendar,
       label: t.schedule.label,
       value: t.schedule.value,
       action: t.schedule.action,
-      href: "mailto:radio941016@gmail.com?subject=Schedule%20a%20Call", 
-      color: "hover:text-green-600 dark:hover:text-green-400",
+      href: "mailto:radio941016@gmail.com?subject=Schedule%20a%20Call",
     },
   ];
 
   return (
-    <div className={`min-h-screen ${colors.background.primary}`}>
-      <div className={`mx-auto ${grid.container.narrow} ${grid.padding.page}`}>
-        
-        <div className={`mb-16 md:mb-24 ${spacing.element}`}>
-          <div className="flex items-center gap-2 mb-8">
+    <div className="container-narrow pb-section space-y-16 md:space-y-20">
+      <section className="space-y-10">
+        <div className="space-y-6">
+          <div className="mb-8 border-b border-border pb-8">
+            <p className="text-xs uppercase tracking-[0.26em] text-ember-accent">Contact</p>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+              {t.heading}
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm text-muted-foreground sm:text-base">
+              {t.description}
+            </p>
+          </div>
+
+          <p className="text-body text-muted-foreground">{t.subheading}</p>
+
+          <div className="flex items-center gap-2">
             <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-ember-accent/35"></span>
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-ember-accent"></span>
             </span>
-            <span className={`text-sm font-medium tracking-wide uppercase ${colors.text.muted}`}>
+            <span className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
               {t.availability}
             </span>
           </div>
-          
-          <h1 className={`${typography.hero} text-5xl md:text-7xl tracking-tight leading-[1.1]`}>
-            {t.heading}
-            <span className="block text-wood-500 dark:text-wood-400 opacity-80 mt-2 text-3xl md:text-5xl font-normal">
-              {t.subheading}
-            </span>
-          </h1>
-          
-          <p className={`${typography.body} text-xl md:text-2xl max-w-2xl leading-relaxed text-gray-500 dark:text-gray-400 mt-8`}>
-            {t.description}
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
           {contactMethods.map((method) => (
             <a
               key={method.label}
               href={method.href}
               target="_blank"
               rel="noopener noreferrer"
-              className={`group relative p-8 rounded-2xl border ${colors.border.light} 
-                bg-gray-50/50 dark:bg-gray-800/50 
-                hover:bg-white dark:hover:bg-gray-800 
-                hover:border-gray-300 dark:hover:border-gray-600 
-                transition-all duration-300 ease-out
-                flex flex-col justify-between h-48 md:h-56 overflow-hidden`}
+              className="group relative flex h-48 flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card p-8 transition-[background-color,border-color] duration-300 ease-out hover:border-ember-accent/40 hover:bg-accent/30 md:h-56"
             >
               <div className="flex justify-between items-start">
-                <div className={`p-3 rounded-xl bg-white dark:bg-gray-900 border ${colors.border.light} 
-                  group-hover:scale-110 transition-transform duration-300 shadow-sm`}>
-                  <method.icon className="w-6 h-6 text-gray-900 dark:text-white" strokeWidth={1.5} />
+                <div className="rounded-xl border border-border bg-background p-3 shadow-sm transition-transform duration-300 group-hover:scale-110">
+                  <method.icon className="h-6 w-6 text-foreground" strokeWidth={1.5} />
                 </div>
-                <ArrowUpRight className={`w-5 h-5 text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white 
-                  group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300`} />
+                <ArrowUpRight className="h-5 w-5 text-muted-foreground transition-[color,transform] duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-ember-accent" />
               </div>
 
               <div className="space-y-1 z-10">
-                <h3 className={`font-semibold text-lg ${colors.text.primary}`}>
+                <h3 className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
                   {method.label}
                 </h3>
-                <p className={`${colors.text.muted} text-sm font-medium group-hover:text-gray-900 dark:group-hover:text-white transition-colors`}>
+                <p className="text-small text-muted-foreground transition-colors group-hover:text-foreground">
                   {method.action}
                 </p>
               </div>
 
-              <div className={`absolute -bottom-10 -right-10 w-32 h-32 bg-gradient-to-br from-gray-200/50 to-transparent dark:from-gray-700/30 rounded-full blur-2xl 
-                group-hover:scale-150 transition-transform duration-500 opacity-0 group-hover:opacity-100 pointer-events-none`} />
+              <div className="pointer-events-none absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-gradient-to-br from-ember-accent/20 to-transparent opacity-0 blur-2xl transition-transform duration-500 group-hover:scale-150 group-hover:opacity-100" />
             </a>
           ))}
         </div>
 
-        <div className="mt-24 pt-8 border-t border-dashed border-gray-200 dark:border-gray-800">
-          <p className={`${typography.caption} text-center`}>
+        <div className="mt-20 border-t border-dashed border-border pt-8">
+          <p className="text-micro text-center text-muted-foreground">
             &copy; {new Date().getFullYear()} Jaeil Lee. All rights reserved.
           </p>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

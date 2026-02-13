@@ -11,6 +11,73 @@
  * - Generous whitespace and clear visual hierarchy
  */
 
+/**
+ * Ember Design System Tokens (additive migration layer)
+ *
+ * CSS variables in globals.css are the source of truth.
+ * These mappings are used by components during migration.
+ */
+export const ember = {
+  color: {
+    accent: "text-ember-accent",
+    accentDim: "text-ember-accent-dim",
+    accentBright: "text-ember-accent-bright",
+    muted: "text-muted-foreground",
+    foreground: "text-foreground",
+    background: "bg-background",
+    surface: "bg-surface",
+    surfaceElevated: "bg-surface-elevated",
+  },
+
+  container: {
+    narrow: "container-narrow",
+    default: "container-default",
+    wide: "container-wide",
+  },
+
+  spacing: {
+    section: "py-section",
+    subsection: "py-subsection",
+    card: "p-card",
+    element: "gap-element",
+    tight: "gap-tight",
+    compact: "gap-compact",
+  },
+
+  text: {
+    display: "font-serif text-display font-bold tracking-tight",
+    h1: "font-serif text-h1 font-bold tracking-tight",
+    h2: "text-h2 font-semibold",
+    h3: "text-h3 font-medium",
+    body: "text-body",
+    small: "text-small text-muted-foreground",
+    micro: "text-micro text-muted-foreground",
+    mono: "font-mono text-small",
+  },
+
+  card: {
+    base: "rounded-lg border border-border bg-card p-card transition-colors duration-normal",
+    interactive:
+      "rounded-lg border border-border bg-card p-card transition-all duration-normal hover:border-ember-accent/30 hover:shadow-sm",
+    elevated: "rounded-lg border border-border bg-card p-card shadow-sm",
+  },
+
+  badge: {
+    default:
+      "inline-flex items-center rounded-full px-2.5 py-0.5 text-micro font-medium border border-border bg-secondary text-secondary-foreground",
+    accent:
+      "inline-flex items-center rounded-full px-2.5 py-0.5 text-micro font-medium bg-ember-accent text-white",
+    outline:
+      "inline-flex items-center rounded-full px-2.5 py-0.5 text-micro font-medium border border-ember-accent/30 text-ember-accent",
+  },
+
+  link: {
+    default: "ember-link",
+    nav: "text-muted-foreground hover:text-foreground transition-colors duration-normal",
+    accent: "text-ember-accent hover:text-ember-accent-bright transition-colors duration-normal",
+  },
+} as const;
+
 // Color System - MUJI Minimal Aesthetic
 export const colors = {
   // Primary text colors

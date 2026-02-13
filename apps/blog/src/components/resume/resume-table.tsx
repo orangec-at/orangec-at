@@ -10,7 +10,7 @@ interface ResumeTableProps {
 export function ResumeTable({ children, className }: ResumeTableProps) {
   return (
     <div
-      className={cn("border border-gray-300 dark:border-gray-700", className)}
+      className={cn("border border-border", className)}
     >
       <table className="w-full text-sm">{children}</table>
     </div>
@@ -28,7 +28,7 @@ export function Tr({ children, isLast = false, className }: TrProps) {
   return (
     <tr
       className={cn(
-        !isLast && "border-b border-gray-300 dark:border-gray-700",
+        !isLast && "border-b border-border",
         className
       )}
     >
@@ -48,8 +48,8 @@ export function Th({ children, isLast = false, className, ...props }: ThProps) {
   return (
     <th
       className={cn(
-        "p-3 text-center font-medium text-gray-600 dark:text-gray-400",
-        !isLast && "border-r border-gray-300 dark:border-gray-700",
+        "p-3 text-center font-medium text-muted-foreground",
+        !isLast && "border-r border-border",
         className
       )}
       {...props}
@@ -75,8 +75,8 @@ export function TdLabel({
   return (
     <td
       className={cn(
-        "p-3 text-center text-gray-600 dark:text-gray-400",
-        !isLast && "border-r border-gray-300 dark:border-gray-700",
+        "p-3 text-center text-muted-foreground",
+        !isLast && "border-r border-border",
         className
       )}
       {...props}
@@ -102,8 +102,8 @@ export function TdValue({
   return (
     <td
       className={cn(
-        "p-3 text-center text-gray-900 dark:text-gray-100",
-        !isLast && "border-r border-gray-300 dark:border-gray-700",
+        "p-3 text-center text-foreground",
+        !isLast && "border-r border-border",
         className
       )}
       {...props}
@@ -123,7 +123,7 @@ export function TheadRow({ children, className }: TheadRowProps) {
   return (
     <tr
       className={cn(
-        "border-b border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800",
+        "border-b border-border bg-surface",
         className
       )}
     >

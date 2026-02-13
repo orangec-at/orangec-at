@@ -48,11 +48,11 @@ function TechStack({ stack }: { stack?: string[] }) {
   if (!stack?.length) return null;
 
   return (
-    <div className="flex flex-wrap gap-2 text-xs text-gray-600 dark:text-gray-300">
+    <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
       {stack.map((item) => (
         <span
           key={item}
-          className="rounded-full bg-gray-100 px-2 py-1 dark:bg-gray-800"
+          className="rounded-full bg-surface px-2 py-1"
         >
           {item}
         </span>
@@ -76,10 +76,10 @@ const experienceColumns: ContentTableColumn<ResumeExperienceItem>[] = [
     align: "left",
     render: (_, row) => (
       <div className="space-y-1">
-        <p className="font-semibold text-gray-900 dark:text-gray-100">
+        <p className="font-semibold text-foreground">
           {row.company}
         </p>
-        <p className="text-xs text-gray-600 dark:text-gray-300">{row.role}</p>
+        <p className="text-xs text-muted-foreground">{row.role}</p>
       </div>
     ),
   },
@@ -91,12 +91,12 @@ const experienceColumns: ContentTableColumn<ResumeExperienceItem>[] = [
     render: (_, row) => (
       <div className="space-y-2">
         {row.summary ? (
-          <p className="leading-relaxed text-gray-900 dark:text-gray-100">
+          <p className="leading-relaxed text-foreground">
             {row.summary}
           </p>
         ) : null}
         {row.achievements?.length ? (
-          <ul className="list-disc space-y-1 pl-4 text-gray-900 dark:text-gray-100">
+          <ul className="list-disc space-y-1 pl-4 text-foreground">
             {row.achievements.map((item) => (
               <li key={item} className="leading-relaxed">
                 {item}
@@ -118,10 +118,10 @@ const projectColumns: ContentTableColumn<ResumeProjectItem>[] = [
     align: "left",
     render: (value, row) => (
       <div className="space-y-1">
-        <p className="font-semibold text-gray-900 dark:text-gray-100">
+        <p className="font-semibold text-foreground">
           {value}
         </p>
-        <p className="text-xs text-gray-600 dark:text-gray-300">{row.role}</p>
+        <p className="text-xs text-muted-foreground">{row.role}</p>
       </div>
     ),
   },
@@ -132,11 +132,11 @@ const projectColumns: ContentTableColumn<ResumeProjectItem>[] = [
     align: "left",
     render: (_, row) => (
       <div className="space-y-1">
-        <p className="font-semibold text-gray-900 dark:text-gray-100">
+          <p className="font-semibold text-foreground">
           {row.name}
         </p>
         {row.context ? (
-          <p className="text-xs text-gray-600 dark:text-gray-300">
+            <p className="text-xs text-muted-foreground">
             {row.context}
           </p>
         ) : null}
@@ -145,7 +145,7 @@ const projectColumns: ContentTableColumn<ResumeProjectItem>[] = [
             href={row.linkUrl}
             target="_blank"
             rel="noreferrer"
-            className="text-xs text-blue-600 underline dark:text-blue-400"
+            className="text-xs text-ember-accent underline"
           >
             {row.linkLabel ?? row.linkUrl}
           </a>
@@ -161,12 +161,12 @@ const projectColumns: ContentTableColumn<ResumeProjectItem>[] = [
     render: (_, row) => (
       <div className="space-y-2">
         {row.summary ? (
-          <p className="leading-relaxed text-gray-900 dark:text-gray-100">
+          <p className="leading-relaxed text-foreground">
             {row.summary}
           </p>
         ) : null}
         {row.achievements?.length ? (
-          <ul className="list-disc space-y-1 pl-4 text-gray-900 dark:text-gray-100">
+          <ul className="list-disc space-y-1 pl-4 text-foreground">
             {row.achievements.map((item) => (
               <li key={item} className="leading-relaxed">
                 {item}
@@ -195,11 +195,11 @@ const educationColumns: ContentTableColumn<ResumeEducationItem>[] = [
     align: "left",
     render: (_, row) => (
       <div className="space-y-1">
-        <p className="font-semibold text-gray-900 dark:text-gray-100">
+        <p className="font-semibold text-foreground">
           {row.school}
         </p>
         {row.major ? (
-          <p className="text-xs text-gray-600 dark:text-gray-300">
+            <p className="text-xs text-muted-foreground">
             {row.major}
           </p>
         ) : null}
@@ -212,7 +212,7 @@ const educationColumns: ContentTableColumn<ResumeEducationItem>[] = [
     width: "w-2/5",
     align: "left",
     render: (value) => (
-      <p className="leading-relaxed text-gray-900 dark:text-gray-100">
+      <p className="leading-relaxed text-foreground">
         {value ?? "-"}
       </p>
     ),
@@ -228,7 +228,7 @@ export function ResumeExperienceContentTable({
       <ContentTable
         columns={experienceColumns}
         data={data}
-        className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700"
+        className="overflow-hidden rounded-lg border border-border"
       />
     </ResumeSection>
   );
@@ -243,7 +243,7 @@ export function ResumeProjectContentTable({
       <ContentTable
         columns={projectColumns}
         data={data}
-        className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700"
+        className="overflow-hidden rounded-lg border border-border"
       />
     </ResumeSection>
   );
@@ -258,7 +258,7 @@ export function ResumeEducationContentTable({
       <ContentTable
         columns={educationColumns}
         data={data}
-        className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700"
+        className="overflow-hidden rounded-lg border border-border"
       />
     </ResumeSection>
   );

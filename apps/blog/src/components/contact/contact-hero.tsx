@@ -6,10 +6,10 @@ export default function ContactHero() {
 
   return (
     <section className="space-y-4 text-center">
-      <Heading variant="s-700" as="h1" className="text-gray-900 dark:text-gray-100">
+      <Heading variant="s-700" as="h1" className="text-foreground">
         {t("title")}
       </Heading>
-      <Body variant="l-400" className="text-gray-700 dark:text-gray-300">
+      <Body variant="l-400" className="text-muted-foreground">
         {t("description")}
       </Body>
     </section>

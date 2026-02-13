@@ -12,7 +12,7 @@ export function BlogCTASection() {
   const locale = useLocale();
 
   return (
-    <div className="mt-12 sm:mt-16 p-4 sm:p-6 lg:p-8 muji-panel text-center">
+    <div className="mt-12 rounded-2xl border border-border bg-card/80 p-4 text-center shadow-sm sm:mt-16 sm:p-6 lg:p-8">
       <Title
         variant="l-700"
         as="h3"

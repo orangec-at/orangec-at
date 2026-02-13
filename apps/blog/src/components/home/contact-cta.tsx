@@ -1,14 +1,11 @@
 "use client";
 
 import { FileText, Github, Linkedin, Mail } from "lucide-react";
-import { Detail } from "../ui/typography";
-import { colors, spacing } from "@/lib/design-tokens";
 
 export default function ContactCTA() {
   return (
-    <section className={spacing.element}>
-      <div className="muji-pegboard rounded-2xl p-6 md:p-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <section className="container-narrow py-section">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {[
             {
               href: "mailto:your-email@example.com",
@@ -39,16 +36,15 @@ export default function ContactCTA() {
               href={item.href}
               target={item.target}
               rel={item.target ? "noopener noreferrer" : undefined}
-              className="muji-tile muji-tile-rounded flex flex-col items-center gap-2 p-4 text-center hover:translate-y-[-2px] transition-transform"
+              className="group flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-small text-muted-foreground transition-colors hover:border-ember-accent/40 hover:text-ember-accent"
             >
-              <span className={`text-xl ${colors.text.primary}`}>
+              <span className="text-foreground transition-colors group-hover:text-ember-accent">
                 {item.icon}
               </span>
-              <Detail variant="s-700">{item.label}</Detail>
+              <span className="text-body">{item.label}</span>
             </a>
           ))}
         </div>
-      </div>
     </section>
   );
 }
