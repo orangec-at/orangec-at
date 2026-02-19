@@ -1,4 +1,5 @@
 import type { MDXFrontmatter } from "@/types/frontmatter";
+import Link from "next/link";
 
 export const meta: MDXFrontmatter = {
   title: "Custom Layout Test: Sidebar Navigation Mode",
@@ -121,12 +122,12 @@ export default function Post() {
               This right panel simulates context tools while the left sidebar
               handles primary navigation.
             </p>
-            <a
+            <Link
               href="/en/blog"
               className="mt-4 inline-flex rounded-lg bg-cyan-300 px-4 py-2 text-sm font-semibold text-zinc-900 transition hover:bg-cyan-200"
             >
               Back to Blog
-            </a>
+            </Link>
           </aside>
         </div>
       </div>

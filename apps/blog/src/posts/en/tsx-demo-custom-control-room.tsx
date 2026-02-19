@@ -1,4 +1,5 @@
 import type { MDXFrontmatter } from "@/types/frontmatter";
+import Link from "next/link";
 
 export const meta: MDXFrontmatter = {
   title: "Custom Layout Test: Control Room Dashboard",
@@ -189,12 +190,12 @@ export default function Post() {
                 Trigger common control-room tasks during custom route validation.
               </p>
               <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-                <a
+                <Link
                   href="/en/blog"
                   className="inline-flex items-center justify-center rounded-lg bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-cyan-200"
                 >
                   Open Test Feed
-                </a>
+                </Link>
                 <a
                   href="mailto:jay@orangec.at"
                   className="inline-flex items-center justify-center rounded-lg border border-cyan-200/70 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/10"
