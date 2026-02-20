@@ -9,7 +9,7 @@ export const meta: MDXFrontmatter = {
   date: "2026-02-20",
   tags: ["lab", "component", "business-logic", "design", "UIUX", "mobile"],
   description:
-    "YES24 모바일 eBook 뷰어의 오버레이 UI를 5가지 렌즈로 분석한 연구일지",
+    "A lab study analyzing the YES24 mobile eBook viewer overlay UI through five lenses.",
   author: "Jaeil Lee",
   category: "lab",
   layout: "custom",
@@ -34,7 +34,7 @@ function ComponentObserve() {
 ├── StatusBar (System)
 ├── HeaderOverlay (Top Bar)
 │   ├── BackButton (← icon)
-│   ├── TitleLabel ("자기신뢰")
+│   ├── TitleLabel ("Self-Trust")
 │   └── ActionGroup
 │       ├── CommentButton (chat bubble)
 │       ├── SearchButton (magnifying glass)
@@ -59,15 +59,15 @@ function ComponentObserve() {
         <ul className="space-y-1 text-sm text-muted-foreground">
           <li>
             <span className="font-mono text-xs text-blue-600 dark:text-blue-400">IconButton</span>{" "}
-            &mdash; 44x44pt touch target, 다양한 아이콘으로 재사용
+            &mdash; 44x44pt touch target, reused across multiple icons
           </li>
           <li>
             <span className="font-mono text-xs text-green-600 dark:text-green-400">Slider</span>{" "}
-            &mdash; full-width 진행률 표시 + thumb 인터랙션
+            &mdash; full-width progress indicator with thumb interaction
           </li>
           <li>
             <span className="font-mono text-xs text-amber-600 dark:text-amber-400">OverlayPanel</span>{" "}
-            &mdash; header/footer 컨테이너, isVisible로 토글
+            &mdash; header/footer container, toggled by `isVisible`
           </li>
         </ul>
       </div>
@@ -88,10 +88,10 @@ function BusinessObserve() {
         </p>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {[
-            { label: "읽기 진행률", detail: "62% 슬라이더" },
-            { label: "댓글/리뷰", detail: "소셜 리딩" },
-            { label: "하이라이트/메모", detail: "사용자 생성 데이터" },
-            { label: "DRM 뷰어", detail: "콘텐츠 보호" },
+            { label: "Reading Progress", detail: "62% slider" },
+            { label: "Comments/Reviews", detail: "Social reading" },
+            { label: "Highlights/Notes", detail: "User-generated data" },
+            { label: "DRM Viewer", detail: "Content protection" },
           ].map((item, i) => (
             <div
               key={i}
@@ -112,11 +112,11 @@ function BusinessObserve() {
         </p>
         <div className="flex flex-wrap items-center gap-2">
           {[
-            "편안한 독서 경험",
-            "완독률 상승",
-            "댓글/메모 축적",
-            "플랫폼 lock-in",
-            "다음 구매",
+            "Comfortable reading experience",
+            "Higher completion rate",
+            "Accumulated comments/notes",
+            "Platform lock-in",
+            "Next purchase",
           ].map((step, i) => (
             <span key={i} className="flex items-center gap-2">
               <span className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground shadow-sm">
@@ -145,10 +145,10 @@ function DesignObserve() {
           Color Palette
         </p>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          <ColorSwatch color="#FFFFFF" label="배경" />
-          <ColorSwatch color="#333333" label="본문 텍스트" />
-          <ColorSwatch color="#4A90D9" label="프로그레스 바" />
-          <ColorSwatch color="#888888" label="UI 아이콘 (thin line)" />
+          <ColorSwatch color="#FFFFFF" label="Background" />
+          <ColorSwatch color="#333333" label="Body text" />
+          <ColorSwatch color="#4A90D9" label="Progress bar" />
+          <ColorSwatch color="#888888" label="UI icons (thin line)" />
         </div>
       </div>
 
@@ -167,19 +167,19 @@ function DesignObserve() {
             </thead>
             <tbody className="text-foreground">
               <tr className="border-b border-border/50">
-                <td className="py-2 pr-4">본문</td>
+                <td className="py-2 pr-4">Body text</td>
                 <td className="py-2 pr-4">Serif</td>
-                <td className="py-2">고전적 책 느낌</td>
+                <td className="py-2">Classic book feel</td>
               </tr>
               <tr className="border-b border-border/50">
-                <td className="py-2 pr-4">UI 라벨</td>
+                <td className="py-2 pr-4">UI labels</td>
                 <td className="py-2 pr-4">Sans-serif</td>
-                <td className="py-2">앱 인터페이스 느낌</td>
+                <td className="py-2">Modern app interface feel</td>
               </tr>
               <tr>
-                <td className="py-2 pr-4">진행률</td>
+                <td className="py-2 pr-4">Progress</td>
                 <td className="py-2 pr-4">Sans-serif, Medium</td>
-                <td className="py-2">상태 정보 표시</td>
+                <td className="py-2">Status information display</td>
               </tr>
             </tbody>
           </table>
@@ -234,7 +234,7 @@ function DesignObserve() {
           <div className="mt-3 flex flex-wrap gap-4 text-xs text-muted-foreground">
             <span>Header 44-56pt</span>
             <span>Footer 2-row</span>
-            <span>충분한 좌우 여백</span>
+            <span>Generous side margins</span>
           </div>
         </div>
       </div>
@@ -256,16 +256,16 @@ function UxObserve() {
         <div className="space-y-3">
           {[
             {
-              gesture: "화면 중앙 탭",
-              result: "오버레이 토글 (show/hide)",
+              gesture: "Center tap on screen",
+              result: "Toggle overlay (show/hide)",
             },
             {
-              gesture: "슬라이더 드래그",
-              result: "빠른 페이지 이동",
+              gesture: "Slider drag",
+              result: "Rapid page navigation",
             },
             {
-              gesture: "좌우 스와이프",
-              result: "페이지 넘김 (기본 모드)",
+              gesture: "Horizontal swipe",
+              result: "Page turn (default mode)",
             },
           ].map((item, i) => (
             <div
@@ -289,16 +289,16 @@ function UxObserve() {
         </p>
         <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800/50 dark:bg-amber-950/30">
           <p className="text-sm font-medium text-foreground">
-            하이라이트 모드 (펜 아이콘 활성화)
+            Highlight mode (pen icon active)
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
-            <span className="font-medium">기본 모드</span>: 스와이프 = 페이지 넘김
+            <span className="font-medium">Default mode</span>: swipe = page turn
           </p>
           <p className="text-xs text-muted-foreground">
-            <span className="font-medium">하이라이트 모드</span>: 드래그 = 텍스트 선택
+            <span className="font-medium">Highlight mode</span>: drag = text selection
           </p>
           <p className="mt-1.5 text-xs text-muted-foreground italic">
-            같은 제스처(드래그)가 모드에 따라 다른 결과를 생성
+            The same gesture (drag) produces different outcomes by mode
           </p>
         </div>
       </div>
@@ -315,7 +315,7 @@ function TechObserve() {
     <div className="space-y-6">
       <div>
         <p className="mb-2 text-sm font-medium text-foreground">
-          Key State (추정)
+          Key State (Inferred)
         </p>
         <CodeBlock>
           {`interface ViewerState {
@@ -330,13 +330,13 @@ function TechObserve() {
 
       <div>
         <p className="mb-2 text-sm font-medium text-foreground">
-          Rendering (추정)
+          Rendering (Inferred)
         </p>
         <CodeBlock>
-          {`// WebView 기반 ePub 렌더링
-// ePub = HTML/CSS → WebView에서 렌더링
-// 한글 양쪽 정렬 + 커스텀 폰트
-// 폰트 크기 변경 시 전체 reflow 필요`}
+          {`// WebView-based ePub rendering
+// ePub = HTML/CSS -> rendered in WebView
+// Justified text layout + custom fonts
+// Full reflow required when font size changes`}
         </CodeBlock>
       </div>
 
@@ -353,7 +353,7 @@ function TechObserve() {
           ]}
         />
         <p className="mt-2 text-[10px] text-muted-foreground">
-          * 위에서 아래로 z-index 순서. 리더앱, 지도앱, 드로잉앱 등 캔버스 기반 앱의 범용 패턴
+          * z-index order from top to bottom. A common pattern in canvas-based apps such as reader, map, and drawing apps.
         </p>
       </div>
     </div>
@@ -371,26 +371,26 @@ const lenses: LensData[] = [
     observe: <ComponentObserve />,
     analysis: [
       {
-        title: "Overlay vs Content 분리",
-        body: "오버레이와 콘텐츠의 엄격한 분리로 몰입 모드를 지원한다. isOverlayVisible 하나로 전체 크롬을 토글.",
+        title: "Overlay vs. content separation",
+        body: "A strict split between overlay and content enables an immersive mode. The full chrome toggles through a single `isOverlayVisible` state.",
       },
       {
-        title: "Header = 책 단위 액션 / Footer = 뷰어 설정",
-        body: "Header는 콘텐츠 메타(뒤로가기, 검색, 북마크), Footer는 뷰어 제어(진행률, 설정). 관심사 분리가 명확하다.",
+        title: "Header = book actions / Footer = viewer settings",
+        body: "The header handles content metadata (back, search, bookmark), while the footer handles viewer controls (progress, settings). Separation of concerns is clear.",
       },
       {
-        title: "IconButton 재사용",
-        body: "다양한 아이콘으로 반복 사용되는 단일 컴포넌트. 44x44pt 터치 타겟을 일관되게 보장한다.",
+        title: "IconButton reuse",
+        body: "A single reusable component used with multiple icons, consistently preserving a 44x44pt touch target.",
       },
     ],
     insights: [
       {
-        title: "Transient Chrome 패턴",
-        body: "UI 크롬과 캔버스(콘텐츠)를 분리하고 isOverlayVisible boolean으로 토글. 리더앱의 핵심 패턴이며 비디오 플레이어, 지도앱 등에도 동일하게 적용된다.",
+        title: "Transient Chrome pattern",
+        body: "Separate the UI chrome from the content canvas and toggle via an `isOverlayVisible` boolean. This is a core reader-app pattern that also applies to video players and map apps.",
       },
       {
-        title: "Header/Footer의 관심사 분리",
-        body: "Header는 콘텐츠 메타(뒤로가기, 검색, 북마크), Footer는 뷰어 제어(진행률, 설정). 기능이 늘어도 각 영역 역할이 명확하여 확장에 유리하다.",
+        title: "Header/Footer separation of concerns",
+        body: "The header owns content metadata (back, search, bookmark), while the footer owns viewer controls (progress, settings). As features grow, each zone remains clear and scalable.",
       },
     ],
   },
@@ -400,26 +400,26 @@ const lenses: LensData[] = [
     observe: <BusinessObserve />,
     analysis: [
       {
-        title: "리텐션 전략",
-        body: "댓글 기능으로 독서의 고독한 행위를 플랫폼 커뮤니티에 연결. 체류 시간과 소셜 끈끈이를 증가시킨다.",
+        title: "Retention strategy",
+        body: "Comments connect the solitary act of reading to the platform community, increasing time in app and social stickiness.",
       },
       {
-        title: "하이라이트 = 전환 비용",
-        body: "사용자 생성 데이터(메모/하이라이트)가 쌓이면 플랫폼 이탈 비용이 높아진다.",
+        title: "Highlights = switching cost",
+        body: "As user-generated data (notes/highlights) accumulates, the cost of leaving the platform rises.",
       },
       {
-        title: "읽기 편의 = 전환율",
-        body: "편안한 독서 경험은 완독률을 높이고 다음 구매로 이어지는 핵심 퍼널이다.",
+        title: "Reading convenience = conversion",
+        body: "A comfortable reading experience increases completion rates and drives follow-up purchases as a core funnel.",
       },
     ],
     insights: [
       {
         title: "Social Reading vs Deep Reading",
-        body: "댓글 버튼을 상단 1차 액션에 배치한 건 순수 몰입보다 참여를 우선한 비즈니스 판단. YES24가 소셜 생태계를 핵심 차별화/리텐션 지표로 본다는 의미.",
+        body: "Placing the comment button in the top primary action area reflects a business decision that prioritizes participation over pure immersion. It suggests YES24 treats its social ecosystem as a key differentiator and retention metric.",
       },
       {
         title: "Lock-in by Content Creation",
-        body: "하이라이트/메모로 사용자의 지적 자산이 플랫폼에 묶이는 패턴. 다른 SaaS에서도 사용자가 데이터를 생성하게 하면 전환 비용이 올라간다.",
+        body: "Highlights and notes bind users' intellectual assets to the platform. This pattern appears across SaaS products: when users create data, switching costs rise.",
       },
     ],
   },
@@ -429,26 +429,26 @@ const lenses: LensData[] = [
     observe: <DesignObserve />,
     analysis: [
       {
-        title: "시각 위계",
-        body: "본문 텍스트(1순위) > 파란 슬라이더(2순위, 상태 표시) > UI 아이콘(3순위, 균일 웨이트). 콘텐츠 우선의 명확한 위계.",
+        title: "Visual hierarchy",
+        body: "Body text (priority 1) > blue slider (priority 2, status) > UI icons (priority 3, uniform weight). The hierarchy clearly favors content first.",
       },
       {
         title: "Content First, UI Second",
-        body: "UI가 콘텐츠의 \"프레임\" 역할. 얇은 라인 아이콘과 중립 색상으로 간섭을 최소화한다.",
+        body: "The UI acts as a frame around content. Thin line icons and neutral colors minimize interference.",
       },
       {
-        title: "어포던스",
-        body: "슬라이더 thumb(동그라미)로 인터랙션을 유도하고, 표준 아이콘 메타포로 인지 부하를 감소시킨다.",
+        title: "Affordance",
+        body: "The slider thumb (circle) invites interaction, while standard icon metaphors reduce cognitive load.",
       },
     ],
     insights: [
       {
-        title: "콘텐츠 프레임 디자인",
-        body: "사용자 콘텐츠가 주인공인 앱에서 UI는 \"액자\" 역할. 유채색은 상태 표시(파란 슬라이더)에만 허용하는 원칙.",
+        title: "Content frame design",
+        body: "In apps where user content is the protagonist, UI should function as a frame. A practical rule is to reserve saturated color for status signals (the blue slider).",
       },
       {
-        title: "세리프/산세리프 이중 서체",
-        body: "본문(세리프)과 UI(산세리프)를 구분하면 \"이건 책, 이건 앱\"이라는 암묵적 경계가 생긴다. 콘텐츠와 인터페이스의 인지적 분리.",
+        title: "Serif/sans-serif dual typography",
+        body: "Separating body text (serif) from UI text (sans-serif) creates an implicit boundary: this is the book, this is the app. It reinforces cognitive separation between content and interface.",
       },
     ],
   },
@@ -459,25 +459,25 @@ const lenses: LensData[] = [
     analysis: [
       {
         title: "Control Paradox",
-        body: "사용자는 컨트롤이 필요하지만 컨트롤은 읽기를 방해한다. 해법: on-demand 오버레이로 필요할 때만 노출.",
+        body: "Users need controls, but controls disrupt reading. The solution is an on-demand overlay that appears only when needed.",
       },
       {
-        title: "모드 전환으로 실수 방지",
-        body: "하이라이트 모드를 명시적으로 분리하여 페이지 넘기다 실수로 형광펜 치는 사고를 방지한다.",
+        title: "Mode switching prevents errors",
+        body: "Explicitly separating highlight mode helps prevent accidental marking while users are trying to turn pages.",
       },
       {
-        title: "설정의 접근성",
-        body: "Aa(폰트), 밝기, 화면 잠금 등을 Footer에 배치하여 읽기 마찰을 최소화한다.",
+        title: "Accessible settings",
+        body: "Placing Aa (font), brightness, and screen lock controls in the footer minimizes reading friction.",
       },
     ],
     insights: [
       {
         title: "User Control vs Simplicity",
-        body: "복잡한 기능(검색, 목차, 설정, 하이라이트)을 오버레이 뒤에 숨겨서 물리적 책의 단순함과 디지털의 파워를 동시에 제공한다.",
+        body: "By hiding complex features (search, TOC, settings, highlights) behind the overlay, the viewer preserves the simplicity of a physical book while delivering digital power.",
       },
       {
-        title: "모드 전환 = 안전 장치",
-        body: "같은 제스처(드래그)가 맥락에 따라 다른 결과를 낳을 때, 명시적 모드 전환은 실수를 막는 핵심 UX 패턴이다.",
+        title: "Mode switching as a safety mechanism",
+        body: "When the same gesture (drag) yields different outcomes by context, explicit mode switching is a key UX safety pattern.",
       },
     ],
   },
@@ -487,26 +487,26 @@ const lenses: LensData[] = [
     observe: <TechObserve />,
     analysis: [
       {
-        title: "Reflow 엔진",
-        body: "폰트 크기 변경 시 전체 페이지 재계산이 필요하다. 백그라운드 스레드에서 처리해야 UI 블로킹을 방지할 수 있다.",
+        title: "Reflow engine",
+        body: "Changing font size requires full page recalculation. Processing this in a background thread helps prevent UI blocking.",
       },
       {
-        title: "레이어드 뷰 아키텍처",
-        body: "Background -> Content -> Touch -> UI 4단 레이어로 관심사를 분리한다. 각 레이어가 독립적으로 변경 가능.",
+        title: "Layered view architecture",
+        body: "A four-layer stack (Background -> Content -> Touch -> UI) separates concerns, allowing each layer to evolve independently.",
       },
       {
-        title: "슬라이더 실시간 바인딩",
-        body: "슬라이더 position과 scrollOffset/currentPage 간 양방향 바인딩. 드래그 중 실시간 페이지 프리뷰가 핵심.",
+        title: "Real-time slider binding",
+        body: "Bi-directional binding between slider position and scrollOffset/currentPage is essential for real-time page preview during drag.",
       },
     ],
     insights: [
       {
         title: "Reflow Logic",
-        body: "동적 페이지네이션이 eBook 리더의 핵심 기술 과제. PDF(고정)와 달리 폰트 설정 변경마다 \"총 페이지 수\"를 재계산해야 한다.",
+        body: "Dynamic pagination is a core technical challenge in eBook readers. Unlike fixed-layout PDFs, total page count must be recalculated whenever font settings change.",
       },
       {
         title: "4-Layer View Architecture",
-        body: "Background -> Content -> Touch -> UI 순서로 레이어를 쌓는 구조는 리더앱뿐 아니라 지도앱, 드로잉앱 등 캔버스 기반 앱의 범용 패턴이다.",
+        body: "The layer order Background -> Content -> Touch -> UI is a general pattern not only for reader apps, but also for canvas-based apps like map and drawing tools.",
       },
     ],
   },
@@ -522,8 +522,12 @@ export default function LabYes24ViewerOverlay() {
       meta={meta}
       lenses={lenses}
       deviceType="mobile"
-      screenshotSrc="/images/lab/yes24-viewer-overlay/01-main.png"
-      screenshotAlt="YES24 모바일 eBook 뷰어 오버레이 스크린샷"
+      screenshots={[
+        {
+          src: "/images/lab/yes24-viewer-overlay/01-main.png",
+          alt: "YES24 mobile eBook viewer overlay screenshot",
+        },
+      ]}
     />
   );
 }

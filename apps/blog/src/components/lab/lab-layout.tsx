@@ -4,8 +4,8 @@ import { useState, useRef, useEffect } from "react";
 
 import type { MDXFrontmatter } from "@/types/frontmatter";
 
-import type { LensData, LensId, DeviceType } from "./types";
-import { DeviceFrame } from "./device-frame";
+import type { LensData, LensId, DeviceType, Screenshot } from "./types";
+import { ScreenshotCarousel } from "./screenshot-carousel";
 import { SectionHeading } from "./section-heading";
 import { AnalysisCard } from "./analysis-card";
 import { InsightCard } from "./insight-card";
@@ -14,16 +14,14 @@ interface LabLayoutProps {
   meta: MDXFrontmatter;
   lenses: LensData[];
   deviceType: DeviceType;
-  screenshotSrc: string;
-  screenshotAlt: string;
+  screenshots: Screenshot[];
 }
 
 export function LabLayout({
   meta,
   lenses,
   deviceType,
-  screenshotSrc,
-  screenshotAlt,
+  screenshots,
 }: LabLayoutProps) {
   const [activeLens, setActiveLens] = useState<LensId>("component");
   const currentLens = lenses.find((l) => l.id === activeLens)!;
@@ -48,7 +46,7 @@ export function LabLayout({
       {/* Header */}
       <header className="mb-10 text-center">
         <span className="inline-block rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
-          Lab &mdash; 앱/웹 연구일지
+          Lab &mdash; App/Web Research Journal
         </span>
         <h1 className="mt-4 text-3xl font-bold leading-tight text-foreground md:text-4xl">
           {meta.title}
@@ -59,8 +57,8 @@ export function LabLayout({
       </header>
 
       {/* Hero Screenshot */}
-      <div ref={heroRef} className="mb-10 flex justify-center">
-        <DeviceFrame type={deviceType} src={screenshotSrc} alt={screenshotAlt} />
+      <div ref={heroRef} className="mb-10">
+        <ScreenshotCarousel screenshots={screenshots} deviceType={deviceType} />
       </div>
 
       {/* Lens Tabs */}
@@ -90,14 +88,14 @@ export function LabLayout({
       {/* Lens Content */}
       <div className="space-y-10">
         <section>
-          <SectionHeading>관찰 &mdash; What I See</SectionHeading>
+          <SectionHeading>Observations</SectionHeading>
           <div className="rounded-2xl border border-border bg-card p-5 md:p-7">
             {currentLens.observe}
           </div>
         </section>
 
         <section>
-          <SectionHeading>분석 &mdash; What I Learn</SectionHeading>
+          <SectionHeading>Analysis</SectionHeading>
           <div className="grid gap-4 sm:grid-cols-2">
             {currentLens.analysis.map((item, i) => (
               <AnalysisCard
@@ -111,7 +109,7 @@ export function LabLayout({
         </section>
 
         <section>
-          <SectionHeading>인사이트 &mdash; What I Take</SectionHeading>
+          <SectionHeading>Insights</SectionHeading>
           <div className="space-y-3">
             {currentLens.insights.map((item, i) => (
               <InsightCard
@@ -134,11 +132,11 @@ export function LabLayout({
             ? "translate-y-0 opacity-100"
             : "pointer-events-none translate-y-4 opacity-0"
         }`}
-        aria-label="스크린샷 보기"
+        aria-label="View screenshot"
       >
         <img
-          src={screenshotSrc}
-          alt={screenshotAlt}
+          src={screenshots[0].src}
+          alt={screenshots[0].alt}
           className={
             deviceType === "mobile"
               ? "h-[140px] w-auto object-cover"
