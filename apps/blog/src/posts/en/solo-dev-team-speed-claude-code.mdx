@@ -1,0 +1,410 @@
+---
+title: "I Build Like a Team of Five, Solo: How I Use Claude Code as a Development Partner"
+description: "Most developers use AI as autocomplete. I use it as a multiplier. Here's the workflow that lets one person ship at team velocity."
+date: "2026-02-20"
+tags: ["development", "tips", "dev-diary"]
+slug: "solo-dev-team-speed-claude-code"
+category: "insight"
+author: "Jaeil Lee"
+featured: false
+seo:
+  keywords: ["claude code workflow", "ai coding productivity", "solo developer ai", "ai development partner", "ship faster with ai"]
+---
+
+# I Build Like a Team of Five, Solo: How I Use Claude Code as a Development Partner
+
+Most people still use AI coding tools like smarter autocomplete.
+
+They ask for a function, paste the result, tweak a few lines, move on.
+
+That is useful, but it is not where the real leverage is.
+
+The bigger shift is using AI as a development partner across the whole loop:
+
+- problem framing
+- implementation planning
+- parallel execution
+- verification
+- documentation
+
+When I changed from "AI writes snippets" to "AI runs process with me," my output changed more than my typing speed ever did.
+
+This is how I work now as a solo builder, and why I can ship at what feels like small-team velocity.
+
+## 1. AI as Autocomplete vs AI as Partner
+
+There are two very different operating modes.
+
+### Mode A: AI as autocomplete
+
+- prompt for local code fragments
+- copy/paste and patch manually
+- little continuity across tasks
+- quality depends on your immediate attention every step
+
+This mode saves keystrokes.
+
+### Mode B: AI as partner
+
+- define goal + constraints first
+- break work into explicit tasks
+- delegate independent chunks
+- keep verification gates
+- maintain branch/worktree hygiene
+
+This mode saves decision fatigue and context-switch cost.
+
+The difference is not "better prompts." It is process design.
+
+I learned this the hard way. Early on, I used AI to generate lots of code quickly, then spent hours reconciling inconsistencies. It felt fast in the first half and slow in the second half.
+
+Now I optimize for end-to-end throughput: fewer regressions, cleaner diffs, better handoff state.
+
+## 2. My Actual Workflow: Claude Code for Orchestration, Cursor for Tight Iteration
+
+I don't use one tool for everything. I split work by strength.
+
+### Claude Code (orchestration layer)
+
+I use it for:
+
+- scope parsing
+- plan generation
+- parallel research/codebase exploration
+- multi-file change execution with task tracking
+- verification and commit hygiene
+
+The biggest win is that it can hold process discipline while I stay focused on product decisions.
+
+### Cursor (micro-iteration layer)
+
+I use it for:
+
+- local component iteration
+- fast UI tweaks
+- short feedback loops in one file or one feature slice
+
+Cursor feels like high-speed local maneuvering. Claude Code feels like air traffic control.
+
+### Why this split works
+
+If I stay only in local-iteration mode, I move fast but drift globally.
+
+If I stay only in orchestration mode, I can lose the tactile speed needed for UI and detail work.
+
+Combined, I get both:
+
+- top-down clarity
+- bottom-up speed
+
+This is basically how teams work too: architecture + implementation specialists. I just compress those roles into one person supported by AI.
+
+## 3. What AI Handles Very Well
+
+Once the task is clear and bounded, AI is excellent at repetitive and structural work.
+
+### A) Boilerplate and scaffolding
+
+- route skeletons
+- action/handler templates
+- data model scaffolding
+- validation schema shells
+
+### B) API and integration wiring
+
+- request/response structures
+- endpoint surface alignment
+- standard error-path scaffolding
+
+### C) Refactor support with guardrails
+
+- repeated rename/move patterns
+- updating references across files
+- checklist-driven migrations
+
+### D) Documentation and operational notes
+
+- setup runbooks
+- "how this module works" notes
+- release checklist drafts
+
+This removes a lot of drag that used to consume senior attention for low-creative work.
+
+In product terms, AI handles a large portion of the "necessary but not differentiating" engineering load.
+
+## 4. What Still Requires Human Judgment
+
+The common mistake is assuming AI acceleration means less need for engineering judgment. In practice, it means judgment becomes more valuable.
+
+### A) Architecture trade-offs
+
+- where to place boundaries
+- what to optimize now vs later
+- when to keep complexity out
+
+### B) Security posture
+
+- auth boundary design
+- token/session handling assumptions
+- least-privilege tool and data access patterns
+
+### C) Product and UX quality
+
+- what to simplify for user outcomes
+- where to spend polish budget
+- choosing behavior over implementation cleverness
+
+### D) Scope discipline
+
+AI can generate ten directions quickly. Humans decide the one worth shipping this week.
+
+I treat AI outputs as high-quality drafts, not authority. My responsibility is selecting and constraining, not blindly accepting.
+
+The model can propose five architectures. It does not own your maintenance burden six months later.
+
+## 5. Real Output Proof: Shipping DrawHatha Solo in 90 Days
+
+The point of workflow talk is outcomes, not theory.
+
+I shipped DrawHatha (iOS app) solo in roughly 90 days. The stack included frontend, backend, auth, data model, and release process. That is not unusual anymore for solo builders with strong tooling, but it still requires process discipline.
+
+What AI changed for me during that period:
+
+- reduced blank-page start cost for each subsystem
+- accelerated integration experiments
+- shortened troubleshooting cycles for recurring patterns
+- helped maintain momentum when context switched between product, infra, and delivery
+
+What AI did not replace:
+
+- deciding what not to build
+- release-quality standards
+- UX decisions based on actual user behavior
+
+This matters because a lot of "AI productivity" content focuses on code generation demos. Shipping live products is about end-to-end reliability and consistency over many days, not one flashy session.
+
+## 6. The Multiplier Effect: Why a Solo Developer Can Match Team Velocity
+
+When people hear "solo dev at team speed," they assume long hours. That helps sometimes, but it is not the core mechanism.
+
+The core mechanism is multiplier stack:
+
+1. **AI handles repeatable cognitive load**
+2. **You reserve your energy for high-leverage decisions**
+3. **Process reduces rework**
+
+That combination makes one person behave less like "one worker" and more like "one orchestrator with parallel assistants."
+
+I think this is especially relevant in the current market:
+
+- many clients arrive with AI-built 70-80% prototypes
+- they need finishing, integration, and production hardening
+- speed matters, but so does correctness
+
+If you can combine AI acceleration with senior-level judgment, you become unusually effective in that environment.
+
+## What This Looks Like in a Week
+
+A practical week for me often looks like this:
+
+- **Monday:** architecture and scope decisions
+- **Tuesday/Wednesday:** implementation batches with AI-assisted execution
+- **Thursday:** integration fixes, tests, edge-case cleanup
+- **Friday:** docs, release prep, positioning content from what I built
+
+The important part is that I no longer lose half a day rebuilding context after each switch. AI helps preserve and restore context quickly when workflow is explicit.
+
+## Mistakes I Made (So You Don't Repeat Them)
+
+1. **Too much blind generation early**
+   - Result: fast code, slow integration.
+2. **No strict verification gate**
+   - Result: hidden regressions and confidence debt.
+3. **Trying one tool for every task**
+   - Result: mismatched workflow and avoidable friction.
+4. **Over-scoping because implementation felt cheap**
+   - Result: delayed shipping.
+
+What fixed all four was adopting process discipline first, then using AI inside that process.
+
+## A Simple Starting Framework
+
+If you want to move from "AI autocomplete" to "AI partner," start here:
+
+1. Define task scope in one paragraph before coding.
+2. Break work into 3-7 explicit checklist items.
+3. Run one verification command per logical unit.
+4. Keep commits small and intentional.
+5. Write one short postmortem note after each feature.
+
+Do this for two weeks and you will feel the difference in shipping rhythm.
+
+## The Tactical Layer: What I Ask AI to Do (and Not Do)
+
+The biggest quality jump for me came from assigning explicit responsibilities.
+
+### What I delegate aggressively
+
+- generate migration checklists before touching schema
+- draft test cases from acceptance criteria
+- map existing patterns before introducing new ones
+- prepare implementation diffs in small batches
+
+### What I keep in my own hands
+
+- final architecture direction
+- security-sensitive boundaries
+- product behavior decisions under ambiguity
+- release go/no-go judgment
+
+If I blur these boundaries, quality drops.
+
+For example, when adding billing flows, I let AI scaffold routes, webhook handlers, and table suggestions. But I personally decide entitlement model and failure behavior, because that directly affects customer trust and support load.
+
+This split is why the system stays fast *and* coherent.
+
+## Verification Discipline: The Part Most People Skip
+
+A lot of AI-assisted coding fails not in generation, but in verification.
+
+I now treat verification as first-class work, not cleanup:
+
+1. define what "done" means before implementation
+2. run checks after each logical unit
+3. capture evidence, not assumptions
+
+My typical evidence stack per feature:
+
+- typecheck output
+- test command output
+- manual scenario checks for user-facing critical flows
+- short notes on known pre-existing failures
+
+This sounds basic, but it changes behavior. Without explicit evidence requirements, AI sessions can feel complete long before they are actually safe.
+
+## A Concrete Example: From Request to Shipped Slice
+
+Let's take a realistic request: "Add subscription gating to premium reports."
+
+### Step 1: Scope framing
+
+I write one short spec:
+
+- what is gated
+- who should access
+- expected behavior for expired subscriptions
+- migration and rollback expectations
+
+### Step 2: Plan and decomposition
+
+I split into small units:
+
+1. add subscription status source of truth
+2. enforce select policy boundary
+3. update UI messaging for free vs paid
+4. add regression checks
+
+### Step 3: AI-assisted implementation
+
+I delegate repetitive parts:
+
+- schema migration draft
+- route and helper scaffolding
+- policy skeletons
+
+Then I review and adjust critical pieces manually.
+
+### Step 4: Verification
+
+I run:
+
+- type checks
+- targeted tests
+- scenario checks: paid user, trial user, expired user
+
+### Step 5: Documentation and commit hygiene
+
+I keep commit scope narrow and message clear about *why* the change exists.
+
+That full cycle is where team-like velocity appears. Not in one giant generation prompt.
+
+## Collaboration Without a Team Still Needs Communication
+
+Even solo, communication matters because future-you is a teammate.
+
+I create lightweight artifacts as I go:
+
+- one paragraph feature intent
+- TODO state progression
+- rationale for non-obvious decisions
+
+This has two benefits:
+
+1. faster re-entry when interrupted
+2. easier client/stakeholder updates with real traceability
+
+It also improves AI outcomes. Models perform better when they have explicit context and constraints. Vague requests create vague output.
+
+## Limits and Reality: This Is Not Magic
+
+AI-augmented solo velocity is real, but there are limits.
+
+### Where it can still hurt
+
+- weak requirements lead to fast wrong implementation
+- overconfidence can hide subtle bugs
+- too many tools can create workflow overhead
+
+### What keeps it healthy
+
+- strict scope control
+- explicit verification gates
+- regular pruning of process/tool complexity
+
+My rule is simple: if a process step does not improve release quality or lead time, remove it.
+
+AI workflows should increase clarity, not become ceremony theater.
+
+## Why This Matters for Clients and Teams
+
+From a client perspective, the value is not "developer used AI."
+
+The value is:
+
+- shorter cycle time
+- clearer delivery scope
+- fewer regressions
+- better maintenance handoff
+
+From a team perspective, AI-native workflows can reduce bottlenecks when one developer can safely execute wider slices of work with reliable process.
+
+This is especially useful for early-stage products where hiring full teams too early can be financially risky.
+
+## What I Would Tell My Past Self
+
+If I could give one instruction to my earlier AI workflow:
+
+"Stop measuring speed by lines generated. Measure speed by reliable releases."
+
+Once I switched metrics, everything else got better:
+
+- prompts improved
+- planning improved
+- tool choices improved
+- output quality improved
+
+The point is not to look like a five-person team. The point is to deliver with the consistency usually expected from one.
+
+## The Takeaway
+
+AI tools are not the advantage by themselves. Workflow is the advantage.
+
+When you use AI as a partner with explicit planning, delegation, and verification, one person can deliver at a level that used to require a small team.
+
+This is not about replacing engineers. It is about compressing the distance between idea and reliable release.
+
+For solo builders, that compression is everything.
+
+---
+
+*Want to build and ship like a small team without hiring one yet? I specialize in AI-native development workflows that turn prototypes into production outcomes. [Let's talk](mailto:jay@orangec.at).*
