@@ -7,5 +7,6 @@ export { CodeBlock } from "./code-block";
 export { ColorSwatch } from "./color-swatch";
 export { StateMachineFlow } from "./state-machine-flow";
 export { LayerStack } from "./layer-stack";
-export type { LensId, LensData, AnalysisItem, InsightItem, DeviceType } from "./types";
+export { ScreenshotCarousel } from "./screenshot-carousel";
+export type { LensId, LensData, AnalysisItem, InsightItem, DeviceType, Screenshot } from "./types";
 export type { LayerItem } from "./layer-stack";

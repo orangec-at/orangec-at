@@ -19,3 +19,9 @@ export interface LensData {
 }
 
 export type DeviceType = "mobile" | "desktop";
+
+export interface Screenshot {
+  src: string;
+  alt: string;
+  label?: string;
+}

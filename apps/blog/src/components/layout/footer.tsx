@@ -11,7 +11,7 @@ export default function Footer() {
   const locale = useLocale();
 
   return (
-    <footer className="border-t border-border py-8">
+    <footer className="border-t border-border pt-8 pb-[calc(8rem+env(safe-area-inset-bottom))] md:py-8">
       <div className="container-narrow mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-muted-foreground">
         <div className="flex items-center gap-4">
           <a

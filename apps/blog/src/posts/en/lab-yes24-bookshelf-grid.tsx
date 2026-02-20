@@ -10,11 +10,11 @@ import {
 import type { LensData } from "@/components/lab";
 
 export const meta: MDXFrontmatter = {
-  title: "YES24 — 서재 Bookshelf Grid",
+  title: "YES24 — Bookshelf Grid",
   date: "2026-02-19",
   tags: ["lab", "component", "business-logic", "design", "UIUX", "mobile"],
   description:
-    "YES24 모바일 서재의 그리드 뷰를 5가지 렌즈(컴포넌트, 비즈니스, 디자인, UX, 기술)로 분석한 연구일지",
+    "Research log analyzing the YES24 mobile bookshelf grid view through five lenses: component, business logic, design, UX, and tech.",
   author: "Jaeil Lee",
   category: "lab",
   layout: "custom",
@@ -120,9 +120,9 @@ User { ownedBooks, subscriptionBooks, bookshelves }`}
         </p>
         <StateMachineFlow
           states={[
-            ["미소유", "구매", "소장"],
-            ["미소유", "구독", "구독중", "만료", "재구독"],
-            ["구독중", "구매", "소장"],
+            ["Unowned", "Purchase", "Owned"],
+            ["Unowned", "Subscribe", "Subscribed", "Expired", "Resubscribe"],
+            ["Subscribed", "Purchase", "Owned"],
           ]}
         />
       </div>
@@ -132,7 +132,7 @@ User { ownedBooks, subscriptionBooks, bookshelves }`}
           Download State Machine
         </p>
         <StateMachineFlow
-          states={[["미다운로드", "다운로드중", "다운로드됨", "삭제", "미다운로드"]]}
+          states={[["Not Downloaded", "Downloading", "Downloaded", "Delete", "Not Downloaded"]]}
         />
       </div>
 
@@ -142,11 +142,11 @@ User { ownedBooks, subscriptionBooks, bookshelves }`}
         </p>
         <div className="flex flex-wrap items-center gap-2">
           {[
-            "서재 진입",
+            "Enter Bookshelf",
             "API GET /bookshelf/{type}",
             "Book[] + ownership + downloadStatus",
-            "클라이언트 daysLeft 계산",
-            "렌더링 분기",
+            "Client calculates daysLeft",
+            "Conditional render paths",
           ].map((step, i) => (
             <span key={i} className="flex items-center gap-2">
               <span className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground shadow-sm">
@@ -175,14 +175,14 @@ function DesignObserve() {
           Color Palette
         </p>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          <ColorSwatch color="#FFFFFF" label="배경" />
-          <ColorSwatch color="#F5F5F5" label="헤더 배경" />
-          <ColorSwatch color="#000000" label="활성 탭" />
-          <ColorSwatch color="#999999" label="비활성 탭" />
-          <ColorSwatch color="#666666" label="소장 텍스트" />
-          <ColorSwatch color="#4CAF50" label="sam 뱃지" />
-          <ColorSwatch color="rgba(0,0,0,0.3)" label="다운로드 오버레이" />
-          <ColorSwatch color="#E0E0E0" label="버튼 테두리" />
+          <ColorSwatch color="#FFFFFF" label="Background" />
+          <ColorSwatch color="#F5F5F5" label="Header Background" />
+          <ColorSwatch color="#000000" label="Active Tab" />
+          <ColorSwatch color="#999999" label="Inactive Tab" />
+          <ColorSwatch color="#666666" label="Owned Text" />
+          <ColorSwatch color="#4CAF50" label="sam Badge" />
+          <ColorSwatch color="rgba(0,0,0,0.3)" label="Download Overlay" />
+          <ColorSwatch color="#E0E0E0" label="Button Border" />
         </div>
       </div>
 
@@ -201,22 +201,22 @@ function DesignObserve() {
             </thead>
             <tbody className="text-foreground">
               <tr className="border-b border-border/50">
-                <td className="py-2 pr-4">서재 헤더</td>
+                <td className="py-2 pr-4">Bookshelf Header</td>
                 <td className="py-2 pr-4">Bold</td>
                 <td className="py-2">18-20px</td>
               </tr>
               <tr className="border-b border-border/50">
-                <td className="py-2 pr-4">탭 라벨</td>
+                <td className="py-2 pr-4">Tab Label</td>
                 <td className="py-2 pr-4">Medium</td>
                 <td className="py-2">14-15px</td>
               </tr>
               <tr className="border-b border-border/50">
-                <td className="py-2 pr-4">카운트</td>
+                <td className="py-2 pr-4">Count</td>
                 <td className="py-2 pr-4">Regular</td>
                 <td className="py-2">13px</td>
               </tr>
               <tr>
-                <td className="py-2 pr-4">뱃지</td>
+                <td className="py-2 pr-4">Badge</td>
                 <td className="py-2 pr-4">Regular / Bold</td>
                 <td className="py-2">11-12px</td>
               </tr>
@@ -263,10 +263,10 @@ function UxObserve() {
         <p className="mb-3 text-sm font-medium text-foreground">User Flow</p>
         <div className="flex flex-wrap items-center gap-2">
           {[
-            "앱 진입",
-            '하단 탭 "서재"',
-            "기본책장",
-            "스크롤 탐색",
+            "Open app",
+            'Bottom tab "Bookshelf"',
+            "Default shelf",
+            "Scroll and browse",
           ].map((step, i) => (
             <span key={i} className="flex items-center gap-2">
               <span className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground shadow-sm">
@@ -279,7 +279,7 @@ function UxObserve() {
           ))}
         </div>
         <div className="mt-2 flex flex-wrap gap-2 pl-4">
-          {["책 탭 (읽기)", "다운로드", "필터", "편집"].map((action) => (
+          {["Tap book (Read)", "Download", "Filter", "Edit"].map((action) => (
             <span
               key={action}
               className="rounded-full border border-border bg-muted px-2.5 py-1 text-xs text-muted-foreground"
@@ -297,24 +297,24 @@ function UxObserve() {
         <div className="space-y-3">
           {[
             {
-              nudge: '잔여일 표시 ("sam 163일 남음")',
-              mechanism: "시간 제한",
-              goal: "읽기 촉진",
+              nudge: 'Days-left display ("sam 163 days left")',
+              mechanism: "Time constraint",
+              goal: "Encourage reading",
             },
             {
-              nudge: "다운로드 오버레이",
-              mechanism: "시각적 장벽",
-              goal: "다운로드 유도",
+              nudge: "Download overlay",
+              mechanism: "Visual barrier",
+              goal: "Drive downloads",
             },
             {
-              nudge: "기본책장 = 기본 탭",
-              mechanism: "풍성한 서재 인상",
-              goal: "만족감 형성",
+              nudge: "Default shelf as the default tab",
+              mechanism: "Creates a rich-library impression",
+              goal: "Build satisfaction",
             },
             {
-              nudge: "10권 카운트",
-              mechanism: "수집 가시화",
-              goal: "수집 욕구 자극",
+              nudge: "10-book count",
+              mechanism: "Makes collection size visible",
+              goal: "Trigger collecting motivation",
             },
           ].map((item, i) => (
             <div
@@ -346,7 +346,7 @@ function TechObserve() {
     <div className="space-y-6">
       <div>
         <p className="mb-2 text-sm font-medium text-foreground">
-          API Structure (추정)
+          API Structure (Inferred)
         </p>
         <CodeBlock>
           {`GET /api/bookshelf?type=default&page=1&size=20
@@ -394,8 +394,8 @@ function TechObserve() {
         </p>
         <div className="flex items-center gap-3">
           {[
-            { label: "L1 메모리 캐시", sub: "fastest" },
-            { label: "L2 디스크 캐시", sub: "persistent" },
+            { label: "L1 Memory Cache", sub: "fastest" },
+            { label: "L2 Disk Cache", sub: "persistent" },
             { label: "L3 CDN", sub: "origin" },
           ].map((tier, i) => (
             <span key={i} className="flex items-center gap-3">
@@ -427,38 +427,38 @@ const lenses: LensData[] = [
     observe: <ComponentObserve />,
     analysis: [
       {
-        title: "BookCard의 조건부 렌더링 설계",
-        body: "4가지 조건부 요소를 boolean/optional/union으로 구분하여 props의 의도를 명확히 전달한다.",
+        title: "BookCard conditional rendering design",
+        body: "It separates four conditional elements into boolean, optional, and union paths, making prop intent explicit and predictable.",
       },
       {
-        title: "ListToolbar의 범용성",
-        body: "count + viewToggle + filter + edit 패턴은 목록형 화면 어디든 재사용 가능한 구조다.",
+        title: "ListToolbar as a reusable pattern",
+        body: "The count + viewToggle + filter + edit composition is a transferable structure for almost any list-based screen.",
       },
       {
-        title: "상태 뱃지의 Discriminated Union",
-        body: "ownership 타입에 따라 OwnershipBadge 또는 SubscriptionBadge를 분기 렌더링하는 구조.",
+        title: "Discriminated union for status badges",
+        body: "The footer branches into OwnershipBadge or SubscriptionBadge by ownership type, mirroring a clean discriminated-union model.",
       },
       {
-        title: "오버레이 레이어 순서",
-        body: "Z-index 충돌 없이 CoverImage → DownloadOverlay → StackBadge 순으로 정보를 층층이 쌓는다.",
+        title: "Overlay layer ordering",
+        body: "Information stacks in a stable sequence (CoverImage -> DownloadOverlay -> StackBadge) without z-index conflicts.",
       },
     ],
     insights: [
       {
-        title: "ListToolbar 패턴",
-        body: "count + viewToggle + filter + edit를 한 줄에 배치하는 범용 컴포넌트로 추출 가능하다.",
+        title: "ListToolbar pattern",
+        body: "You can extract this into a universal one-line list toolbar that combines count, viewToggle, filter, and edit actions.",
       },
       {
-        title: "조건부 오버레이 설계",
-        body: "boolean/optional/union으로 명확히 구분하면 props가 예측 가능해지고 테스트가 쉬워진다.",
+        title: "Conditional overlay design",
+        body: "Clear boolean/optional/union boundaries make props easier to reason about and significantly easier to test.",
       },
       {
-        title: "Discriminated Union으로 상태 뱃지",
-        body: "union type으로 타입 안전성과 확장성을 확보할 수 있다.",
+        title: "Status badges with discriminated unions",
+        body: "A union-driven status model secures type safety today while keeping room for future badge variants.",
       },
       {
-        title: "도메인 특화 카드 > 범용 카드",
-        body: "도메인 로직이 많으면 전용 카드가 범용 카드보다 깔끔하다.",
+        title: "Domain card over generic card",
+        body: "When domain logic is dense, a dedicated card component stays cleaner than over-customizing a generic card.",
       },
     ],
   },
@@ -468,38 +468,38 @@ const lenses: LensData[] = [
     observe: <BusinessObserve />,
     analysis: [
       {
-        title: "소유 모델의 복잡성",
-        body: "소유 상태 x 다운로드 상태 = 4가지 조합. UI에서 레이어링으로 해결한다.",
+        title: "Complex ownership model",
+        body: "Ownership state x download state yields four key combinations, resolved cleanly through independent UI layers.",
       },
       {
-        title: "daysLeft의 비즈니스 의도",
-        body: "구독 갱신이나 구매 전환을 유도하는 비즈니스 드라이버 역할을 한다.",
+        title: "Business role of daysLeft",
+        body: "daysLeft is not just metadata; it acts as a business driver for renewal and conversion to purchase.",
       },
       {
-        title: "책장 분류의 도메인 로직",
-        body: "세 번째 탭만 기기 상태 기준으로 분류 - 도메인 순수성보다 사용자 시나리오를 우선한다.",
+        title: "Domain logic behind shelf classification",
+        body: "Only the third tab is grouped by device state, showing a deliberate trade-off toward user scenarios over domain purity.",
       },
       {
-        title: "필터와 편집의 도메인 액션",
-        body: "도서 수 증가 시 관리 복잡성을 완화하기 위한 장치.",
+        title: "Filter and edit as domain actions",
+        body: "Filter and edit are governance tools that reduce management complexity as the library grows.",
       },
     ],
     insights: [
       {
-        title: "독립적 상태 축 레이어링",
-        body: "두 독립 상태(소유/다운로드)를 UI의 다른 레이어에 배치하면 교차 조합을 시각적으로 표현할 수 있다.",
+        title: "Layer independent state axes",
+        body: "Placing ownership and download in separate visual layers makes cross-combinations legible without overwhelming the card.",
       },
       {
-        title: "Computed 속성의 비즈니스 드라이버",
-        body: "서버 원본 -> 클라이언트 계산 -> 행동 유도. daysLeft처럼 계산된 값이 비즈니스 행동을 이끈다.",
+        title: "Computed fields as business drivers",
+        body: "Server source -> client-side computation -> user behavior: computed values like daysLeft can directly shape action.",
       },
       {
-        title: "도메인 순수성 vs 사용자 시나리오",
-        body: "핵심 시나리오에 맞추면 도메인 순수성을 약간 포기해도 더 나은 설계가 된다.",
+        title: "Domain purity vs user scenario",
+        body: "It can be better to relax strict domain purity when doing so better supports a core user scenario.",
       },
       {
-        title: "배치 액션의 진입 시점",
-        body: "관리 부담이 생기는 시점에 필터/편집 같은 도구를 제공하는 것이 적절하다.",
+        title: "When to surface batch actions",
+        body: "Introduce tools like filter and edit at the point where collection scale creates real management overhead.",
       },
     ],
   },
@@ -509,38 +509,38 @@ const lenses: LensData[] = [
     observe: <DesignObserve />,
     analysis: [
       {
-        title: "커버 중심 디자인",
-        body: "UI 프레임은 무채색으로 절제하고, 책 커버가 유일한 비주얼 포인트가 되게 한다.",
+        title: "Cover-first visual design",
+        body: "A restrained neutral UI frame lets book covers remain the primary visual focus of the screen.",
       },
       {
-        title: "뱃지 색상의 심리적 설계",
-        body: "소장 = 회색(안정/완료), sam = 초록(활성/행동유도). 상태에 감정을 매핑한다.",
+        title: "Psychological color mapping for badges",
+        body: "Owned = gray (stable/completed), sam = green (active/actionable), mapping emotional cues to state.",
       },
       {
-        title: "정보 밀도 vs 여백 균형",
-        body: "한 화면에 6-9권 노출 + 충분한 여백으로 시각적 숨통을 확보한다.",
+        title: "Density and whitespace balance",
+        body: "Showing 6-9 books per screen while preserving breathing room balances scan speed and readability.",
       },
       {
-        title: "버튼 3단계 위계",
-        body: "아이콘만(주요) -> 테두리+라벨(보조) -> 테두리+아이콘(토글)으로 중요도를 시각화한다.",
+        title: "Three-level button hierarchy",
+        body: "Icon-only (primary) -> outlined + label (secondary) -> outlined + icon (toggle) creates clear visual priority.",
       },
     ],
     insights: [
       {
-        title: "콘텐츠 중심 UI에서의 색상 제한",
-        body: "UI 프레임은 무채색, 유채색은 시스템 상태에만 사용하는 원칙.",
+        title: "Color restraint in content-first UI",
+        body: "Keep the frame neutral and reserve saturated colors for system-state communication only.",
       },
       {
-        title: "상태 색상의 심리적 매핑",
-        body: "회색 = 완료, 초록 = 활성, 빨간 = 경고. 상태별 색상에 감정적 의미를 부여한다.",
+        title: "Emotional mapping of status colors",
+        body: "Gray = completed, green = active, red = warning; color semantics help users prioritize attention quickly.",
       },
       {
-        title: "3열 그리드 + 1:1.4 비율",
-        body: "모바일 썸네일 그리드의 범용 패턴. 책, 앱, 상품 카드에 두루 적용 가능하다.",
+        title: "3-column grid + 1:1.4 ratio",
+        body: "A broadly reusable mobile thumbnail pattern that works well for books, apps, and product cards alike.",
       },
       {
-        title: "버튼 3단계 위계",
-        body: "새 디자인 시스템을 만들 때 버튼 위계의 시작점으로 참고할 수 있다.",
+        title: "Three-level button hierarchy",
+        body: "A practical baseline hierarchy to start from when defining button systems in a new design language.",
       },
     ],
   },
@@ -550,38 +550,38 @@ const lenses: LensData[] = [
     observe: <UxObserve />,
     analysis: [
       {
-        title: "시간 기반 넛지",
-        body: "손실 회피 + 가치 인지 심리 효과로 사용을 촉진한다.",
+        title: "Time-based nudge",
+        body: "Loss aversion plus perceived-value reinforcement increases engagement and reading intent.",
       },
       {
-        title: "부드러운 장벽 (Soft Barrier)",
-        body: '완전 차단이 아닌 "한 단계 더" 전달. 반투명 오버레이로 접근 가능하지만 행동을 유도한다.',
+        title: "Soft barrier",
+        body: 'Instead of hard blocking, it communicates "one more step" with a translucent overlay that still nudges action.',
       },
       {
-        title: "기본 탭의 감정 설계",
-        body: "사용 빈도순이 아닌 감정 순서: 만족감 -> 정리 -> 실용. 첫 인상을 극대화한다.",
+        title: "Emotional strategy for the default tab",
+        body: "The order favors emotional payoff over pure frequency: satisfaction -> organization -> utility.",
       },
       {
-        title: "편집 모드의 진입 비용",
-        body: "파괴적 액션을 모드로 격리하여 실수를 방지한다.",
+        title: "Entry cost for edit mode",
+        body: "Isolating destructive actions behind an explicit mode transition lowers accidental-error risk.",
       },
     ],
     insights: [
       {
-        title: "시간 기반 넛지 패턴",
-        body: "만료일 잔여 표시로 사용 촉진. 구독, 쿠폰 등에 범용 적용 가능하다.",
+        title: "Time-based nudge pattern",
+        body: "Displaying remaining time drives usage and generalizes well to subscriptions, coupons, and trial products.",
       },
       {
-        title: "부드러운 장벽",
-        body: '반투명 오버레이로 "한 단계 더" 전달. 로그인 필요, 프리미엄 등에 적용 가능하다.',
+        title: "Soft barrier",
+        body: 'A translucent layer communicates "one more step," applicable to login-gated and premium-only experiences.',
       },
       {
-        title: "기본 탭의 감정 설계",
-        body: "첫 번째 탭 = 가장 좋은 인상을 주는 것. 사용 빈도가 아닌 감정을 기준으로 정렬한다.",
+        title: "Emotional default-tab design",
+        body: "Set the first tab to deliver the strongest positive impression, not merely the highest usage frequency.",
       },
       {
-        title: "모드 분리로 실수 방지",
-        body: "파괴적 액션은 별도 모드에 격리하여 일반 탐색과 분리한다.",
+        title: "Prevent mistakes through mode separation",
+        body: "Keep destructive actions in a dedicated mode, separated from everyday browsing interactions.",
       },
     ],
   },
@@ -591,38 +591,38 @@ const lenses: LensData[] = [
     observe: <TechObserve />,
     analysis: [
       {
-        title: "이중 데이터 소스 패턴",
-        body: "서버(소유 정보) + 로컬(다운로드 상태)을 merge하여 하나의 ViewModel을 생성한다.",
+        title: "Dual data-source pattern",
+        body: "Merge server ownership data with local download state to produce a unified ViewModel for rendering.",
       },
       {
-        title: "이미지 캐싱 전략",
-        body: "메모리 -> 디스크 -> CDN 3단 캐싱으로 이미지 그리드의 성능을 확보한다.",
+        title: "Image caching strategy",
+        body: "A memory -> disk -> CDN cache chain secures responsive performance for image-heavy grids.",
       },
       {
-        title: "탭 간 데이터 공유",
-        body: "같은 데이터셋의 클라이언트 사이드 필터링으로 탭 전환 시 재요청 없이 즉시 전환.",
+        title: "Data sharing across tabs",
+        body: "Client-side filtering over one dataset enables instant tab switching without repeated network fetches.",
       },
       {
-        title: "다운로드 관리의 복잡성",
-        body: "백그라운드 처리, 큐, 저장공간, 상태 동기화 등 독립적 관리가 필요한 영역.",
+        title: "Complexity of download management",
+        body: "Background jobs, queues, storage limits, and state sync make download handling a distinct technical domain.",
       },
     ],
     insights: [
       {
-        title: "이중 데이터 소스 merge",
-        body: "서버 + 로컬 -> ViewModel. 오프라인 앱의 표준 패턴이다.",
+        title: "Dual data-source merge",
+        body: "Server + local -> ViewModel is a standard pattern for offline-capable applications.",
       },
       {
-        title: "3단 이미지 캐싱",
-        body: "메모리 -> 디스크 -> CDN. 이미지 그리드 UI의 표준 전략이다.",
+        title: "Three-tier image caching",
+        body: "Memory -> disk -> CDN remains a practical default strategy for image-grid interfaces.",
       },
       {
-        title: "클라이언트 사이드 필터링",
-        body: "소규모 데이터는 서버 재요청 없이 즉시 탭 전환이 가능하다.",
+        title: "Client-side filtering",
+        body: "For small datasets, local filtering provides immediate tab transitions without additional server requests.",
       },
       {
-        title: "오프라인 기능의 기술적 비용",
-        body: "다운로드/오프라인은 독립 관리가 필요할 만큼 복잡한 영역이다.",
+        title: "Technical cost of offline features",
+        body: "Download and offline capabilities are complex enough to justify separate management concerns.",
       },
     ],
   },
@@ -638,8 +638,12 @@ export default function LabYes24BookshelfGrid() {
       meta={meta}
       lenses={lenses}
       deviceType="mobile"
-      screenshotSrc="/images/lab/yes24-bookshelf-grid/01-main.png"
-      screenshotAlt="YES24 모바일 서재 그리드 뷰 스크린샷"
+      screenshots={[
+        {
+          src: "/images/lab/yes24-bookshelf-grid/01-main.png",
+          alt: "YES24 mobile bookshelf grid view screenshot",
+        },
+      ]}
     />
   );
 }
