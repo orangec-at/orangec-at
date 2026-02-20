@@ -1,11 +1,9 @@
 // 서버 전용 블로그 유틸리티
-import type React from "react";
 import { promises as fs } from "fs";
 import matter from "gray-matter";
 import path from "path";
 import {
-  type MDXFrontmatter,
-  type TsxPostModule,
+  MDXFrontmatter,
   validateAndParseFrontmatter,
 } from "../types/frontmatter";
 
@@ -15,16 +13,45 @@ export interface BlogPostMeta extends MDXFrontmatter {
   locale: string;
 }
 
-// TSX 포스트에서 meta 추출 (서버 전용)
-async function getTsxModuleMeta(
+// 지원하는 포스트 파일 확장자
+const POST_EXTENSIONS = [".mdx", ".tsx"] as const;
+
+// slug에 해당하는 포스트 파일 경로와 확장자를 찾는다
+async function resolvePostFile(
   slug: string,
   locale: string
-): Promise<BlogPostMeta | null> {
+): Promise<{ filePath: string; ext: string } | null> {
+  const postsDir = path.join(process.cwd(), "src/posts", locale);
+  for (const ext of POST_EXTENSIONS) {
+    const filePath = path.join(postsDir, `${slug}${ext}`);
+    try {
+      await fs.access(filePath);
+      return { filePath, ext };
+    } catch {
+      // 다음 확장자 시도
+    }
+  }
+  return null;
+}
+
+// TSX 파일에서 export const meta를 추출한다
+async function extractTsxMeta(filePath: string): Promise<Record<string, unknown> | null> {
   try {
-    const mod: TsxPostModule = await import(`../posts/${locale}/${slug}`);
-    if (!mod.meta) return null;
-    const frontmatter = validateAndParseFrontmatter(mod.meta);
-    return { ...frontmatter, slug, locale };
+    const source = await fs.readFile(filePath, "utf-8");
+    // meta 객체를 정규식으로 추출 (export const meta: MDXFrontmatter = { ... };)
+    const metaMatch = source.match(
+      /export\s+const\s+meta\s*(?::\s*MDXFrontmatter\s*)?=\s*(\{[\s\S]*?\n\});/
+    );
+    if (!metaMatch) return null;
+
+    // JSON-like 객체를 파싱 (JS 객체 리터럴 → JSON 변환)
+    const objStr = metaMatch[1]
+      .replace(/\/\/.*$/gm, "")           // 한 줄 주석 제거
+      .replace(/,(\s*[}\]])/g, "$1")      // trailing comma 제거
+      .replace(/(\w+)\s*:/g, '"$1":')     // key를 따옴표로 감싸기
+      .replace(/'/g, '"');                 // 작은따옴표 → 큰따옴표
+
+    return JSON.parse(objStr);
   } catch {
     return null;
   }
@@ -34,26 +61,38 @@ export async function getBlogPostMeta(
   slug: string,
   locale: string = "ko"
 ): Promise<BlogPostMeta | null> {
-  // 1. Try MDX first
   try {
-    const filePath = path.join(
-      process.cwd(),
-      "src/posts",
-      locale,
-      `${slug}.mdx`
-    );
-    const source = await fs.readFile(filePath, "utf-8");
-    const { data } = matter(source);
+    const resolved = await resolvePostFile(slug, locale);
+    if (!resolved) return null;
 
+    let data: Record<string, unknown>;
+
+    if (resolved.ext === ".mdx") {
+      const source = await fs.readFile(resolved.filePath, "utf-8");
+      const parsed = matter(source);
+      data = parsed.data;
+    } else {
+      // .tsx — export const meta에서 추출
+      const tsxMeta = await extractTsxMeta(resolved.filePath);
+      if (!tsxMeta) return null;
+      data = tsxMeta;
+    }
+
+    // Zod 스키마로 검증 및 파싱
     const frontmatter = validateAndParseFrontmatter(data);
 
-    return { ...frontmatter, slug, locale };
-  } catch {
-    // MDX not found, try TSX
+    return {
+      ...frontmatter,
+      slug,
+      locale,
+    };
+  } catch (error) {
+    console.error(
+      `Failed to read blog post meta for ${slug} in ${locale}:`,
+      error
+    );
+    return null;
   }
-
-  // 2. Try TSX
-  return getTsxModuleMeta(slug, locale);
 }
 
 export async function getBlogPostsMeta(
@@ -72,8 +111,8 @@ export async function getBlogPostsByLocale(
   try {
     const postsDir = path.join(process.cwd(), "src/posts", locale);
     const files = await fs.readdir(postsDir);
-    const postFiles = files.filter(
-      (file) => file.endsWith(".mdx") || file.endsWith(".tsx")
+    const postFiles = files.filter((file) =>
+      POST_EXTENSIONS.some((ext) => file.endsWith(ext))
     );
 
     const posts = await Promise.all(
@@ -98,16 +137,8 @@ export async function getAvailableTranslations(
   const availableLocales: string[] = [];
 
   for (const locale of locales) {
-    const postsDir = path.join(process.cwd(), "src/posts", locale);
-    const mdxExists = await fs
-      .access(path.join(postsDir, `${slug}.mdx`))
-      .then(() => true)
-      .catch(() => false);
-    const tsxExists = await fs
-      .access(path.join(postsDir, `${slug}.tsx`))
-      .then(() => true)
-      .catch(() => false);
-    if (mdxExists || tsxExists) {
+    const resolved = await resolvePostFile(slug, locale);
+    if (resolved) {
       availableLocales.push(locale);
     }
   }
@@ -126,8 +157,8 @@ export async function getAllPostSlugs(): Promise<
     try {
       const postsDir = path.join(process.cwd(), "src/posts", locale);
       const files = await fs.readdir(postsDir);
-      const postFiles = files.filter(
-        (file) => file.endsWith(".mdx") || file.endsWith(".tsx")
+      const postFiles = files.filter((file) =>
+        POST_EXTENSIONS.some((ext) => file.endsWith(ext))
       );
 
       postFiles.forEach((filename) => {
@@ -142,15 +173,12 @@ export async function getAllPostSlugs(): Promise<
   return allSlugs;
 }
 
-// TSX 포스트 컴포넌트 로드 (page route에서 사용)
-export async function getTsxPostComponent(
+// slug의 포스트 타입을 반환 (라우터에서 사용)
+export async function getPostType(
   slug: string,
   locale: string
-): Promise<React.ComponentType | null> {
-  try {
-    const mod: TsxPostModule = await import(`../posts/${locale}/${slug}`);
-    return mod.default ?? null;
-  } catch {
-    return null;
-  }
+): Promise<"mdx" | "tsx" | null> {
+  const resolved = await resolvePostFile(slug, locale);
+  if (!resolved) return null;
+  return resolved.ext === ".tsx" ? "tsx" : "mdx";
 }

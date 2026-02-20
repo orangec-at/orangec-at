@@ -17,12 +17,11 @@ export const meta: MDXFrontmatter = {
     "YES24 모바일 서재의 그리드 뷰를 5가지 렌즈(컴포넌트, 비즈니스, 디자인, UX, 기술)로 분석한 연구일지",
   author: "Jaeil Lee",
   category: "lab",
+  layout: "custom",
   relatedProjects: [],
   featured: false,
   draft: false,
 };
-
-export const layout = "custom" as const;
 
 /* ------------------------------------------------------------------ */
 /*  Lens: Component                                                    */

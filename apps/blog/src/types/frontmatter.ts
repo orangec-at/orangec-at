@@ -2,7 +2,7 @@ import { z } from "zod";
 
 // 카테고리 및 태그 상수 (Zod enum 사용)
 // 카테고리 key 상수
-export const BLOG_CATEGORIES = ["case-study", "technical", "insight"] as const;
+export const BLOG_CATEGORIES = ["case-study", "technical", "insight", "lab"] as const;
 
 // 태그 key 상수
 export const COMMON_TAGS = [
@@ -23,12 +23,13 @@ export const COMMON_TAGS = [
   "es6",
 ] as const;
 
-export const CONTENT_CATEGORIES = ["case-study", "technical", "insight"] as const;
+export const CONTENT_CATEGORIES = ["case-study", "technical", "insight", "lab"] as const;
 // 카테고리 번역 맵핑
 export const CATEGORY_TRANSLATIONS = {
   "case-study": { ko: "케이스 스터디", en: "Case Study" },
   technical: { ko: "기술", en: "Technical" },
   insight: { ko: "인사이트", en: "Insight" },
+  lab: { ko: "연구일지", en: "Lab" },
 } as const;
 
 // 태그 번역 맵핑

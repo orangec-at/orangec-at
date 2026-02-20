@@ -12,12 +12,11 @@ export const meta: MDXFrontmatter = {
     "YES24 모바일 eBook 뷰어의 오버레이 UI를 5가지 렌즈로 분석한 연구일지",
   author: "Jaeil Lee",
   category: "lab",
+  layout: "custom",
   relatedProjects: [],
   featured: false,
   draft: false,
 };
-
-export const layout = "custom" as const;
 
 /* ------------------------------------------------------------------ */
 /*  Lens: Component                                                    */
