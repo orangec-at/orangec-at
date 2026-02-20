@@ -1,0 +1,508 @@
+---
+title: "Stripe + Supabase: Adding Subscription Payments to Your SaaS in a Day"
+description: "Checkout sessions, webhooks, subscription status sync — the complete payment integration pattern for Supabase-backed SaaS."
+date: "2026-02-20"
+tags: ["supabase", "typescript", "nextjs", "development"]
+slug: "stripe-supabase-saas-payments"
+category: "technical"
+author: "Jaeil Lee"
+featured: false
+seo:
+  keywords: ["stripe supabase integration", "saas subscription payments", "stripe checkout nextjs", "stripe webhook supabase", "saas billing setup"]
+---
+
+# Stripe + Supabase: Adding Subscription Payments to Your SaaS in a Day
+
+Most founders overestimate payment complexity and underestimate deployment complexity.
+
+They imagine billing as a giant subsystem with invoices, dunning logic, tax rules, edge cases, and dashboard UIs. So they postpone it. "We'll add payments after traction." Then traction comes, people ask for paid plans, and now the product has no monetization path.
+
+The practical reality is simpler: if you're building a subscription SaaS, Stripe Checkout + Stripe Webhooks + a clean Supabase `subscriptions` table gets you to production far faster than most teams expect.
+
+This is the exact pattern I use when shipping MVPs that need real billing quickly. It works especially well for AI-native products where speed matters but "move fast" still has to include security and data consistency.
+
+If you have not set up auth/session correctly yet, read [Supabase Auth From Scratch](/en/supabase-auth-from-scratch) first. Billing without reliable user identity is where weird bugs begin.
+
+## 1. Why Payments Are Simpler Than You Think
+
+Stripe Checkout handles the hard parts most teams should not reinvent:
+
+- card collection UX
+- SCA/3DS flows
+- payment method management
+- localization and many country-specific details
+- retry paths around incomplete payment states
+
+That means your app can focus on three responsibilities:
+
+1. create a checkout session for the current user
+2. handle Stripe webhook events and sync subscription state
+3. enforce feature access via your own database state + RLS
+
+You don't need custom PCI-heavy forms. You don't need to build your own billing portal. You don't need to run a periodic Stripe poller every minute.
+
+When I see payment integrations go wrong, it is usually one of these mistakes:
+
+- relying on client-side success redirects instead of webhooks for truth
+- no idempotency in webhook handlers
+- no durable mapping between Stripe customer and internal user
+- mixing entitlement logic directly with transient Stripe API responses
+
+The fix is architecture, not hero debugging.
+
+## 2. The Architecture That Stays Stable
+
+The baseline flow:
+
+```text
+User clicks "Upgrade"
+  -> Next.js route creates Stripe Checkout Session (server-side)
+  -> Stripe-hosted checkout handles payment and subscription creation
+  -> Stripe sends webhook events to your backend
+  -> Backend verifies signature, upserts subscriptions in Supabase
+  -> App gates features by subscriptions table (+ RLS policies)
+```
+
+I like this because each layer has one job:
+
+- **Stripe** is payment system of record.
+- **Supabase** is app authorization state.
+- **Your app** reads Supabase to decide paid/free behavior.
+
+One table is usually enough for MVP/early growth.
+
+```sql
+create table public.subscriptions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  stripe_customer_id text not null,
+  stripe_subscription_id text not null unique,
+  stripe_price_id text not null,
+  status text not null,
+  current_period_start timestamptz,
+  current_period_end timestamptz,
+  cancel_at_period_end boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create unique index subscriptions_user_active_idx
+  on public.subscriptions (user_id)
+  where status in ('trialing', 'active', 'past_due');
+
+create index subscriptions_customer_idx on public.subscriptions (stripe_customer_id);
+
+alter table public.subscriptions enable row level security;
+```
+
+RLS policy for self-access:
+
+```sql
+create policy "subscriptions_select_own"
+on public.subscriptions
+for select
+to authenticated
+using ((select auth.uid()) = user_id);
+```
+
+Your feature gating logic can now be a simple query against this table.
+
+## 3. Creating Checkout Sessions (Server-side)
+
+You want the server to own plan selection and Stripe calls. Never trust client payloads for price IDs without validation.
+
+First, create Stripe client:
+
+```typescript
+// lib/stripe.ts
+import Stripe from "stripe";
+
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-01-27.acacia",
+});
+```
+
+Then create an upgrade route using Next.js App Router.
+
+```typescript
+// app/api/billing/checkout/route.ts
+import { NextResponse } from "next/server";
+import { stripe } from "@/lib/stripe";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+
+const PRICE_IDS = {
+  starter: process.env.STRIPE_PRICE_STARTER!,
+  pro: process.env.STRIPE_PRICE_PRO!,
+} as const;
+
+async function createSupabaseServer() {
+  const cookieStore = await cookies();
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
+}
+
+export async function POST(req: Request) {
+  const { plan } = (await req.json()) as { plan: "starter" | "pro" };
+
+  if (!plan || !(plan in PRICE_IDS)) {
+    return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
+  }
+
+  const supabase = await createSupabaseServer();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
+
+  const session = await stripe.checkout.sessions.create({
+    mode: "subscription",
+    line_items: [{ price: PRICE_IDS[plan], quantity: 1 }],
+    success_url: `${appUrl}/billing/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${appUrl}/billing`,
+    client_reference_id: user.id,
+    customer_email: user.email,
+    allow_promotion_codes: true,
+    metadata: {
+      user_id: user.id,
+      plan,
+    },
+  });
+
+  return NextResponse.json({ url: session.url });
+}
+```
+
+The key fields:
+
+- `mode: "subscription"`
+- `line_items` with your recurring price ID
+- `client_reference_id` and metadata containing your internal user ID
+- success/cancel URLs
+
+You can also pass `customer` if you've already created/stored Stripe customer IDs. For early versions, `customer_email` + webhook mapping is often enough.
+
+## 4. Handling Webhooks Correctly
+
+This is the part that decides whether your billing is reliable.
+
+Two non-negotiables:
+
+1. verify Stripe signature with raw request body
+2. treat webhooks as source of truth for subscription state
+
+### Why raw body matters
+
+Stripe signs the exact payload bytes. If JSON parsing mutates payload before verification, signature checks fail. In route handlers, call `req.text()` and feed that exact string into `constructEvent`.
+
+```typescript
+// app/api/stripe/webhook/route.ts
+import { headers } from "next/headers";
+import { stripe } from "@/lib/stripe";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+async function upsertSubscriptionFromStripe(subscriptionId: string) {
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+    expand: ["items.data.price", "customer"],
+  });
+
+  const customerId =
+    typeof subscription.customer === "string"
+      ? subscription.customer
+      : subscription.customer.id;
+
+  const priceId = subscription.items.data[0]?.price?.id;
+
+  // user mapping table is strongly recommended in production
+  const { data: mapping, error: mappingError } = await supabaseAdmin
+    .from("stripe_customers")
+    .select("user_id")
+    .eq("stripe_customer_id", customerId)
+    .single();
+
+  if (mappingError || !mapping) {
+    throw new Error(`Missing customer mapping for ${customerId}`);
+  }
+
+  const payload = {
+    user_id: mapping.user_id,
+    stripe_customer_id: customerId,
+    stripe_subscription_id: subscription.id,
+    stripe_price_id: priceId,
+    status: subscription.status,
+    current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+    current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+    cancel_at_period_end: subscription.cancel_at_period_end,
+    updated_at: new Date().toISOString(),
+  };
+
+  const { error } = await supabaseAdmin
+    .from("subscriptions")
+    .upsert(payload, { onConflict: "stripe_subscription_id" });
+
+  if (error) throw error;
+}
+
+export async function POST(req: Request) {
+  const rawBody = await req.text();
+  const signature = (await headers()).get("stripe-signature");
+
+  if (!signature) {
+    return new Response("Missing stripe-signature", { status: 400 });
+  }
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      rawBody,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET!
+    );
+  } catch (error) {
+    return new Response("Invalid signature", { status: 400 });
+  }
+
+  try {
+    switch (event.type) {
+      case "checkout.session.completed": {
+        const session = event.data.object;
+
+        if (session.mode === "subscription" && session.subscription) {
+          await upsertSubscriptionFromStripe(session.subscription as string);
+        }
+        break;
+      }
+
+      case "customer.subscription.updated":
+      case "customer.subscription.deleted": {
+        const sub = event.data.object;
+        await upsertSubscriptionFromStripe(sub.id);
+        break;
+      }
+
+      case "invoice.paid":
+      case "invoice.payment_failed": {
+        const invoice = event.data.object;
+        if (invoice.subscription) {
+          await upsertSubscriptionFromStripe(invoice.subscription as string);
+        }
+        break;
+      }
+
+      default:
+        break;
+    }
+
+    return new Response("ok", { status: 200 });
+  } catch (error) {
+    return new Response("Webhook handling failed", { status: 500 });
+  }
+}
+```
+
+### Important behavior choices
+
+- **Fetch latest subscription state from Stripe** instead of trusting partial webhook payload shape forever.
+- **Use upsert** keyed on `stripe_subscription_id`.
+- **Use service-role Supabase client only in webhook route**.
+- **Keep entitlement checks in your own DB**, not ad-hoc Stripe API calls on every request.
+
+## 5. Syncing Subscription State for Feature Gating
+
+Your app should not ask Stripe in-line for every protected page load. That creates latency and a new failure mode where Stripe outages break your product UX.
+
+Instead:
+
+- Stripe events update Supabase `subscriptions`.
+- App reads `subscriptions` table.
+- RLS decides who can view paid resources.
+
+Example gated table:
+
+```sql
+create table public.premium_reports (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  title text not null,
+  report_json jsonb not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.premium_reports enable row level security;
+```
+
+RLS policy requiring active/trialing subscription:
+
+```sql
+create policy "premium_reports_select_paid_users"
+on public.premium_reports
+for select
+to authenticated
+using (
+  user_id = (select auth.uid())
+  and exists (
+    select 1
+    from public.subscriptions s
+    where s.user_id = (select auth.uid())
+      and s.status in ('trialing', 'active')
+  )
+);
+```
+
+Application-side helper:
+
+```typescript
+export function isPaidStatus(status: string | null | undefined) {
+  return status === "active" || status === "trialing";
+}
+```
+
+I still keep app-level checks for UX messaging ("Upgrade to unlock this feature"), but hard security remains in RLS.
+
+### Customer mapping table (recommended)
+
+```sql
+create table public.stripe_customers (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  stripe_customer_id text not null unique,
+  created_at timestamptz not null default now()
+);
+
+alter table public.stripe_customers enable row level security;
+
+create policy "stripe_customers_select_own"
+on public.stripe_customers
+for select
+to authenticated
+using ((select auth.uid()) = user_id);
+```
+
+This table removes ambiguity in webhook mapping and keeps your billing model predictable.
+
+## 6. Billing Portal: Zero Custom UI for Subscription Management
+
+You don't need to build your own "change plan / update card / cancel subscription" pages in v1.
+
+Stripe Billing Portal does this for you.
+
+```typescript
+// app/api/billing/portal/route.ts
+import { NextResponse } from "next/server";
+import { stripe } from "@/lib/stripe";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+
+export async function POST() {
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        setAll: (cookiesToSet) => {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { data: customer } = await supabase
+    .from("stripe_customers")
+    .select("stripe_customer_id")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!customer?.stripe_customer_id) {
+    return NextResponse.json({ error: "No billing profile" }, { status: 404 });
+  }
+
+  const portal = await stripe.billingPortal.sessions.create({
+    customer: customer.stripe_customer_id,
+    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing`,
+  });
+
+  return NextResponse.json({ url: portal.url });
+}
+```
+
+The business value here is huge:
+
+- fewer support tickets for card updates/cancellations
+- no extra billing management UI to maintain
+- safer behavior around cancellation and invoice states
+
+## Operational Checklist (What Usually Breaks)
+
+Use this checklist before announcing "billing shipped":
+
+1. **Webhook endpoint is reachable in production**
+   - Check Stripe dashboard event delivery logs.
+2. **Signature verification is active**
+   - No fallback path that accepts unsigned payloads.
+3. **Customer mapping exists for every paid user**
+   - `stripe_customers` is populated deterministically.
+4. **Subscription sync is idempotent**
+   - Replayed events don't corrupt state.
+5. **Feature gating uses DB status, not redirect query params**
+   - `?success=true` should not grant access.
+6. **Cancellation + past_due path tested**
+   - Ensure downgrade behavior is explicit.
+
+If you skip these, billing may appear "working" in happy paths but fail when real customer behavior starts.
+
+## The Takeaway
+
+You can add reliable SaaS subscriptions in a day if you keep responsibilities clear:
+
+- Checkout creates intent and collects payment.
+- Webhooks synchronize truth.
+- Supabase stores entitlement state.
+- RLS enforces paid access boundaries.
+
+This pattern scales from MVP to serious revenue without forcing a rewrite every two months.
+
+If your product already has Supabase auth, this is a clean next step. If auth is still shaky, fix that first with [Supabase Auth From Scratch](/en/supabase-auth-from-scratch), then wire in billing on top.
+
+For founders shipping fast with AI tools, this is the point where prototype becomes business.
+
+---
+
+*Need help wiring Stripe + Supabase subscriptions so billing is production-safe, not demo-safe? I specialize in turning AI-built MVPs into reliable SaaS systems. [Let's talk](mailto:jay@orangec.at).*
