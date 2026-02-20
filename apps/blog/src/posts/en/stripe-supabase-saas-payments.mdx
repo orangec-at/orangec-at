@@ -486,6 +486,14 @@ Use this checklist before announcing "billing shipped":
 6. **Cancellation + past_due path tested**
    - Ensure downgrade behavior is explicit.
 
+7. **Plan migration tested**
+   - Upgrades and downgrades should preserve entitlements correctly.
+   - Verify plan metadata in Stripe and your `stripe_price_id` sync logic stay aligned.
+
+8. **Webhook retry behavior observed**
+   - Trigger manual replay in Stripe dashboard.
+   - Confirm your handler remains idempotent and the resulting row is stable.
+
 If you skip these, billing may appear "working" in happy paths but fail when real customer behavior starts.
 
 ## The Takeaway
