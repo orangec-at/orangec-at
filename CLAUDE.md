@@ -77,11 +77,14 @@ orangec-at/
 ## Quick Commands
 
 ```bash
-# 개발 서버
+# 개발 서버 (전체)
 pnpm dev
 
-# 블로그만 실행
+# 블로그만 실행 (아래 둘 다 동일)
+pnpm blog dev
 pnpm --filter blog dev
+# → apps/blog 디렉토리에서 next dev --turbopack --port 7071 실행
+# → http://localhost:7071
 
 # 빌드
 pnpm build
@@ -89,6 +92,36 @@ pnpm build
 # 타입 체크
 pnpm typecheck
 ```
+
+### Dev Server 주의사항
+
+- **반드시 `pnpm blog dev`로 실행**. `cd apps/blog && npx next dev`나 monorepo 루트에서 `npx next dev apps/blog`로 직접 실행하면 `process.cwd()`가 monorepo 루트를 반환해서 `src/posts/` 경로를 못 찾음
+- 블로그 포트: **7071** (고정)
+- Playwright 등으로 확인 시 URL: `http://localhost:7071/en/blog/{slug}`
+
+---
+
+## Blog Post Types
+
+블로그는 **MDX**와 **TSX** 두 가지 포스트 형식을 지원합니다.
+
+### MDX 포스트 (기본)
+- 위치: `apps/blog/src/posts/{locale}/{slug}.mdx`
+- frontmatter로 메타데이터 선언
+- `BlogDetailClient` 컴포넌트로 렌더링
+
+### TSX 커스텀 레이아웃 포스트
+- 위치: `apps/blog/src/posts/{locale}/{slug}.tsx`
+- `export const meta: MDXFrontmatter` 로 메타데이터 선언
+- `export const layout = "custom" as const`
+- `export default function` 으로 전체 페이지를 직접 렌더링
+- `"use client"` 사용 가능 (인터랙티브 요소)
+- Lab 연구일지 등 커스텀 UI가 필요한 포스트에 사용
+
+### 메타데이터 추출 방식 (`blog-utils.server.ts`)
+- `.mdx`: `gray-matter`로 frontmatter 파싱
+- `.tsx`: 정규식으로 `export const meta = { ... }` 추출 후 JSON 파싱
+- `getPostType(slug, locale)` 로 포스트 타입 확인 가능
 
 ---
 

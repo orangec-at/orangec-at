@@ -68,3 +68,6 @@ apps/**/.serena/
 .superdesign/
 
 codes/
+
+# Local git worktrees
+.worktrees/
