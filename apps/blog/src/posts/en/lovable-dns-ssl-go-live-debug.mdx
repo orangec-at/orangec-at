@@ -1,0 +1,251 @@
+---
+title: "Lovable Site Not Going Live? The DNS/SSL Debug Guide Nobody Wrote"
+description: "'It takes up to 72 hours' — but your DNS propagated 20 hours ago. The real problem is SSL certificate generation being blocked."
+date: "2026-02-20"
+tags: ["development", "tips"]
+slug: "lovable-dns-ssl-go-live-debug"
+category: "technical"
+author: "Jaeil Lee"
+featured: false
+seo:
+  keywords: ["lovable custom domain", "lovable dns not working", "lovable ssl certificate", "cloudflare lovable setup", "lovable go live"]
+---
+
+# Lovable Site Not Going Live? The DNS/SSL Debug Guide Nobody Wrote
+
+If you built a site with Lovable, connected your custom domain, and still see "pending" after many hours, you are probably hearing the same advice:
+
+"Wait up to 72 hours."
+
+Sometimes that is true. Most of the time it is lazy support language for a specific technical issue that can be found in minutes.
+
+I keep seeing the same pattern:
+
+- DNS records already propagated.
+- Domain resolves correctly in lookup tools.
+- Site still not live because SSL certificate issuance cannot complete.
+
+This guide is the checklist I use when somebody says, "Everything is set, but Lovable won't go live."
+
+## 1. The Three Go-Live Failure Modes
+
+For Lovable custom domains, the failure is usually one of three buckets:
+
+1. **Proxy interference** between certificate authority validation and your domain.
+2. **CAA policy mismatch** that blocks certificate issuance.
+3. **Incomplete delegation** where authoritative nameservers are not what you think they are.
+
+These are infrastructure-level failures, not editor-level failures. You can't fix them from the page builder UI.
+
+Before debugging, separate two phases clearly:
+
+- **Phase A: DNS points correctly** (A/CNAME/TXT are visible where expected).
+- **Phase B: SSL is issued and bound** (certificate exists and is valid for your domain).
+
+A lot of teams verify only Phase A, then assume Phase B will happen automatically. When it doesn't, they wait instead of diagnosing.
+
+The rule: if DNS checks look stable but HTTPS still fails after a reasonable window, stop waiting and inspect SSL blockers.
+
+## 2. Failure 1: Cloudflare Proxy Blocking SSL Verification
+
+### Symptom
+
+- domain resolves, but platform cannot complete certificate validation
+- status stays stuck in pending verification
+- support suggests waiting, nothing changes
+
+### Why it happens
+
+Certificate authorities need direct validation paths. Proxy/CDN layers can interfere depending on setup.
+
+Even when teams say "we don't use Cloudflare," they may still be using DNS products that route through Cloudflare-like proxy behavior, or an IT/admin panel where proxied mode was enabled by default.
+
+### What to check
+
+- Is proxy mode enabled on the target record?
+- Are you seeing proxied behavior instead of direct origin resolution?
+- Did someone toggle performance/security settings that alter validation path?
+
+### Practical fix
+
+Temporarily disable proxy for the target record (DNS-only mode), let certificate issuance complete, then re-enable proxy if needed.
+
+One detail many people miss: if you change proxy mode, re-run validation checks after TTL windows, not immediately every 30 seconds.
+
+### Decision rule
+
+If disabling proxy for a short window allows SSL issuance, your blocker was not propagation time. It was validation path interference.
+
+## 3. Failure 2: CAA Records Blocking Certificate Issuance
+
+### Symptom
+
+- DNS seems correct
+- certificate still fails to issue
+- no obvious error in builder UI
+
+### Why it happens
+
+CAA records tell certificate authorities which issuers are allowed to issue certs for your domain. If old hosting setup left restrictive CAA entries, your current platform might be unauthorized to issue.
+
+This often appears when domains are migrated between platforms or managed by multiple vendors over time.
+
+### What to inspect
+
+- existing CAA records at apex and relevant subdomains
+- whether allowed issuer list includes provider needed by your current platform
+
+### Practical fix
+
+- update CAA to include required issuer(s), or
+- remove stale restrictive CAA records if policy allows
+
+Coordinate with whoever owns DNS policy. For some teams this is not the developer, and that handoff delay is why the issue drags out.
+
+### How to avoid recurrence
+
+Whenever moving platforms, include CAA review in migration checklist. Most teams remember A/CNAME cutover and forget CAA entirely.
+
+## 4. Failure 3: Nameserver Not Fully Delegated
+
+### Symptom
+
+- dashboard says records are set
+- external checks show mixed results
+- some resolvers return old values, others return new
+
+### Why it happens
+
+You are editing records in one DNS zone while domain registrar still points to different authoritative nameservers.
+
+So your changes are real, just not authoritative for the internet.
+
+### How to confirm
+
+Use `dig` to inspect delegation path:
+
+- query NS at registrar-level view
+- query authoritative nameserver directly
+- compare expected A/CNAME/TXT answers
+
+If authoritative NS is not the provider where you are editing records, that is your blocker.
+
+### Practical fix
+
+Correct nameserver delegation at registrar, then wait for NS propagation. This is one of the rare cases where waiting is actually required.
+
+This is also where "20 hours already passed" can still be true and irrelevant, because the wrong nameservers were being observed the whole time.
+
+## 5. The 30-Minute Fix Checklist
+
+When a client says "site not live," run this checklist top-to-bottom:
+
+1. **Confirm current authoritative nameservers**
+   - Ensure registrar delegation matches the DNS provider you are editing.
+2. **Verify required records on authoritative NS**
+   - Check A/CNAME/TXT values exactly.
+3. **Check proxy mode on target records**
+   - Disable proxy temporarily if SSL validation may be blocked.
+4. **Inspect CAA records**
+   - Confirm certificate issuer authorization is not blocking issuance.
+5. **Re-trigger/refresh domain verification in platform**
+   - Some dashboards need manual nudge after infra fixes.
+6. **Test HTTPS handshake explicitly**
+   - Confirm cert is actually issued and served for host.
+7. **Re-enable optional proxy/performance settings only after SSL is green**
+
+The sequence matters. If you skip straight to random toggling, you can create a second failure while fixing the first.
+
+### Time expectations
+
+- Proxy and CAA fixes can resolve fast once corrected.
+- Nameserver delegation changes can require real waiting windows.
+
+Diagnose first, then decide whether waiting is justified.
+
+## 6. When You Actually Need to Wait
+
+There are legitimate wait scenarios:
+
+- fresh nameserver delegation updates
+- high TTL records with global cache still converging
+- certificate issuance queue delays on provider side
+
+But "wait" should be a conclusion after checks, not the first response.
+
+I use this simple threshold:
+
+- If authoritative DNS and SSL prerequisites are confirmed correct, wait and monitor.
+- If any prerequisite is unclear, keep debugging.
+
+Waiting without verified prerequisites is just downtime with better branding.
+
+## Field Notes from Real Lovable Go-Live Incidents
+
+A few patterns come up repeatedly:
+
+- **Multiple hands in DNS:** marketing agency, IT team, and developer each touch different systems; nobody owns end-to-end state.
+- **Wrong dashboard confidence:** people trust one UI status label over external verification.
+- **Mixed environment records:** staging and production records overlap, causing ambiguous resolution.
+
+Process change that helps most:
+
+Assign one person as domain cutover owner for the window. That person tracks:
+
+- current authoritative NS
+- intended record set
+- SSL validation status
+- rollback notes
+
+This small ownership change prevents 80% of communication drift during launch.
+
+## Quick Triage Scripts You Can Use with IT Teams
+
+When debugging with non-developer stakeholders, language matters. Instead of asking "is DNS okay?" ask concrete yes/no checks:
+
+1. "What are the current authoritative nameservers at registrar right now?"
+2. "Can you send the exact current CAA records at apex and `www`?"
+3. "Is proxy mode enabled on the record used for SSL validation?"
+4. "Can we keep proxy disabled until certificate status is green?"
+
+This removes ambiguity and shortens back-and-forth.
+
+I also recommend keeping a small incident note template during go-live:
+
+- timestamp
+- change made
+- who made it
+- expected effect
+- next check window
+
+Without this, teams make overlapping changes and later cannot tell which action solved or worsened the issue.
+
+If your organization has strict change management, this same template becomes useful postmortem evidence and helps avoid repeating the same launch problem on the next domain.
+
+## FAQ: "But the DNS Checker Is Green"
+
+"Green" in a checker only tells you one layer is visible from one perspective. It does not guarantee SSL issuance is completed, nor that validation path is unobstructed.
+
+A better question is:
+
+"Can this exact host complete HTTPS handshake with a valid certificate right now?"
+
+If the answer is no, your launch is still blocked, even if DNS visuals look reassuring.
+
+## The Takeaway
+
+When Lovable custom domain does not go live, the issue is usually not "platform is slow." It is one of a few concrete DNS/SSL blockers:
+
+- proxy in the way
+- CAA restriction
+- nameserver mismatch
+
+Treat go-live as an operational debugging task, not a waiting task.
+
+The faster you move from "maybe it needs time" to "which prerequisite is failing," the faster the site goes live.
+
+If you build fast with AI tools, this is the final discipline that turns launch from hopeful to reliable.
+
+---
+
+*Need help unblocking a stuck Lovable custom domain and SSL setup? I specialize in last-mile DNS/SSL troubleshooting for AI-built products. [Let's talk](mailto:jay@orangec.at).*

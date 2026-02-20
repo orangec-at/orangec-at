@@ -1,0 +1,326 @@
+---
+title: "Why Your Lovable App Hates Shopify (and How to Fix the OAuth/HMAC Mess)"
+description: "You built a Shopify app in Lovable in 10 minutes. Then spent 3 days on '400 Bad Request'. Here's what's actually wrong."
+date: "2026-02-20"
+tags: ["development", "typescript", "tips"]
+slug: "lovable-shopify-oauth-hmac-fix"
+category: "technical"
+author: "Jaeil Lee"
+featured: false
+seo:
+  keywords: ["lovable shopify app", "shopify oauth fix", "shopify hmac verification", "ai builder shopify integration", "lovable 400 bad request"]
+---
+
+# Why Your Lovable App Hates Shopify (and How to Fix the OAuth/HMAC Mess)
+
+You build a Shopify app UI with Lovable in a few minutes. It looks clean. Routes are there. Buttons work. You open Shopify install flow, and suddenly everything breaks:
+
+- `400 Bad Request`
+- redirect loop
+- webhook signature mismatch
+- random "unauthorized" on callback
+
+This pattern is so common that I can usually guess the root cause from one screenshot.
+
+The problem is not that Lovable generated bad code. The problem is that Shopify auth and webhook flows are protocol-heavy, and protocol bugs are usually in tiny details: one slash, one header, one parsing step in the wrong order.
+
+In other words: AI can write the function. You still need to honor the handshake.
+
+This post is a troubleshooting guide in the exact order I debug these projects.
+
+## 1. The Last-Mile Problem: AI Builders Hit Protocol Boundaries
+
+Low-code and AI coding tools are excellent at application scaffolding:
+
+- route layouts
+- components
+- forms
+- API handler skeletons
+
+Where they struggle is cross-platform protocol compliance where external systems are strict by design.
+
+Shopify app auth is strict on:
+
+- callback URL matching
+- signed parameter validation (`hmac`, `state`, `shop`)
+- webhook signature verification with raw body bytes
+
+Those constraints are not optional. They are the security model.
+
+When teams say "we're blocked by Shopify," they are usually blocked by one of these protocol assumptions:
+
+1. callback URL in dashboard "looks right" but does not exactly match runtime URL
+2. callback query HMAC is checked incorrectly
+3. webhook HMAC is verified after body has already been mutated
+
+The project feels 95% done, but this last 5% is where production readiness actually lives.
+
+## 2. The Redirect URI Trap
+
+### Symptom
+
+- install starts, then callback fails
+- app keeps redirecting back to install
+- Shopify sends user to callback with params but your app rejects them
+
+### Root cause
+
+Your app and Shopify dashboard are not using an identical callback URI.
+
+Shopify expects exact callback alignment in your auth configuration. Tiny mismatches can break flow:
+
+- trailing slash mismatch (`/auth/callback` vs `/auth/callback/`)
+- domain mismatch (`www` vs non-`www`)
+- protocol mismatch (`http` local assumption leaking into prod)
+- wrong environment variable used in redirect construction
+
+### Fix checklist
+
+1. Define one canonical app URL (per environment).
+2. Build callback URL from that canonical URL only.
+3. Register that exact callback URL in Shopify app config.
+4. Verify final runtime callback string by logging it before redirect.
+
+```typescript
+const appUrl = process.env.APP_URL!; // e.g. https://your-app.com
+const redirectUri = `${appUrl}/auth/shopify/callback`;
+
+const installUrl = new URL(`https://${shop}/admin/oauth/authorize`);
+installUrl.searchParams.set("client_id", process.env.SHOPIFY_API_KEY!);
+installUrl.searchParams.set("scope", SCOPES.join(","));
+installUrl.searchParams.set("redirect_uri", redirectUri);
+installUrl.searchParams.set("state", state);
+```
+
+If you are debugging this at 2am: print `redirect_uri` and compare it character-by-character with Shopify settings.
+
+## 3. The HMAC Raw-Body Mistake
+
+### Symptom
+
+- webhook endpoint receives request
+- Shopify sends `X-Shopify-Hmac-Sha256`
+- your verification fails intermittently or always
+
+### Root cause
+
+You verify HMAC against a transformed body, not the raw bytes Shopify signed.
+
+Common failure pattern:
+
+```ts
+// wrong sequence
+const json = await req.json(); // body parsed first
+verifyHmac(JSON.stringify(json)); // payload changed
+```
+
+This is enough to fail validation because spacing, encoding, and key ordering can differ from original payload bytes.
+
+### Correct verification pattern (Node/TypeScript)
+
+```typescript
+import crypto from "crypto";
+
+function verifyShopifyWebhook(rawBody: string, hmacHeader: string, secret: string) {
+  const digest = crypto
+    .createHmac("sha256", secret)
+    .update(rawBody, "utf8")
+    .digest("base64");
+
+  const digestBuffer = Buffer.from(digest);
+  const hmacBuffer = Buffer.from(hmacHeader || "");
+
+  if (digestBuffer.length !== hmacBuffer.length) return false;
+  return crypto.timingSafeEqual(digestBuffer, hmacBuffer);
+}
+
+export async function POST(req: Request) {
+  const rawBody = await req.text();
+  const hmac = req.headers.get("x-shopify-hmac-sha256") ?? "";
+
+  if (!verifyShopifyWebhook(rawBody, hmac, process.env.SHOPIFY_API_SECRET!)) {
+    return new Response("Invalid HMAC", { status: 401 });
+  }
+
+  const payload = JSON.parse(rawBody);
+  // process webhook payload
+  return new Response("ok");
+}
+```
+
+Rule: verify first, parse second.
+
+## 4. The Shopify App Remix Auth Flow (What Actually Happens)
+
+A lot of Lovable-generated code gets cleaner once you understand Remix-style auth sequence.
+
+High-level sequence:
+
+1. user opens embedded app
+2. app checks for valid session
+3. if missing, start install/auth flow (`shop`, `state`, redirect)
+4. Shopify callback arrives with `code`, `hmac`, `shop`, `state`, `timestamp`
+5. app validates state + HMAC + shop domain
+6. app exchanges code for access token
+7. app stores session and continues to embedded UI
+
+Why this matters: if any one validation step is skipped or malformed, you might still get "sometimes works" behavior in development and complete failure in production.
+
+For callback safety, validate at minimum:
+
+- `state` matches nonce from your session/cookie
+- `hmac` is valid for callback query params
+- `shop` ends with `.myshopify.com` and follows expected format
+
+That sequence is security, not ceremony.
+
+## 5. Injecting Middleware into Lovable Code (Concrete Fix)
+
+Lovable scaffolds are often route-centric and optimistic. For Shopify, add explicit guard middleware boundaries.
+
+### Middleware 1: shop domain validation
+
+```typescript
+function isValidShopDomain(shop: string | null) {
+  return Boolean(shop && /^[a-zA-Z0-9][a-zA-Z0-9-]*\.myshopify\.com$/.test(shop));
+}
+```
+
+### Middleware 2: callback HMAC + state verification
+
+```typescript
+function verifyOAuthCallback(url: URL, storedState: string, secret: string) {
+  const params = Object.fromEntries(url.searchParams.entries());
+  const { hmac, state } = params;
+
+  if (!hmac || !state || state !== storedState) return false;
+
+  const message = Object.keys(params)
+    .filter((k) => k !== "hmac" && k !== "signature")
+    .sort()
+    .map((k) => `${k}=${params[k]}`)
+    .join("&");
+
+  const generated = crypto
+    .createHmac("sha256", secret)
+    .update(message)
+    .digest("hex");
+
+  const a = Buffer.from(generated, "utf8");
+  const b = Buffer.from(hmac, "utf8");
+  if (a.length !== b.length) return false;
+  return crypto.timingSafeEqual(a, b);
+}
+```
+
+### Middleware 3: webhook verification before any handler logic
+
+- reject invalid signatures fast
+- log topic + shop + webhook id for traceability
+- deduplicate by webhook id if needed
+
+The intent is to make protocol validation unavoidable, not optional per route.
+
+## 6. Protocol Literacy in the AI Era
+
+I don't think this problem goes away soon.
+
+AI tools will keep getting better at scaffolding. That's good. But external platform protocols (Shopify, Stripe, OAuth providers, DNS/SSL systems) remain strict interfaces between independent systems.
+
+That means the highest-leverage skill right now is protocol literacy:
+
+- understanding signed requests
+- understanding callback trust boundaries
+- understanding configuration-code coupling
+
+If your team builds with AI, this is the realistic division of labor:
+
+- AI accelerates implementation volume.
+- Humans enforce integration contracts.
+
+This is also why "last-mile" debugging has become a real freelance niche. Many founders can generate 80% of their app. They get stuck exactly at OAuth/HMAC/infra boundaries.
+
+If that pattern sounds familiar, you're not behind. You're hitting the part everyone hits.
+
+## Rapid Troubleshooting Card (Copy/Paste)
+
+When Shopify integration fails, check in this order:
+
+1. **Redirect URI exact match** (character-by-character)
+2. **Callback `state` validation** against stored nonce
+3. **Callback HMAC validation** on canonical query string
+4. **Shop domain validation** (`*.myshopify.com`)
+5. **Webhook raw body verification** before JSON parse
+6. **One canonical app URL per environment** (no mixed host/protocol)
+
+This sequence solves most "Lovable + Shopify" launch blockers quickly.
+
+## What to Log While Debugging (So You Stop Guessing)
+
+A lot of teams debug this flow by trial and error in dashboards. It feels busy, but you lose causality fast.
+
+Add structured logs around auth and webhook boundaries:
+
+```typescript
+console.info("shopify_oauth_callback", {
+  shop,
+  hasCode: Boolean(code),
+  hasHmac: Boolean(hmac),
+  stateMatches,
+  path: url.pathname,
+});
+
+console.info("shopify_webhook_received", {
+  topic: req.headers.get("x-shopify-topic"),
+  shop: req.headers.get("x-shopify-shop-domain"),
+  webhookId: req.headers.get("x-shopify-webhook-id"),
+  hmacValid,
+});
+```
+
+Use these logs to answer objective questions:
+
+- Did callback arrive with expected params?
+- Did state fail, HMAC fail, or shop validation fail?
+- Are webhook failures isolated to one topic?
+- Are retries happening with same webhook id?
+
+This turns a fuzzy "Shopify is broken" situation into a specific failed guardrail.
+
+One more practical tip: keep local and production callback domains explicitly separate in config. Most invisible bugs happen when local assumptions leak into deployed URLs.
+
+## App Review and Production Readiness Notes
+
+Even after OAuth works, teams often get blocked later by incomplete operational setup:
+
+- missing required webhook subscriptions
+- inconsistent scopes vs app behavior
+- brittle error handling around token exchange
+
+Before submitting or rolling out to merchants, run a short readiness pass:
+
+1. install flow from a clean browser/session
+2. uninstall + reinstall path
+3. webhook verification with replayed events
+4. permission/scope mismatch behavior
+5. merchant-facing error message quality
+
+This extra hour saves days of reactive fixes after the first real merchant install.
+
+## The Takeaway
+
+If your Lovable-built Shopify app keeps failing auth, assume protocol mismatch before assuming framework bugs.
+
+The fastest path is not rewriting everything. It is adding strict middleware boundaries around:
+
+- redirect URI construction
+- callback validation
+- raw-body webhook verification
+
+Once those are stable, the rest of the app usually settles down fast.
+
+And if you feel like this was "just one slash and one header," yes. That is exactly the point. Production systems fail in details, not architecture diagrams.
+
+---
+
+*Stuck on Shopify OAuth/HMAC in an AI-built app? I specialize in fixing the protocol layer so your app can move from demo to production. [Let's talk](mailto:jay@orangec.at).*

@@ -1,0 +1,424 @@
+---
+title: "Vercel Edge Functions: When and Why to Run Your API at the Edge"
+description: "Not everything belongs on the edge. Here's when edge functions actually help, when they don't, and how to use them with Supabase and AI SDKs."
+date: "2026-02-20"
+tags: ["nextjs", "typescript", "development", "tips"]
+slug: "vercel-edge-functions-guide"
+category: "technical"
+author: "Jaeil Lee"
+featured: false
+seo:
+  keywords: ["vercel edge functions", "nextjs edge runtime", "edge vs serverless", "vercel ai sdk edge", "supabase edge functions"]
+---
+
+# Vercel Edge Functions: When and Why to Run Your API at the Edge
+
+"Put it on the edge" has become one of those phrases that sounds technical and strategic at the same time. It usually means one of two things:
+
+1. someone wants lower latency
+2. someone just heard edge is the new default and doesn't want to look behind
+
+Both are understandable. But edge runtime is not a badge. It is a trade-off.
+
+I have seen teams move handlers to edge, then quietly move half of them back to Node runtime once they hit dependency issues, database bottlenecks, or runtime API limits. That is normal. The goal is not to be edge-pure. The goal is to place each workload where it performs best with the least operational friction.
+
+This guide is about practical decisions:
+
+- what edge actually changes
+- where edge helps
+- where it creates pain
+- how to implement it in Next.js
+- how to combine it with Supabase and AI SDK streaming
+
+## 1. Edge vs Serverless: What "Edge" Actually Means
+
+In Next.js, you can set route runtime with:
+
+```ts
+export const runtime = "edge";
+```
+
+or leave default Node runtime (`"nodejs"`).
+
+That one line changes execution environment characteristics:
+
+- **Node runtime** gives you full Node APIs and broad package compatibility.
+- **Edge runtime** runs in a more limited environment (Web APIs, no native Node APIs like filesystem access).
+
+So edge is not simply "faster lambda." It is "different runtime constraints + regional execution strategy."
+
+### What teams usually expect
+
+They expect every endpoint to get faster because compute moves closer to users.
+
+### What actually happens
+
+Only the portion of response time sensitive to location improves.
+
+If your endpoint does:
+
+- 10ms edge compute
+- 280ms remote database query
+
+moving compute to edge does not fix the 280ms bottleneck. It might improve TTFB a bit, but your total latency profile can still be database-dominated.
+
+Edge is best treated as latency shaping at the network and first-byte layer, not universal acceleration.
+
+## 2. When Edge Makes Sense
+
+I use edge when request handling is lightweight, geographically sensitive, or streaming-first.
+
+### A) Auth/session checks before expensive work
+
+Lightweight gatekeeping is a strong edge fit:
+
+- read cookie/JWT
+- validate user presence/role
+- short-circuit unauthorized requests quickly
+
+This reduces useless round-trips deeper in your stack.
+
+### B) Geo-aware routing/personalization
+
+Edge can branch behavior early:
+
+- choose nearest region-backed service
+- locale/country-specific policy handling
+- low-cost personalization on headers/cookies
+
+These are small logic units where proximity helps.
+
+### C) AI streaming endpoints (chat/completions)
+
+For AI UX, first token latency is often more important than total completion time. Edge runtime works well with stream-based responses because users feel responsiveness immediately.
+
+### D) Lightweight transforms and request shaping
+
+- header normalization
+- response shaping
+- token forwarding
+- signed URL generation
+
+Anything stateless and quick is a good candidate.
+
+## 3. When Edge Doesn't Make Sense
+
+You should not force edge for heavy or Node-dependent workloads.
+
+### A) Node-specific libraries or APIs
+
+Edge runtime does not support many native Node APIs and `require`-based patterns. If your stack depends on those, you will spend time fighting runtime mismatch instead of shipping value.
+
+### B) Heavy database joins and large ORM-driven queries
+
+If query time dominates, moving handler compute to edge often yields little gain. You may increase architecture complexity without meaningful user benefit.
+
+### C) Large dependency footprint
+
+Big packages can inflate cold-start behavior and deployment complexity. Keep edge bundles lean.
+
+### D) CPU-heavy work
+
+Batch transforms, reports, media processing, and long-running compute are usually poor edge fits. Keep these in background jobs or Node/serverless workers.
+
+### A useful rule
+
+If your endpoint needs broad Node compatibility and deep database work, start in Node runtime. Move to edge only after measurement says it helps.
+
+## 4. Implementation: Next.js Route with `runtime = "edge"`
+
+Here is a minimal App Router endpoint with edge runtime:
+
+```typescript
+// app/api/ping/route.ts
+export const runtime = "edge";
+
+export async function GET() {
+  return Response.json({
+    ok: true,
+    runtime: "edge",
+    ts: Date.now(),
+  });
+}
+```
+
+Now a real-world edge-friendly route: lightweight auth check + small JSON response.
+
+```typescript
+// app/api/me/route.ts
+export const runtime = "edge";
+
+import { createServerClient } from "@supabase/ssr";
+
+function createSupabaseFromRequest(req: Request, responseHeaders: Headers) {
+  const cookieHeader = req.headers.get("cookie") ?? "";
+
+  // simple cookie parser for edge compatibility
+  const cookies = cookieHeader
+    .split(";")
+    .map((c) => c.trim())
+    .filter(Boolean)
+    .map((entry) => {
+      const [name, ...rest] = entry.split("=");
+      return { name, value: rest.join("=") };
+    });
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookies;
+        },
+        setAll(cookiesToSet) {
+          for (const { name, value, options } of cookiesToSet) {
+            const parts = [`${name}=${value}`, "Path=/", "HttpOnly", "SameSite=Lax"];
+            if (options?.secure) parts.push("Secure");
+            if (typeof options?.maxAge === "number") parts.push(`Max-Age=${options.maxAge}`);
+            responseHeaders.append("Set-Cookie", parts.join("; "));
+          }
+        },
+      },
+    }
+  );
+}
+
+export async function GET(req: Request) {
+  const responseHeaders = new Headers({ "Content-Type": "application/json" });
+  const supabase = createSupabaseFromRequest(req, responseHeaders);
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: responseHeaders,
+    });
+  }
+
+  return new Response(
+    JSON.stringify({
+      id: user.id,
+      email: user.email,
+    }),
+    {
+      status: 200,
+      headers: responseHeaders,
+    }
+  );
+}
+```
+
+This pattern keeps the endpoint lightweight, edge-compatible, and still tied to authenticated user context.
+
+## 5. Edge + Supabase: Using `@supabase/ssr` in Edge Runtime
+
+There are two common misunderstandings about Edge + Supabase:
+
+1. "Edge means no auth session management" (false)
+2. "Edge automatically makes Supabase queries fast" (depends)
+
+`@supabase/ssr` works in server contexts including route handlers and middleware as long as you provide cookie get/set behavior for that context.
+
+### What to optimize in practice
+
+- Keep edge handlers thin.
+- Query only what you need.
+- Prefer indexed lookups over broad scans.
+- Let RLS enforce access control close to data.
+
+For write-heavy, complex business logic, it's often cleaner to keep route on Node runtime and reserve edge for ingress-level tasks.
+
+### Edge + Supabase Edge Functions are different choices
+
+People also confuse these two:
+
+- **Vercel Edge Runtime**: Next.js endpoints close to users.
+- **Supabase Edge Functions (Deno)**: custom functions deployed on Supabase's edge platform.
+
+You can combine them:
+
+- edge route receives request and handles user session context
+- edge route calls Supabase Edge Function for specialized logic/webhook fanout
+
+But don't add both layers unless you need separation. Complexity tax is real.
+
+## 6. Edge + AI SDK: Streaming for Better First-Token UX
+
+If you are building chat or generative UI, edge runtime plus streaming can improve perceived speed significantly.
+
+With Vercel AI SDK:
+
+```typescript
+// app/api/chat/route.ts
+export const runtime = "edge";
+export const maxDuration = 30;
+
+import { streamText } from "ai";
+import { openai } from "@ai-sdk/openai";
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  const result = streamText({
+    model: openai("gpt-4o-mini"),
+    messages,
+  });
+
+  return result.toDataStreamResponse();
+}
+```
+
+Why this works well at edge:
+
+- request enters near user
+- response starts streaming quickly
+- client sees tokens immediately
+
+### Guardrails for production
+
+1. **Timeout budget discipline**
+   - set realistic `maxDuration` and fail gracefully
+2. **Token/cost controls**
+   - rate limit by user and model tier
+3. **Data access boundaries**
+   - if tools query data, enforce RLS and scoped tools
+4. **Fallback path**
+   - degrade to Node runtime endpoint if edge constraints conflict with required dependencies
+
+### A practical split that works
+
+- Edge endpoint for streaming and lightweight orchestration.
+- Node endpoint for heavy tools/integrations requiring Node-only libs.
+
+This hybrid setup usually gives the best UX/perf without runtime fights.
+
+## Reality Checks: How to Measure Whether Edge Helped
+
+I do not keep an endpoint on edge unless data justifies it.
+
+Three metrics matter most:
+
+1. **TTFB (time to first byte)**
+   - Especially relevant for streaming responses and interactive APIs.
+2. **p95 end-to-end latency**
+   - If p50 improves but p95 worsens, user experience often feels worse.
+3. **error rate by runtime**
+   - Runtime mismatch errors can erase perceived speed gains.
+
+### Practical experiment setup
+
+Use one endpoint and run an A/B style deployment:
+
+- `api/chat-edge` with `runtime = "edge"`
+- `api/chat-node` with `runtime = "nodejs"`
+
+Hit both from representative regions and compare:
+
+- first token time
+- completion time
+- failure reasons
+
+When I did this for an AI-heavy endpoint, edge reduced first token latency noticeably for distant users, but total completion time changed less than expected because model compute dominated. That was still a win, because chat UX is first-token sensitive.
+
+When I did the same for a data-heavy dashboard endpoint, edge had almost no user-visible gain. Query time and downstream service latency dominated. We moved that route back to Node runtime and focused on SQL/index improvements.
+
+### Suggested benchmark script (quick and dirty)
+
+```bash
+# compare first-byte time for two endpoints
+curl -s -o /dev/null -w "edge ttfb=%{time_starttransfer} total=%{time_total}\n" \
+  https://your-app.com/api/chat-edge
+
+curl -s -o /dev/null -w "node ttfb=%{time_starttransfer} total=%{time_total}\n" \
+  https://your-app.com/api/chat-node
+```
+
+This does not replace full observability, but it is enough to catch obvious no-win migrations.
+
+## Migration Anti-patterns I Keep Seeing
+
+Edge adoption fails for predictable reasons. Avoid these and you keep most of the upside.
+
+### 1) Runtime-by-fashion migration
+
+"Let's make all APIs edge" is an architectural smell.
+
+Different routes have different bottlenecks. Treat runtime as route-level optimization, not framework-level identity.
+
+### 2) Mixing secrets/integration logic casually
+
+Teams sometimes move payment or admin routes to edge without reviewing dependency and security requirements. If the route uses libraries that assume Node internals, you'll discover it after deployment.
+
+Keep high-risk integrations where your runtime assumptions are stable.
+
+### 3) Ignoring region topology
+
+If your compute is edge-distributed but your database and third-party services are fixed in one region, the total path can still be long. This does not mean edge is useless, but it does mean you should model end-to-end path, not only compute location.
+
+### 4) No fallback strategy
+
+Production systems need graceful fallback.
+
+- Keep an equivalent Node endpoint for critical flows during migration.
+- Feature-flag edge rollout by percentage.
+- Roll back by routing, not emergency rewrite.
+
+### 5) Conflating "works locally" with runtime-safe
+
+Some runtime incompatibilities surface only in deployed edge environments. Test in staging with realistic traffic and payload sizes before declaring success.
+
+## Decision Framework I Actually Use
+
+Before setting `runtime = "edge"`, ask:
+
+1. **Is this endpoint latency-sensitive at first-byte level?**
+2. **Can this logic run with edge runtime API constraints?**
+3. **Will remote DB/integration latency dominate anyway?**
+4. **Do we have monitoring to prove improvement after move?**
+
+If 1 and 2 are yes, and 3 is not dominant, edge is a strong candidate.
+
+If 2 is no, or 3 dominates, keep Node runtime and optimize data paths first.
+
+## Common Migration Plan (Low Risk)
+
+If you already have stable Node runtime APIs, migrate in slices:
+
+1. pick one read-heavy, lightweight endpoint
+2. move to edge runtime
+3. compare p95 latency and error rate
+4. keep or roll back based on data
+5. repeat only where wins are real
+
+Do not migrate everything in one pass. You lose attribution and spend weeks debugging runtime compatibility issues without clear benefit.
+
+## The Takeaway
+
+Edge runtime is a placement decision, not an identity.
+
+Use it where it shines:
+
+- lightweight checks
+- geo-sensitive routing
+- AI streaming UX
+
+Avoid it where constraints hurt more than they help:
+
+- Node-bound dependencies
+- heavy DB workloads
+- CPU-heavy processing
+
+For most teams, the winning architecture is mixed:
+
+- Node where compatibility and heavy logic matter
+- Edge where first-byte responsiveness and lightweight logic matter
+
+That balance is how you get real performance gains without trading away reliability.
+
+---
+
+*Need help deciding what should run at the edge vs stay on Node in your Next.js stack? I specialize in shipping pragmatic architectures that optimize both UX and operational stability. [Let's talk](mailto:jay@orangec.at).*

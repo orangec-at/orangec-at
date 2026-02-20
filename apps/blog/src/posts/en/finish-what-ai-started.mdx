@@ -1,0 +1,300 @@
+---
+title: "I Finish What Your AI Started: The Emerging Niche of AI Code Fixers"
+description: "People build 80% with Lovable, Cursor, or ChatGPT — then hit a wall. OAuth, DNS, deployments, security. That last 20% is a new freelance niche."
+date: "2026-02-20"
+tags: ["development", "tips", "dev-diary"]
+slug: "finish-what-ai-started"
+category: "insight"
+author: "Jaeil Lee"
+featured: false
+seo:
+  keywords: ["ai code fixer", "lovable developer help", "ai prototype to production", "fix ai generated code", "vibe coding freelance"]
+---
+
+# I Finish What Your AI Started: The Emerging Niche of AI Code Fixers
+
+There is a request pattern I keep seeing in freelance channels:
+
+"We built most of it with AI. We just need help finishing."
+
+The phrase changes, the shape is the same.
+
+- "Frontend is done, auth is broken."
+- "Webhook works locally, fails in production."
+- "Domain connected, site still not live."
+- "We are close. Need expert for the last part."
+
+That "last part" is becoming its own category of work.
+
+Not full rewrites. Not greenfield builds. Not simple bug tickets.
+
+A new class of product rescue work: finishing AI-generated systems at integration boundaries.
+
+## 1. The Pattern I Keep Seeing on Upwork
+
+Most of these projects have meaningful progress already:
+
+- usable UI
+- basic user flows
+- partial backend routes
+- some live preview deployed
+
+In effort terms, teams often describe it as "80% done." That number is emotional, but the pattern is real.
+
+What they actually have is:
+
+- **high visible progress** (screens, forms, interactions)
+- **low protocol confidence** (auth, payments, domains, compliance)
+
+This gap is why these projects feel done and blocked at the same time.
+
+Clients are not wrong to feel frustrated. AI tools genuinely accelerated their first phase. The part that remains is just less visible and more unforgiving.
+
+The old freelance pattern was "build my app from scratch."
+
+The new one is increasingly "stabilize this AI-built app so it can survive production."
+
+## 2. Where AI Builders Break: Not Logic, Protocols
+
+Most breakdowns happen at system boundaries, not inside local component logic.
+
+### Common breakpoints
+
+- OAuth callback and state/HMAC validation
+- webhook signature verification
+- DNS + SSL certificate issuance
+- environment and secret management
+- platform-specific compliance checks
+
+These are handshake problems. Two systems must agree on exact behavior under strict rules.
+
+If one side expects exact callback URI and the other sends almost-correct URI, you get failure.
+
+If one side signs raw bytes and the other verifies transformed JSON, you get failure.
+
+If DNS points but certificate issuance path is blocked, you get failure.
+
+I wrote two detailed examples of this exact last-mile pain:
+
+- [Why Your Lovable App Hates Shopify (and How to Fix the OAuth/HMAC Mess)](/en/lovable-shopify-oauth-hmac-fix)
+- [Lovable Site Not Going Live? The DNS/SSL Debug Guide Nobody Wrote](/en/lovable-dns-ssl-go-live-debug)
+
+Those are not edge cases. They are normal outcomes when rapid app generation meets strict external systems.
+
+## 3. Why This Is a Niche, Not a Bug
+
+Some people treat this as temporary tool immaturity.
+
+I think it is a structural niche for now.
+
+AI is very good at synthesis from local context. It is less reliable when correctness depends on external operational contracts and multi-dashboard state.
+
+In simpler terms:
+
+- AI handles function-level implementation well.
+- Humans still handle protocol-level accountability better.
+
+This creates demand for specialists who can bridge:
+
+- generated code
+- platform docs
+- operational configuration
+- production debugging
+
+The key shift is role definition.
+
+I am not positioning as "I can code faster than AI."
+
+I am positioning as "I can finish safely where AI-assisted builds stall."
+
+That framing matters because it aligns with the actual pain buyers are experiencing.
+
+## 4. What "Finishing" Actually Requires
+
+Clients sometimes ask, "Can you just fix this one bug quickly?"
+
+Sometimes yes. Usually no, because the bug is symptom-level and root cause is architectural or operational.
+
+Finishing work usually requires a sequence:
+
+1. reproduce failure reliably
+2. identify handshake contract being violated
+3. patch code and configuration together
+4. verify across realistic paths (not only happy path)
+5. document guardrails so regression is less likely
+
+This is why "last 20%" can feel slower than the first 80%.
+
+The first phase builds possibility. The last phase builds reliability.
+
+Reliability includes things the user never sees directly:
+
+- consistent callback validation
+- idempotent webhook handling
+- clear deployment/environment boundaries
+- predictable failure behavior
+
+These are not glamorous, but they decide whether a product can onboard real users without constant firefighting.
+
+## 5. How I Position for This Work
+
+I do not market this as generic full-stack freelancing.
+
+I position around specific outcomes:
+
+- "Unblock OAuth and webhook reliability"
+- "Get custom domain + SSL live"
+- "Stabilize AI-built prototype for production"
+
+### Portfolio strategy that works
+
+Instead of broad "I can build anything" messaging, I show:
+
+- before/after integration fixes
+- root cause writeups
+- checklists and guardrail patterns
+
+This builds trust with buyers who already burned days on unclear blockers.
+
+### Scoping approach
+
+I scope by risk layers, not UI features:
+
+1. auth and access boundaries
+2. external integration handshakes
+3. deployment/runtime correctness
+4. regression prevention
+
+This keeps engagements practical and helps clients see immediate progress.
+
+### Communication style
+
+These clients usually don't need jargon. They need certainty.
+
+I focus on:
+
+- what failed
+- why it failed
+- what changed
+- how to avoid repeat failures
+
+That is often more valuable than delivering ten extra files.
+
+## 6. The Future of This Niche
+
+Will AI tools eventually reduce this category of work? Yes, partially.
+
+Will it disappear this year? I don't think so.
+
+Three reasons:
+
+1. External platforms keep evolving requirements faster than generic templates.
+2. Production environments remain messy (multiple vendors, mixed ownership, legacy settings).
+3. Business teams will keep optimizing for speed, which increases integration debt unless managed well.
+
+What probably changes next:
+
+- more AI-generated prototypes enter the market
+- more buyers seek targeted finishing specialists
+- pricing shifts from "hours coding" to "risk removed"
+
+That last part is important. The value is not typing. The value is turning uncertainty into a stable release.
+
+## What Buyers Should Ask Before Hiring an "AI Finisher"
+
+If you are on the client side, ask these questions:
+
+1. Can they explain root cause in plain language, not just patch symptoms?
+2. Do they handle code + configuration + platform dashboard together?
+3. Do they verify fixes with repeatable checks?
+4. Will they leave documentation your team can use later?
+
+If the answer is no, you might get a temporary patch and the same failure next sprint.
+
+## Three Realistic Engagement Types I See Repeatedly
+
+To make this concrete, most "finish this" work falls into one of these shapes.
+
+### Type 1: Integration Rescue (1-3 days)
+
+Goal: unblock a specific external integration.
+
+Typical examples:
+
+- Shopify OAuth callback + webhook signature fixes
+- Stripe checkout/webhook mismatch and subscription sync stabilization
+- auth provider redirects failing across environments
+
+Success criteria:
+
+- deterministic handshake behavior
+- clear logging around failure boundaries
+- documented verification checklist
+
+### Type 2: Go-Live Hardening (2-5 days)
+
+Goal: move from "demo works" to "production survives."
+
+Typical examples:
+
+- DNS/SSL launch blockers
+- environment variable and secret separation cleanup
+- deployment runtime mismatch fixes
+
+Success criteria:
+
+- stable deployment path
+- rollback clarity
+- post-launch monitorability
+
+### Type 3: Production Bridge Sprint (1-2 weeks)
+
+Goal: keep existing AI-built code, replace fragile boundaries.
+
+Typical examples:
+
+- preserve UI and core flow
+- rework auth/data access boundaries
+- add operational guardrails and tests
+
+Success criteria:
+
+- reduced incident risk
+- cleaner ownership map
+- maintainable path for next features
+
+This categorization helps both sides price and scope work around risk removed, not raw code volume.
+
+## Why This Positioning Helps Founders Too
+
+Some founders worry that hiring a finisher means admitting failure.
+
+I see the opposite.
+
+Using AI to move quickly on product shape is a strength. Bringing in specialized finishing support when you hit protocol boundaries is also a strength. It is just good resource allocation.
+
+What hurts startups is not asking for finishing help early enough. Teams lose momentum by spending weeks in integration limbo when a targeted rescue could have unblocked launch in days.
+
+The best outcomes happen when founders keep ownership of product direction and bring in specialist help for boundary-heavy risk zones.
+
+That model preserves speed while protecting trust.
+
+One practical indicator that you are in this zone: your roadmap is blocked by "unknowns" that are mostly integration uncertainties, not product uncertainties. When that happens, a short finishing sprint often creates more business value than adding net-new features on unstable foundations.
+
+## The Takeaway
+
+The market changed.
+
+More people can build fast with AI. That's a real gain.
+
+And because of that, finishing has become a high-value specialization: taking AI-generated momentum and converting it into production reliability.
+
+This is the niche I keep seeing, and it is growing.
+
+Not because AI failed.
+
+Because shipping is bigger than generating code.
+
+---
+
+*Built most of your app with AI and stuck on the last-mile blockers? I specialize in finishing integration, deployment, and protocol issues so you can launch with confidence. [Let's talk](mailto:jay@orangec.at).*
