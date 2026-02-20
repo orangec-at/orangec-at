@@ -30,7 +30,7 @@ export function LabLayout({
 
   return (
     <article className="mx-auto w-full max-w-6xl px-4 pt-24 pb-8 md:px-6 md:pt-28 md:pb-12">
-      <header className="mb-10 text-center">
+      <header className="mb-8 text-center lg:text-left">
         <span className="inline-block rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
           Lab &mdash; 앱/웹 연구일지
         </span>
@@ -38,53 +38,60 @@ export function LabLayout({
         <p className="mt-2 text-sm text-muted-foreground">
           {deviceType} &middot; {meta.date}
         </p>
-        <div className="mt-6 flex justify-center">
-          <DeviceFrame type={deviceType} src={screenshotSrc} alt={screenshotAlt} />
-        </div>
       </header>
 
-      <nav className="mb-8 border-b border-border">
-        <ul className="flex overflow-x-auto">
-          {lenses.map((lens) => {
-            return (
-              <li key={lens.id}>
-                <button
-                  type="button"
-                  onClick={() => setActiveLens(lens.id)}
-                  className={`relative px-4 py-3 text-sm font-medium transition-colors ${activeLens === lens.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                >
-                  {lens.label}
-                  {activeLens === lens.id && (<span className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground" />)}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-
-      <div className="space-y-10">
-        <section>
-          <SectionHeading>관찰 &mdash; What I See</SectionHeading>
-          <div className="rounded-2xl border border-border bg-card p-5 md:p-7">{currentLens.observe}</div>
-        </section>
-
-        <section>
-          <SectionHeading>분석 &mdash; What I Learn</SectionHeading>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {currentLens.analysis.map((item, i) => (
-              <AnalysisCard key={i} index={i + 1} title={item.title} body={item.body} />
-            ))}
+      <div className="lg:grid lg:grid-cols-[auto_1fr] lg:gap-10">
+        <div className="mb-8 flex justify-center lg:mb-0">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <DeviceFrame type={deviceType} src={screenshotSrc} alt={screenshotAlt} />
           </div>
-        </section>
+        </div>
 
-        <section>
-          <SectionHeading>인사이트 &mdash; What I Take</SectionHeading>
-          <div className="space-y-3">
-            {currentLens.insights.map((item, i) => (
-              <InsightCard key={i} index={i + 1} title={item.title} body={item.body} />
-            ))}
+        <div className="min-w-0">
+          <nav className="mb-8 border-b border-border">
+            <ul className="flex overflow-x-auto">
+              {lenses.map((lens) => {
+                return (
+                  <li key={lens.id}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveLens(lens.id)}
+                      className={`relative px-4 py-3 text-sm font-medium transition-colors ${activeLens === lens.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                    >
+                      {lens.label}
+                      {activeLens === lens.id && (<span className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground" />)}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          <div className="space-y-10">
+            <section>
+              <SectionHeading>관찰 &mdash; What I See</SectionHeading>
+              <div className="rounded-2xl border border-border bg-card p-5 md:p-7">{currentLens.observe}</div>
+            </section>
+
+            <section>
+              <SectionHeading>분석 &mdash; What I Learn</SectionHeading>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {currentLens.analysis.map((item, i) => (
+                  <AnalysisCard key={`${item.title}-${i}`} index={i + 1} title={item.title} body={item.body} />
+                ))}
+              </div>
+            </section>
+
+            <section>
+              <SectionHeading>인사이트 &mdash; What I Take</SectionHeading>
+              <div className="space-y-3">
+                {currentLens.insights.map((item, i) => (
+                  <InsightCard key={`${item.title}-${i}`} index={i + 1} title={item.title} body={item.body} />
+                ))}
+              </div>
+            </section>
           </div>
-        </section>
+        </div>
       </div>
     </article>
   );
