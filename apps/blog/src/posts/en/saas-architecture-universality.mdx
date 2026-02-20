@@ -7,6 +7,7 @@ slug: "saas-architecture-universality"
 category: "insight"
 author: "Jaeil Lee"
 featured: false
+draft: false
 seo:
   keywords: ["SaaS architecture patterns", "multi-tenant database design", "booking system architecture", "SaaS database schema", "Supabase multi-tenant"]
 ---
@@ -143,7 +144,7 @@ This single pattern handles every domain:
 
 No if-statements in your application code. No `WHERE org_id = ?` scattered across fifty queries. The database enforces isolation at the row level, regardless of what the application asks for.
 
-I wrote a detailed post about why this matters for AI-powered applications: [Secure Tool Calling with Supabase RLS](/blog/secure-ai-chatbot-supabase-rls). The short version is that RLS protects your data even when an AI chatbot generates unfiltered queries.
+I wrote a detailed post about why this matters for AI-powered applications: [Secure Tool Calling with Supabase RLS](/en/secure-ai-chatbot-supabase-rls). The short version is that RLS protects your data even when an AI chatbot generates unfiltered queries.
 
 ## 4. The Metadata Column: Your Domain Flexibility Layer
 
@@ -293,4 +294,4 @@ This is why experienced SaaS developers can estimate projects in hours, not week
 
 ---
 
-*Need a multi-tenant SaaS built on proven architecture? I have shipped this pattern across yoga, enterprise, and mobile platforms. [Let's talk](mailto:your@email.com).*
+*Need a multi-tenant SaaS built on proven architecture? I have shipped this pattern across yoga, enterprise, and mobile platforms. [Let's talk](mailto:jay@orangec.at).*

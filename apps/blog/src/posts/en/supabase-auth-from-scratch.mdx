@@ -1,0 +1,378 @@
+---
+title: "Supabase Auth From Scratch: The Only Guide Your SaaS Actually Needs"
+description: "Email login, OAuth, sessions, protected routes — everything you need to add authentication to your Next.js SaaS with Supabase, explained for builders who'd rather ship than read docs."
+date: "2026-02-20"
+tags: ["supabase", "typescript", "nextjs", "development"]
+slug: "supabase-auth-from-scratch"
+category: "technical"
+author: "Jaeil Lee"
+featured: false
+draft: false
+seo:
+  keywords: ["supabase auth tutorial", "supabase authentication nextjs", "supabase oauth setup", "supabase email login", "saas authentication"]
+---
+
+# Supabase Auth From Scratch: The Only Guide Your SaaS Actually Needs
+
+You just finished building your SaaS MVP. Maybe you used Lovable, maybe Cursor, maybe you wrote every line by hand. Either way, it looks great. You have a dashboard, a settings page, maybe even a billing flow stubbed out. You show it to a friend, they type in the URL, and — they can see everything. Every page, every feature, every piece of data. Because there is no login. There is no session. There is nothing standing between a random visitor and the entire application.
+
+This is the moment most builders realize auth is not a feature on the backlog. It is the foundation that every other feature depends on. Row Level Security needs a user ID to enforce policies. Stripe billing needs a customer identity to attach subscriptions. Team workspaces need to know who belongs where. Without authentication, none of these systems have anything to work with.
+
+I have set up auth on enough projects now — my own SaaS products, client builds, prototypes that turned into real businesses — to know exactly where people get stuck and what actually matters. This is the guide I wish I had the first time. No filler, no hand-waving, just working code and the reasoning behind it.
+
+## 1. Why Auth Comes First
+
+Authentication is not "the login page." It is the identity layer that everything else in your application depends on.
+
+When Supabase Auth issues a session, it gives you `auth.uid()` — a unique identifier for the current user. That single value is the key to your entire security model. RLS policies use it to filter database rows. Your Stripe integration uses it to map customers to subscriptions. Role-based access control uses it to determine what each person can see and do.
+
+I have watched teams try to bolt auth onto an app that was built without it. It is painful. You end up rewriting database queries, restructuring API routes, and debugging session issues across dozens of files. Build auth first, and every feature you add after slots into place naturally.
+
+## 2. Email/Password in 10 Minutes
+
+Let's start with the most common auth flow: email and password. We are using `@supabase/ssr` with the Next.js App Router. If you see tutorials using `@supabase/auth-helpers-nextjs`, that package is deprecated — `@supabase/ssr` is the current official library.
+
+Here is the server action pattern. I prefer server actions over client-side auth calls because they keep your Supabase keys on the server and handle cookies properly:
+
+```typescript
+// app/auth/actions.ts
+"use server";
+
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+async function createClient() {
+  const cookieStore = await cookies();
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
+}
+
+export async function signUp(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signUp({ email, password });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  redirect("/check-email");
+}
+
+export async function signIn(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  redirect("/dashboard");
+}
+```
+
+And here is a minimal login form that calls these actions:
+
+```tsx
+// app/auth/login/page.tsx
+"use client";
+
+import { signIn } from "../actions";
+import { useActionState } from "react";
+
+export default function LoginPage() {
+  const [state, formAction, pending] = useActionState(signIn, null);
+
+  return (
+    <form action={formAction} className="flex flex-col gap-4 max-w-sm mx-auto mt-20">
+      <h1 className="text-2xl font-bold">Sign In</h1>
+      <input
+        name="email"
+        type="email"
+        placeholder="Email"
+        required
+        className="border rounded px-3 py-2"
+      />
+      <input
+        name="password"
+        type="password"
+        placeholder="Password"
+        required
+        className="border rounded px-3 py-2"
+      />
+      <button
+        type="submit"
+        disabled={pending}
+        className="bg-blue-600 text-white rounded px-3 py-2 disabled:opacity-50"
+      >
+        {pending ? "Signing in..." : "Sign In"}
+      </button>
+      {state?.error && (
+        <p className="text-red-500 text-sm">{state.error}</p>
+      )}
+    </form>
+  );
+}
+```
+
+What happens under the hood: when a user signs in, Supabase verifies the credentials, generates a JWT (JSON Web Token), and sends it back. The `createServerClient` helper stores that JWT in HTTP-only cookies. Every subsequent request to your server carries those cookies, so Supabase can identify the user without the client needing to manage tokens manually.
+
+The `signUp` function sends a confirmation email by default. You can customize this in your Supabase Dashboard under Authentication → Email Templates. The user clicks the link, their email is verified, and they can sign in.
+
+## 3. OAuth (Google, GitHub) in 15 Minutes
+
+Social login removes friction. People are far more likely to sign up when they can click "Continue with Google" instead of creating yet another password. Setting this up has two parts: configuring the provider in Supabase, and adding a small amount of code.
+
+**Dashboard configuration:**
+
+1. Go to your Supabase Dashboard → Authentication → Providers
+2. Enable Google → paste your Client ID and Client Secret from the [Google Cloud Console](https://console.cloud.google.com/) (under APIs & Services → Credentials → OAuth 2.0 Client IDs)
+3. For GitHub, enable the provider and paste the Client ID and Client Secret from [GitHub Developer Settings](https://github.com/settings/developers) → OAuth Apps
+
+The code is surprisingly short:
+
+```typescript
+// app/auth/actions.ts (add to existing file)
+export async function signInWithGoogle() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+    },
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  redirect(data.url);
+}
+
+export async function signInWithGitHub() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "github",
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+    },
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  redirect(data.url);
+}
+```
+
+But there is a critical piece most tutorials gloss over: the callback route handler. After the OAuth provider redirects the user back to your app, you need to exchange the authorization code for a session:
+
+```typescript
+// app/auth/callback/route.ts
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+
+export async function GET(request: Request) {
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get("code");
+
+  if (code) {
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options);
+            });
+          },
+        },
+      }
+    );
+
+    await supabase.auth.exchangeCodeForSession(code);
+  }
+
+  return NextResponse.redirect(`${origin}/dashboard`);
+}
+```
+
+**The #1 OAuth debugging issue:** the redirect URL. In your Supabase Dashboard, go to Authentication → URL Configuration and add your redirect URL to the allow list. It must exactly match the `redirectTo` value in your code. Trailing slashes matter. `http` vs `https` matters. `localhost:3000` vs your deployed domain matters. If OAuth silently fails — the user clicks "Sign in with Google," gets redirected, but nothing happens — check the redirect URL first. It is almost always the problem.
+
+## 4. The Session Pattern: Server vs Client
+
+Supabase gives you two client constructors, and choosing the wrong one for the context is a common source of bugs. Here is the distinction:
+
+- **`createServerClient`** (from `@supabase/ssr`): Use in Server Components, Server Actions, Route Handlers, and Middleware. It reads cookies through the Node.js `cookies()` API.
+- **`createBrowserClient`** (from `@supabase/ssr`): Use in Client Components. It reads cookies from `document.cookie` in the browser.
+
+I keep these in two utility files so every part of the app imports from the right place:
+
+```typescript
+// lib/supabase/server.ts — for Server Components, Actions, Route Handlers
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+
+export async function createSupabaseServer() {
+  const cookieStore = await cookies();
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        setAll: (cookiesToSet) => {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            cookieStore.set(name, value, options)
+          );
+        },
+      },
+    }
+  );
+}
+```
+
+```typescript
+// lib/supabase/client.ts — for Client Components
+import { createBrowserClient } from "@supabase/ssr";
+
+export function createSupabaseBrowser() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+```
+
+The key insight: both clients read the same JWT from the same cookies. They are not creating different sessions. The only difference is *how* they access those cookies — Node.js `cookies()` API on the server, `document.cookie` in the browser. The user identity is identical in both cases.
+
+Use the server client by default. Only reach for the browser client when you are inside a `"use client"` component and need real-time subscriptions or client-side auth state (like showing a "Sign Out" button that reacts to session changes).
+
+## 5. Protected Routes with Middleware
+
+Now that auth is working, you need to actually protect your routes. The cleanest pattern is Next.js middleware — it runs before every request, checks for a valid session, and redirects unauthenticated users to the login page:
+
+```typescript
+// middleware.ts
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
+
+export async function middleware(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({ request });
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            request.cookies.set(name, value);
+            supabaseResponse.cookies.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Redirect unauthenticated users to login
+  if (
+    !user &&
+    !request.nextUrl.pathname.startsWith("/auth") &&
+    !request.nextUrl.pathname.startsWith("/public")
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/login";
+    return NextResponse.redirect(url);
+  }
+
+  return supabaseResponse;
+}
+
+export const config = {
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
+};
+```
+
+A few things worth calling out:
+
+**Why `getUser()` and not `getSession()`?** The `getUser()` method makes a network call to Supabase to verify the JWT is still valid. `getSession()` only reads the local token without verifying it. In middleware — where you are making access control decisions — you want the verified check.
+
+**The `supabaseResponse` pattern** is important. The middleware needs to both read cookies from the incoming request and write updated cookies (like refreshed tokens) to the outgoing response. The `setAll` callback handles both by updating `request.cookies` (for downstream server code) and `supabaseResponse.cookies` (for the browser).
+
+**The `matcher` config** excludes static files — images, CSS, JavaScript bundles. Without this, you would be running an auth check on every single static asset request, which adds latency for no reason.
+
+## 6. Auth + RLS: Why They're a Package Deal
+
+Authentication protects your routes. Row Level Security protects your data. You need both.
+
+Once auth is set up, Supabase makes `auth.uid()` available inside every RLS policy. This is the bridge between "who is this person?" and "what are they allowed to see?" A basic policy looks like this:
+
+```sql
+CREATE POLICY "Users see own data"
+  ON profiles
+  FOR SELECT
+  USING (id = auth.uid());
+```
+
+That single line ensures every `SELECT` on the `profiles` table automatically filters to only the current user's row. No application code needed. No risk of a developer forgetting a `WHERE` clause. The database enforces it.
+
+The mental model is simple: **Auth = "who are you?"** and **RLS = "what can you see?"** Without auth, RLS has no user ID to work with. Without RLS, auth only protects page access — someone with a valid session could still query another user's data if the API allows it.
+
+I wrote a deeper dive on this pattern in [Stop Letting Your AI Chatbot Write Raw SQL](/en/secure-ai-chatbot-supabase-rls), covering how RLS interacts with AI tool-calling and multi-tenant data isolation. If you are building anything where multiple users share the same database, that post is the natural next step after this one.
+
+## The Takeaway
+
+Auth is infrastructure, not a feature. Treat it like plumbing — invisible when it works, catastrophic when it doesn't. Every hour you spend setting it up properly saves you from days of painful debugging and restructuring later.
+
+Here is the complete stack: **Supabase Auth** for identity management, **`@supabase/ssr`** for cookie-based sessions, **Next.js middleware** for route protection. Together, they give you production-ready authentication in under an hour.
+
+Your checklist before moving on to the next feature:
+
+1. **Set up email/password auth** — server actions, sign up, sign in, confirmation flow
+2. **Add at least one OAuth provider** — Google or GitHub, with the callback route handler
+3. **Create server and browser client utilities** — one for each context, shared across the app
+4. **Add middleware for route protection** — verify sessions on every request, redirect when needed
+5. **Enable RLS on all user-data tables** — auth gives you the user ID, RLS enforces the boundaries
+
+Get these five things right, and you have a foundation you can build anything on.
+
+---
+
+*Need help setting up authentication for your SaaS, or taking an AI-built prototype to production? I specialize in Supabase + Next.js full-stack development. [Let's talk](mailto:jay@orangec.at).*
