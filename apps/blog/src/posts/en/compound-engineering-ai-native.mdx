@@ -1,0 +1,144 @@
+---
+title: "Compound Engineering: The AI-Native Philosophy for Exponential Velocity"
+description: "Most codebases get slower with age. Compound engineering makes them faster. Here is the 4-step loop that turns AI assistance into systematic compounding gains."
+date: "2026-02-14"
+tags: ["development", "productivity", "ai-native", "workflow", "system-design", "tips"]
+slug: "compound-engineering-ai-native"
+category: "technical"
+author: "Jaeil Lee"
+featured: false
+seo:
+  keywords: ["Compound Engineering", "AI-native development", "Claude Code workflow", "Agentic architecture", "Engineering velocity"]
+---
+
+# Compound Engineering: The AI-Native Philosophy for Exponential Velocity
+
+Every developer knows the feeling. You start a new project, and you fly. Features ship in hours. The code is clean, the tests pass, and everything feels easy.
+
+Fast forward two years. That same feature now takes three days. You spend half your time fighting the legacy code, negotiating with past decisions, and decoding "clever" abstractions that seemed like a good idea at the time.
+
+**Entropy always wins.** In traditional software engineering, every new line of code adds complexity. Complexity adds friction. Over time, the system fights back.
+
+But what if entropy didn't have to win? What if every feature you built made the *next* feature easier to build?
+
+This is the promise of **Compound Engineering**. It is not just about using AI to type faster. It is a fundamental shift in how we build software, where the goal is not just shipping the feature, but improving the system that builds the feature.
+
+## 1. The Core Philosophy: Plan → Work → Review → Compound
+
+At Every, Kieran Klaassen and his team run five products with single-person engineering teams. They don't do it by working harder. They do it by following a four-step loop that turns linear effort into exponential capability.
+
+The loop looks like this:
+
+**Plan → Work → Review → Compound → Repeat**
+
+The first three steps are standard. Every good engineering team plans, builds, and reviews. But most teams stop there. The fourth step—**Compound**—is where the magic happens.
+
+### The Missing Step
+In traditional development, once a feature is shipped, the learning evaporates. Maybe it lives in one developer's head. Maybe it's mentioned in a PR comment that no one will ever read again.
+
+In Compound Engineering, you treat the *process* as the product.
+
+*   **Plan**: Transform an idea into a detailed blueprint.
+*   **Work**: The AI agent implements the plan while you monitor.
+*   **Review**: Specialized agents verify the work (security, performance, style).
+*   **Compound**: Capture the solution, document the pattern, and update the system instructions (`CLAUDE.md`, `AGENTS.md`) so the AI *never makes the same mistake again*.
+
+If you skip the Compound step, you are just doing traditional engineering with a faster keyboard. You are not building leverage.
+
+## 2. The 50/50 Rule: Redefining "Work"
+
+This requires a mental shift. We are trained to believe that "real work" is typing code into an IDE. Everything else—documentation, tooling, configuring agents—feels like overhead.
+
+Compound Engineering flips this. 
+
+**The Rule**: Spend 50% of your time building features, and 50% improving the system.
+
+It sounds radical. Spend half your time *not* shipping features? But consider the math. An hour spent creating a "Review Agent" that automatically catches N+1 queries saves you hundreds of hours of debugging and code review over the next year.
+
+When you treat system improvement as an investment rather than a distraction, your velocity doesn't flatline—it accelerates.
+
+## 3. Unlearning the "Craftsman" Myths
+
+To adopt this, I had to let go of some deeply held beliefs about what it means to be a software engineer.
+
+### Myth 1: "The code must be written by hand."
+**Reality**: Your job is to solve problems and ship value. Code is just an artifact. Whether you typed it or an agent generated it doesn't matter, as long as it works, is maintainable, and solves the user's problem.
+
+### Myth 2: "First attempts should be good."
+**Reality**: In the AI era, iteration speed beats initial perfection. AI-generated code often has a 95% "garbage rate" on the first try. That's fine. If you can iterate 10 times in the time it used to take to write one draft, you win.
+
+### Myth 3: "I need to review every line manually."
+**Reality**: Manual review doesn't scale. You need safety nets, not gatekeepers. If you don't trust the AI's output, don't just squint harder at the diff. Build a test suite or a verification agent that gives you mathematical confidence.
+
+## 4. The Ladder of Adoption: Where Are You?
+
+You don't jump straight to managing a fleet of autonomous agents. There is a progression.
+
+### Stage 0: Manual Development
+You, the IDE, and Stack Overflow. The classic way. It built the internet, but it's too slow for 2026.
+
+### Stage 1: Chat-Based Assistance
+You use Claude or ChatGPT as a smart reference. You copy-paste snippets. You are still the driver, mostly using GPS.
+
+### Stage 2: Agentic Tools (Line-by-Line)
+You let tools like Cursor Composer or Claude Code edit files directly. But you watch every keystroke. You are a micromanager. "No, not there, line 42." This is where most developers plateau.
+
+### Stage 3: The Leap (Plan-First)
+This is the inflection point. You stop micromanaging. You write a **Plan**—a detailed document of requirements and edge cases—and tell the AI: "Execute this." 
+
+You step away. The AI writes the code, runs the tests, and attempts a solution. You review the *outcome* (the PR), not the process.
+
+### Stage 5: "Fleet Commander"
+You are no longer an individual contributor; you are an orchestrator. You run multiple agents in parallel. One is refactoring the auth system. Another is building the new landing page. A third is writing documentation. You manage the queue, unblock the agents, and merge the PRs.
+
+## 5. Practical Tactics to Start Today
+
+If you want to move from Stage 2 to Stage 3, here are three concrete things you can do right now.
+
+### 1. Skip Permissions (Responsibly)
+To get into the flow, you need to trust the tool. Claude Code has a flag: `--dangerously-skip-permissions`.
+
+```bash
+alias cc='claude --dangerously-skip-permissions'
+```
+
+The name is scary on purpose. But if you are working in a git-controlled environment, with good tests, and not touching production directly, the risk is minimal. The speed gain—not having to hit "y" every 30 seconds—is transformative. 
+
+*Note: Never do this on production servers or without version control.*
+
+### 2. Plans Are The New Code
+Stop diving into the code. Start by writing a Markdown file.
+
+```markdown
+# Plan: Add Dark Mode
+
+## Context
+User requested dark mode. We use Tailwind.
+
+## Requirements
+- [ ] Toggle in settings
+- [ ] Persist specific user preference to local storage
+- [ ] Default to system preference if no override
+- [ ] Update all `bg-white` and `text-black` to use semantic colors
+```
+
+Hand *this* to the agent. A good plan prevents 80% of AI hallucinations.
+
+### 3. "Vibe Coding" for Discovery
+Sometimes you don't know what you want. That's okay. Use "Vibe Coding" to prototype.
+
+Tell the agent: *"Make me a dashboard that feels like 90s cyberpunk."* 
+
+Don't look at the code. Just look at the result. Iterate until it feels right. Then—and this is key—**throw it away**. Take the design patterns you discovered, write a proper plan, and have the agent build it cleanly.
+
+## The Takeaway
+
+The era of the "10x Engineer" who types faster than everyone else is ending. We are entering the era of the **Compound Engineer**.
+
+Your value is no longer defined by your WPM or your memorization of the standard library. It is defined by your ability to orchestrate intelligence, to build systems that learn, and to turn linear effort into exponential results.
+
+Start carrying the `CLAUDE.md` file in your project root. Treat your agents as junior developers who need clear instructions and good documentation. And remember: every time you fix a bug, teach the system how to prevent it next time.
+
+---
+
+*Are you building with agentic workflows? I'm documenting the shift to AI-native engineering. [Let's connect](mailto:jay@orangec.at).*
