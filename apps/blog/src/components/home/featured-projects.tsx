@@ -2,15 +2,13 @@
 
 import ProjectCard from "@/components/project/project-card";
 import { FEATURED_PROJECTS } from "@/data/projects";
-import { useTranslations } from "next-intl";
 
 export default function FeaturedProjects() {
-  const t = useTranslations("home.projects");
   return (
     <section id="projects" className="py-section space-y-8">
       <div className="container-narrow">
         <h2 className="text-h2 font-serif text-center text-foreground">
-          {t("featured")}
+          Featured Projects
         </h2>
       </div>
 

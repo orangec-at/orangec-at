@@ -20,34 +20,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const staticPages = staticRoutes.flatMap((route) => {
-    const koUrl = `${baseUrl}${route.path}`;
-    const enUrl = `${baseUrl}/en${route.path}`;
-
-    return [
-      {
-        url: koUrl,
-        lastModified: new Date(),
-        changeFrequency: route.changeFrequency,
-        priority: route.priority,
-      },
-      {
-        url: enUrl,
-        lastModified: new Date(),
-        changeFrequency: route.changeFrequency,
-        priority: route.priority,
-      },
-    ];
+    return {
+      url: `${baseUrl}${route.path}`,
+      lastModified: new Date(),
+      changeFrequency: route.changeFrequency,
+      priority: route.priority,
+    };
   });
 
   // 블로그 포스트들
-  const blogPages = allPostSlugs.map(({ slug, locale }) => {
-    const url =
-      locale === "ko"
-        ? `${baseUrl}/blog/${slug}`
-        : `${baseUrl}/en/blog/${slug}`;
-
+  const blogPages = allPostSlugs.map((slug) => {
     return {
-      url,
+      url: `${baseUrl}/blog/${slug}`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.6,

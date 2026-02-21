@@ -5,8 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useTranslations, useLocale } from "next-intl";
-import { withLocalePath } from "@/lib/locale-path";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/contexts/theme-context";
 
@@ -23,11 +21,9 @@ export default function ResponsiveHeader({
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVerySmallScreen, setIsVerySmallScreen] = useState(false);
 
-  const t = useTranslations();
-  const locale = useLocale();
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
-  const homeHref = withLocalePath(locale, "/");
+  const homeHref = "/";
   const isMobile = position === "bottom";
   const isDark = theme === "dark";
   const pillClass = "bg-surface/80 backdrop-blur-md border border-border";
@@ -126,7 +122,7 @@ export default function ResponsiveHeader({
                 } ${isScrolled ? "text-sm" : "text-base"}`}
               >
                 {MENU_ITEMS.map((item) => {
-                  const itemHref = withLocalePath(locale, item.href);
+                  const itemHref = item.href;
                   const isActive = pathname === itemHref;
                   return (
                     <Link
@@ -134,7 +130,7 @@ export default function ResponsiveHeader({
                       href={itemHref}
                       className={`${getNavLinkClass(isActive)} px-3 py-3`}
                     >
-                      {t(item.translationKey)}
+                      {getMenuLabel(item.translationKey)}
                     </Link>
                   );
                 })}
@@ -183,7 +179,7 @@ export default function ResponsiveHeader({
                 <div className="flex items-center overflow-x-auto mobile-nav-container">
                   <div className="flex gap-1 min-w-max">
                     {MENU_ITEMS.map((item) => {
-                      const itemHref = withLocalePath(locale, item.href);
+                      const itemHref = item.href;
                       const isActive = pathname === itemHref;
                       const IconComponent = item.icon;
                       return (
@@ -191,7 +187,7 @@ export default function ResponsiveHeader({
                           key={item.href}
                           href={itemHref}
                           className={`${getNavLinkClass(isActive)} px-3 py-3 flex items-center justify-center min-w-[48px] min-h-[48px]`}
-                          aria-label={t(item.translationKey)}
+                          aria-label={getMenuLabel(item.translationKey)}
                         >
                           <IconComponent className="h-5 w-5" />
                         </Link>
@@ -202,7 +198,7 @@ export default function ResponsiveHeader({
               ) : (
                 <div className="flex gap-2 text-sm">
                   {MENU_ITEMS.map((item) => {
-                    const itemHref = withLocalePath(locale, item.href);
+                    const itemHref = item.href;
                     const isActive = pathname === itemHref;
                     return (
                       <Link
@@ -210,7 +206,7 @@ export default function ResponsiveHeader({
                         href={itemHref}
                         className={`${getNavLinkClass(isActive)} px-3 py-3 touch-target`}
                       >
-                        {t(item.translationKey)}
+                        {getMenuLabel(item.translationKey)}
                       </Link>
                     );
                   })}
@@ -244,4 +240,21 @@ export default function ResponsiveHeader({
       )}
     </div>
   );
+}
+
+function getMenuLabel(translationKey: string): string {
+  switch (translationKey) {
+    case "navigation.home":
+      return "Home";
+    case "navigation.projects":
+      return "Projects";
+    case "navigation.blog":
+      return "Blog";
+    case "navigation.about":
+      return "About";
+    case "navigation.contact":
+      return "Contact";
+    default:
+      return "Menu";
+  }
 }

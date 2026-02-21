@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { ResumeSection } from "../resume-section";
 import { ProjectHighlight } from "../types";
 
@@ -9,16 +8,14 @@ interface ProjectHighlightsSectionProps {
 }
 
 export function ProjectHighlightsSection({ data }: ProjectHighlightsSectionProps) {
-  const t = useTranslations("resume.projectHighlights");
-
   if (!data || data.length === 0) return null;
 
   return (
-    <ResumeSection title={t("title")}>
+    <ResumeSection title="Key Projects">
       <div className="space-y-4">
-        {data.map((project, index) => (
+        {data.map((project) => (
           <div
-            key={index}
+            key={`${project.company}-${project.name}`}
             className="rounded-lg border border-border p-4"
           >
             <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -41,11 +38,11 @@ export function ProjectHighlightsSection({ data }: ProjectHighlightsSectionProps
             {project.achievements && project.achievements.length > 0 && (
               <div className="mb-3">
                 <p className="mb-1 text-xs font-medium text-muted-foreground">
-                  {t("achievements")}
+                  Achievements
                 </p>
                 <ul className="list-inside list-disc space-y-1 text-sm text-foreground/85">
-                  {project.achievements.map((achievement, i) => (
-                    <li key={i}>{achievement}</li>
+                  {project.achievements.map((achievement) => (
+                    <li key={achievement}>{achievement}</li>
                   ))}
                 </ul>
               </div>
@@ -53,9 +50,9 @@ export function ProjectHighlightsSection({ data }: ProjectHighlightsSectionProps
 
             {project.techStack && project.techStack.length > 0 && (
               <div className="flex flex-wrap gap-1">
-                {project.techStack.map((tech, i) => (
+                {project.techStack.map((tech) => (
                     <span
-                      key={i}
+                      key={tech}
                       className="rounded border border-border bg-surface px-2 py-0.5 text-xs text-ember-accent"
                     >
                       {tech}

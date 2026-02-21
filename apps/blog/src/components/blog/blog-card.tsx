@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useLocale, useTranslations } from "next-intl";
-import { withLocalePath } from "@/lib/locale-path";
 
 interface BlogCardProps {
   title: string;
@@ -29,11 +27,8 @@ export default function BlogCard({
   tags = [],
   featured = false,
 }: BlogCardProps) {
-  const t = useTranslations("blog");
-  const locale = useLocale();
-
   return (
-    <Link href={withLocalePath(locale, `/blog/${slug}`)} className="block h-full">
+    <Link href={`/blog/${slug}`} className="block h-full">
       <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-ember-accent/40 hover:bg-ember-accent-bg">
         <div className="relative aspect-[16/10] overflow-hidden border-b border-border bg-surface">
           {thumbnail ? (
@@ -49,9 +44,9 @@ export default function BlogCard({
                 <p className="text-2xl opacity-45" aria-hidden>
                   📝
                 </p>
-                <p className="mt-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                  {category || t("defaultCategory")}
-                </p>
+                  <p className="mt-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                   {category || "Blog"}
+                 </p>
               </div>
             </div>
           )}
@@ -71,9 +66,9 @@ export default function BlogCard({
 
           {featured && (
             <div className="absolute right-3 top-3">
-              <span className="inline-flex rounded-full border border-ember-accent/30 bg-ember-accent px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white">
-                {t("featured")}
-              </span>
+                <span className="inline-flex rounded-full border border-ember-accent/30 bg-ember-accent px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white">
+                 Featured
+                </span>
             </div>
           )}
         </div>

@@ -1,7 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-
 interface Experience {
   company: string;
   role: string;
@@ -13,13 +11,57 @@ interface Experience {
 }
 
 export default function CareerTimeline() {
-  const t = useTranslations("home.career");
-
-  const experiences = t.raw("experiences") as Experience[];
+  const experiences: Experience[] = [
+    {
+      company: "MIDAS IT",
+      role: "Frontend Developer",
+      period: "Oct 2022 ~ Mar 2024",
+      team: "Cell One | DX Dev",
+      description:
+        "Web service development for subscription model transition of structural engineering software for construction",
+      highlights: [
+        "Worked as main frontend developer in a 20-person web development team",
+        "Built architecture collaboration platform benchmarking Adobe Creative Cloud",
+        "Developed core authentication features including member info page and SSO login",
+        "Implemented monorepo architecture for unified codebase management",
+      ],
+      techStack: "React, TypeScript, Next.js, Recoil, React-Query, Yarn Workspace",
+    },
+    {
+      company: "Pikurate Inc.",
+      role: "Frontend Developer",
+      period: "Mar 2022 ~ Sep 2022",
+      team: "Researcher | Product Team",
+      description:
+        "Development of SNS app service with bookmark feature and internal web services",
+      highlights: [
+        "Worked as core frontend developer in a 15-person startup",
+        "Contributed to initial product development joining at MVP stage",
+        "Developed new internal web service for marketing funnel tracking",
+        "Built design system for legacy product component integration",
+      ],
+      techStack: "React, TypeScript, React Native, Next.js, Zustand, React Query",
+    },
+    {
+      company: "SecureNet Inc.",
+      role: "Full-stack Developer",
+      period: "Jun 2020 ~ Dec 2021",
+      team: "Manager | Service Dev",
+      description:
+        "Maintenance of product certification management service and new back-office development for sales management",
+      highlights: [
+        "Worked as core web developer in a 5-person startup",
+        "Transformed Excel and messenger-based manual work into efficient back-office system",
+        "A to Z experience from sales manager interviews and wireframe design to development",
+        "Gained infrastructure experience including server and database management",
+      ],
+      techStack: "React, Redux, Spring Boot, Oracle Database, Ubuntu Server",
+    },
+  ];
 
   return (
     <section className="container-narrow py-section space-y-10">
-      <h2 className="text-h2 font-serif text-center text-foreground">{t("title")}</h2>
+      <h2 className="text-h2 font-serif text-center text-foreground">Work Experience</h2>
 
       <div className="border-l border-border pl-6 md:pl-8">
         {experiences.map((exp, index) => (
@@ -58,7 +100,7 @@ export default function CareerTimeline() {
 
               <div className="pt-1">
                 <p className="text-micro uppercase tracking-wide text-muted-foreground">
-                  {t("techLabel")}:{" "}
+                  Tech Stack:{" "}
                 </p>
                 <p className="text-small text-muted-foreground">
                   {exp.techStack}

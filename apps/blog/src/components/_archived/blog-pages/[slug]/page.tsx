@@ -10,15 +10,15 @@ import path from "path";
 import BlogPostClient from "./client";
 
 interface BlogPageProps {
-  params: Promise<{ slug: string; locale: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 // SEO 메타데이터 생성
 export async function generateMetadata({ params }: BlogPageProps) {
-  const { slug, locale } = await params;
+  const { slug } = await params;
 
   const [blogMeta, availableTranslations] = await Promise.all([
-    getBlogPostMeta(slug, locale),
+    getBlogPostMeta(slug),
     getAvailableTranslations(slug),
   ]);
 
@@ -29,17 +29,13 @@ export async function generateMetadata({ params }: BlogPageProps) {
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
-  const canonicalUrl = `${baseUrl}/${
-    locale === "ko" ? "" : `${locale}/`
-  }blog/${slug}`;
+  const canonicalUrl = `${baseUrl}/blog/${slug}`;
 
   // hreflang links 생성
   const languages: Record<string, string> = {};
   availableTranslations.forEach((availableLocale) => {
-    const localeUrl = `${baseUrl}/${
-      availableLocale === "ko" ? "" : `${availableLocale}/`
-    }blog/${slug}`;
-    languages[availableLocale === "ko" ? "ko" : "en"] = localeUrl;
+    const localeUrl = `${baseUrl}/blog/${slug}`;
+    languages[availableLocale] = localeUrl;
   });
 
   return {
@@ -54,7 +50,7 @@ export async function generateMetadata({ params }: BlogPageProps) {
       description: blogMeta.description,
       url: canonicalUrl,
       siteName: "Orange C At",
-      locale: locale === "ko" ? "ko_KR" : "en_US",
+      locale: "en_US",
       type: "article",
       publishedTime: blogMeta.date,
       authors: [blogMeta.author],
@@ -76,18 +72,17 @@ export async function generateMetadata({ params }: BlogPageProps) {
 }
 
 export default async function BlogPostPage({ params }: BlogPageProps) {
-  const { slug, locale } = await params;
+  const { slug } = await params;
 
   // 언어별 포스트 경로 시도
-  const filePath = path.join(process.cwd(), "src/posts", locale, `${slug}.mdx`);
+  const filePath = path.join(process.cwd(), "src/posts", `${slug}.mdx`);
 
   let source: string;
   try {
     source = await fs.readFile(filePath, "utf-8");
   } catch {
-    // 해당 언어의 포스트가 없으면 404
-    console.error(`Post not found: ${slug} for locale ${locale}`);
-    throw new Error(`Post not found: ${slug} for locale ${locale}`);
+    console.error(`Post not found: ${slug}`);
+    throw new Error(`Post not found: ${slug}`);
   }
 
   // frontmatter 제거하고 content만 추출
@@ -96,16 +91,16 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
 
   // 블로그 포스트 메타데이터와 번역 정보 가져오기
   const [blogMeta, availableTranslations] = await Promise.all([
-    getBlogPostMeta(slug, locale),
+    getBlogPostMeta(slug),
     getAvailableTranslations(slug),
   ]);
 
   if (!blogMeta) {
-    throw new Error(`Post metadata not found: ${slug} for locale ${locale}`);
+    throw new Error(`Post metadata not found: ${slug}`);
   }
 
   // JSON-LD 데이터 생성
-  const jsonLd = generateJsonLd(blogMeta, slug, locale);
+  const jsonLd = generateJsonLd(blogMeta, slug);
 
   return (
     <>
@@ -121,7 +116,7 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         mdxSource={mdxSource}
         blogMeta={blogMeta}
         blogSlug={slug}
-        locale={locale}
+        locale="en"
         availableTranslations={availableTranslations}
       />
     </>
@@ -129,9 +124,9 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
 }
 
 // JSON-LD 구조화된 데이터 생성
-function generateJsonLd(blogMeta: BlogPostMeta, slug: string, locale: string) {
+function generateJsonLd(blogMeta: BlogPostMeta, slug: string) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
-  const url = `${baseUrl}/${locale === "ko" ? "" : `${locale}/`}blog/${slug}`;
+  const url = `${baseUrl}/blog/${slug}`;
 
   return {
     "@context": "https://schema.org",
@@ -154,7 +149,7 @@ function generateJsonLd(blogMeta: BlogPostMeta, slug: string, locale: string) {
       "@type": "WebPage",
       "@id": url,
     },
-    inLanguage: locale === "ko" ? "ko-KR" : "en-US",
+    inLanguage: "en-US",
     ...(blogMeta.category && {
       articleSection: blogMeta.category,
     }),

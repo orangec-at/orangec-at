@@ -10,7 +10,7 @@ import {
 // 블로그 포스트 메타데이터 (slug 포함)
 export interface BlogPostMeta extends MDXFrontmatter {
   slug: string;
-  locale: string;
+  locale: "en";
 }
 
 // 지원하는 포스트 파일 확장자
@@ -18,10 +18,9 @@ const POST_EXTENSIONS = [".mdx", ".tsx"] as const;
 
 // slug에 해당하는 포스트 파일 경로와 확장자를 찾는다
 async function resolvePostFile(
-  slug: string,
-  locale: string
+  slug: string
 ): Promise<{ filePath: string; ext: string } | null> {
-  const postsDir = path.join(process.cwd(), "src/posts", locale);
+  const postsDir = path.join(process.cwd(), "src/posts");
   for (const ext of POST_EXTENSIONS) {
     const filePath = path.join(postsDir, `${slug}${ext}`);
     try {
@@ -58,11 +57,10 @@ async function extractTsxMeta(filePath: string): Promise<Record<string, unknown>
 }
 
 export async function getBlogPostMeta(
-  slug: string,
-  locale: string = "ko"
+  slug: string
 ): Promise<BlogPostMeta | null> {
   try {
-    const resolved = await resolvePostFile(slug, locale);
+    const resolved = await resolvePostFile(slug);
     if (!resolved) return null;
 
     let data: Record<string, unknown>;
@@ -84,32 +82,25 @@ export async function getBlogPostMeta(
     return {
       ...frontmatter,
       slug,
-      locale,
+      locale: "en",
     };
   } catch (error) {
-    console.error(
-      `Failed to read blog post meta for ${slug} in ${locale}:`,
-      error
-    );
+    console.error(`Failed to read blog post meta for ${slug}:`, error);
     return null;
   }
 }
 
 export async function getBlogPostsMeta(
-  slugs: string[],
-  locale: string = "ko"
+  slugs: string[]
 ): Promise<BlogPostMeta[]> {
-  const metaPromises = slugs.map((slug) => getBlogPostMeta(slug, locale));
+  const metaPromises = slugs.map((slug) => getBlogPostMeta(slug));
   const metas = await Promise.all(metaPromises);
   return metas.filter((meta): meta is BlogPostMeta => meta !== null);
 }
 
-// 특정 언어의 모든 포스트 가져오기
-export async function getBlogPostsByLocale(
-  locale: string = "ko"
-): Promise<BlogPostMeta[]> {
+export async function getBlogPosts(): Promise<BlogPostMeta[]> {
   try {
-    const postsDir = path.join(process.cwd(), "src/posts", locale);
+    const postsDir = path.join(process.cwd(), "src/posts");
     const files = await fs.readdir(postsDir);
     const postFiles = files.filter((file) =>
       POST_EXTENSIONS.some((ext) => file.endsWith(ext))
@@ -118,13 +109,13 @@ export async function getBlogPostsByLocale(
     const posts = await Promise.all(
       postFiles.map(async (filename) => {
         const slug = filename.replace(/\.(mdx|tsx)$/, "");
-        return await getBlogPostMeta(slug, locale);
+        return await getBlogPostMeta(slug);
       })
     );
 
     return posts.filter((post): post is BlogPostMeta => post !== null);
   } catch (error) {
-    console.error(`Failed to get posts for locale ${locale}:`, error);
+    console.error("Failed to get posts:", error);
     return [];
   }
 }
@@ -133,52 +124,30 @@ export async function getBlogPostsByLocale(
 export async function getAvailableTranslations(
   slug: string
 ): Promise<string[]> {
-  const locales = ["ko", "en"];
-  const availableLocales: string[] = [];
-
-  for (const locale of locales) {
-    const resolved = await resolvePostFile(slug, locale);
-    if (resolved) {
-      availableLocales.push(locale);
-    }
-  }
-
-  return availableLocales;
+  const resolved = await resolvePostFile(slug);
+  return resolved ? ["en"] : [];
 }
 
-// 모든 언어의 포스트 slug 목록 (sitemap 생성용)
-export async function getAllPostSlugs(): Promise<
-  Array<{ slug: string; locale: string }>
-> {
-  const locales = ["ko", "en"];
-  const allSlugs: Array<{ slug: string; locale: string }> = [];
+export async function getAllPostSlugs(): Promise<string[]> {
+  try {
+    const postsDir = path.join(process.cwd(), "src/posts");
+    const files = await fs.readdir(postsDir);
+    const postFiles = files.filter((file) =>
+      POST_EXTENSIONS.some((ext) => file.endsWith(ext))
+    );
 
-  for (const locale of locales) {
-    try {
-      const postsDir = path.join(process.cwd(), "src/posts", locale);
-      const files = await fs.readdir(postsDir);
-      const postFiles = files.filter((file) =>
-        POST_EXTENSIONS.some((ext) => file.endsWith(ext))
-      );
-
-      postFiles.forEach((filename) => {
-        const slug = filename.replace(/\.(mdx|tsx)$/, "");
-        allSlugs.push({ slug, locale });
-      });
-    } catch {
-      console.warn(`No posts directory for locale ${locale}`);
-    }
+    return postFiles.map((filename) => filename.replace(/\.(mdx|tsx)$/, ""));
+  } catch {
+    console.warn("No posts directory");
+    return [];
   }
-
-  return allSlugs;
 }
 
 // slug의 포스트 타입을 반환 (라우터에서 사용)
 export async function getPostType(
-  slug: string,
-  locale: string
+  slug: string
 ): Promise<"mdx" | "tsx" | null> {
-  const resolved = await resolvePostFile(slug, locale);
+  const resolved = await resolvePostFile(slug);
   if (!resolved) return null;
   return resolved.ext === ".tsx" ? "tsx" : "mdx";
 }

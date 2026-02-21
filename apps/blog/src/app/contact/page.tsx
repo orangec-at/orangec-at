@@ -1,0 +1,149 @@
+import { Metadata } from "next";
+import { Mail, Linkedin, Github, Calendar, ArrowUpRight } from "lucide-react";
+
+type Props = {
+  params: Promise<Record<string, never>>;
+};
+
+const DICTIONARY = {
+  en: {
+    title: "Contact",
+    heading: "Get in touch",
+    subheading: "Let's build something impossible.",
+    availability: "Available for new opportunities",
+    description: "Whether you have a question, a project in mind, or just want to say hi, I'm always open to discussing new ideas.",
+    email: {
+      label: "Email",
+      value: "radio941016@gmail.com",
+      action: "Send a message",
+    },
+    linkedin: {
+      label: "LinkedIn",
+      value: "linkedin.com/in/orangec-at",
+      action: "Connect",
+    },
+    github: {
+      label: "GitHub",
+      value: "github.com/orangec-at",
+      action: "Follow",
+    },
+    schedule: {
+      label: "Schedule",
+      value: "Book a meeting",
+      action: "Select a time",
+    },
+    metaTitle: "Contact | Jaeil Lee",
+    metaDescription: "Get in touch with Jaeil Lee. Available for new projects and collaborations.",
+  },
+} as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = DICTIONARY.en;
+
+  return {
+    title: t.metaTitle,
+    description: t.metaDescription,
+  };
+}
+
+export default async function ContactPage({ params }: Props) {
+  await params;
+  const t = DICTIONARY.en;
+
+  const contactMethods = [
+    {
+      icon: Mail,
+      label: t.email.label,
+      value: t.email.value,
+      action: t.email.action,
+      href: "mailto:radio941016@gmail.com",
+    },
+    {
+      icon: Linkedin,
+      label: t.linkedin.label,
+      value: t.linkedin.value,
+      action: t.linkedin.action,
+      href: "https://linkedin.com/in/orangec-at",
+    },
+    {
+      icon: Github,
+      label: t.github.label,
+      value: t.github.value,
+      action: t.github.action,
+      href: "https://github.com/orangec-at",
+    },
+    {
+      icon: Calendar,
+      label: t.schedule.label,
+      value: t.schedule.value,
+      action: t.schedule.action,
+      href: "mailto:radio941016@gmail.com?subject=Schedule%20a%20Call",
+    },
+  ];
+
+  return (
+    <div className="container-narrow pb-section space-y-16 md:space-y-20">
+      <section className="space-y-10">
+        <div className="space-y-6">
+          <div className="mb-8 border-b border-border pb-8">
+            <p className="text-xs uppercase tracking-[0.26em] text-ember-accent">Contact</p>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+              {t.heading}
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm text-muted-foreground sm:text-base">
+              {t.description}
+            </p>
+          </div>
+
+          <p className="text-body text-muted-foreground">{t.subheading}</p>
+
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-ember-accent/35"></span>
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-ember-accent"></span>
+            </span>
+            <span className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
+              {t.availability}
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+          {contactMethods.map((method) => (
+            <a
+              key={method.label}
+              href={method.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative flex h-48 flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card p-8 transition-[background-color,border-color] duration-300 ease-out hover:border-ember-accent/40 hover:bg-accent/30 md:h-56"
+            >
+              <div className="flex justify-between items-start">
+                <div className="rounded-xl border border-border bg-background p-3 shadow-sm transition-transform duration-300 group-hover:scale-110">
+                  <method.icon className="h-6 w-6 text-foreground" strokeWidth={1.5} />
+                </div>
+                <ArrowUpRight className="h-5 w-5 text-muted-foreground transition-[color,transform] duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-ember-accent" />
+              </div>
+
+              <div className="space-y-1 z-10">
+                <h3 className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
+                  {method.label}
+                </h3>
+                <p className="text-small text-muted-foreground transition-colors group-hover:text-foreground">
+                  {method.action}
+                </p>
+              </div>
+
+              <div className="pointer-events-none absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-gradient-to-br from-ember-accent/20 to-transparent opacity-0 blur-2xl transition-transform duration-500 group-hover:scale-150 group-hover:opacity-100" />
+            </a>
+          ))}
+        </div>
+
+        <div className="mt-20 border-t border-dashed border-border pt-8">
+          <p className="text-micro text-center text-muted-foreground">
+            &copy; {new Date().getFullYear()} Jaeil Lee. All rights reserved.
+          </p>
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -5,8 +5,6 @@ import { Button } from "@orangec-at/design";
 import { Title, Body, Detail } from "@orangec-at/design/blog";
 import { Project } from "@/data/projects";
 import Link from "next/link";
-import { useTranslations, useLocale } from "next-intl";
-import { withLocalePath } from "@/lib/locale-path";
 
 interface RelatedProjectsSectionProps {
   projects: Project[];
@@ -15,10 +13,6 @@ interface RelatedProjectsSectionProps {
 export function RelatedProjectsSection({
   projects,
 }: RelatedProjectsSectionProps) {
-  const t = useTranslations("blog");
-  const tp = useTranslations("projects");
-  const locale = useLocale();
-
   if (projects.length === 0) {
     return null;
   }
@@ -30,13 +24,13 @@ export function RelatedProjectsSection({
         as="h3"
         className="text-gray-900 dark:text-white mb-3 sm:mb-4"
       >
-        {t("relatedProjects")}
+        Related Projects
       </Title>
       <Body
         variant="m-400"
         className="text-gray-600 dark:text-gray-400 mb-4 sm:mb-6"
       >
-        {t("relatedProjectsDescription")}
+        Check out projects where these technologies are applied.
       </Body>
       <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
         {projects.map((project) => (
@@ -69,8 +63,8 @@ export function RelatedProjectsSection({
               ))}
             </div>
             <Button asChild variant="outline" size="sm" className="w-full">
-              <Link href={withLocalePath(locale, `/projects/${project.id}`)}>
-                {tp("viewDetails")}
+              <Link href={`/projects/${project.id}`}>
+                View Project Details
               </Link>
             </Button>
           </div>

@@ -1,5 +1,5 @@
 import BlogClient from "./client";
-import { getBlogPostsByLocale } from "@/lib/blog-utils.server";
+import { getBlogPosts } from "@/lib/blog-utils.server";
 
 // 블로그 목록 페이지 메타데이터
 export async function generateMetadata({
@@ -50,9 +50,8 @@ export default async function BlogPage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
-  const resolvedLocale = locale === "en" ? "en" : "ko";
-  const posts = await getBlogPostsByLocale(resolvedLocale);
+  await params;
+  const posts = await getBlogPosts();
 
   return <BlogClient posts={posts} />;
 }

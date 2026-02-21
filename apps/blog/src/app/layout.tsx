@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@/contexts/theme-context";
 import { auth } from "@/auth";
+import ConditionalAppShell from "@/components/layout/conditional-app-shell";
 import type { Metadata } from "next";
-import { getLocale } from "next-intl/server";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 
@@ -18,15 +18,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getLocale();
   const session = await auth();
 
   return (
-    <html lang={locale}>
+    <html lang="en">
       <body className="font-sans antialiased bg-background text-foreground transition-colors duration-200">
         <SessionProvider session={session}>
           <ThemeProvider defaultTheme="dark" storageKey="orangecat-theme">
-            {children}
+            <ConditionalAppShell>{children}</ConditionalAppShell>
           </ThemeProvider>
         </SessionProvider>
       </body>

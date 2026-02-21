@@ -1,9 +1,6 @@
 import type { NextConfig } from "next";
 import withMDX from "@next/mdx";
-import createNextIntlPlugin from "next-intl/plugin";
 import path from "path";
-
-const withNextIntl = createNextIntlPlugin("./src/i18n.ts");
 
 const withMDXConfig = withMDX({
   extension: /\.mdx?$/,
@@ -33,7 +30,6 @@ const nextConfig: NextConfig = {
       "@/utils": path.resolve(__dirname, "./src/utils"),
       "@/hooks": path.resolve(__dirname, "./src/hooks"),
       "@/config": path.resolve(__dirname, "./src/config"),
-      "@/i18n": path.resolve(__dirname, "./src/i18n"),
     };
 
     // Custom resolver plugin to handle @/ imports from design package
@@ -73,4 +69,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextIntl(withMDXConfig(nextConfig));
+export default withMDXConfig(nextConfig);

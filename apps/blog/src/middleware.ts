@@ -1,27 +1,21 @@
-// middleware.ts
-import createMiddleware from "next-intl/middleware";
-import { auth } from "@/auth"; // Check if this alias works, or use relative import
+import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-
-const intlMiddleware = createMiddleware({
-  locales: ["ko", "en"],
-  defaultLocale: "ko",
-});
-
-function getLocaleFromPathname(pathname: string) {
-  return pathname.startsWith("/en") ? "en" : "ko";
-}
 
 export default auth((req) => {
   const pathname = req.nextUrl.pathname;
   const hasAuthenticatedUser = Boolean(req.auth?.user?.id);
 
-  const locale = getLocaleFromPathname(pathname);
-  const onboardingPath = locale === "en" ? "/en/onboarding" : "/onboarding";
+  if (pathname.startsWith("/en/") || pathname.startsWith("/ko/")) {
+    const stripped = pathname.replace(/^\/(en|ko)/, "") || "/";
+    return NextResponse.redirect(new URL(stripped, req.url), 301);
+  }
+  if (pathname === "/en" || pathname === "/ko") {
+    return NextResponse.redirect(new URL("/", req.url), 301);
+  }
 
-  const isOnboardingRoute = /\/(en\/)?onboarding(\/|$)/.test(pathname);
-  const isLegalRoute = /\/(en\/)?(terms|privacy)(\/|$)/.test(pathname);
-  const isNewsletterRoute = /\/(en\/)?newsletter\/(confirm|unsubscribe)(\/|$)/.test(pathname);
+  const isOnboardingRoute = /\/onboarding(\/|$)/.test(pathname);
+  const isLegalRoute = /\/(terms|privacy)(\/|$)/.test(pathname);
+  const isNewsletterRoute = /\/newsletter\/(confirm|unsubscribe)(\/|$)/.test(pathname);
 
   if (!req.auth && isOnboardingRoute) {
     return NextResponse.redirect(new URL("/api/auth/signin", req.url));
@@ -35,8 +29,7 @@ export default auth((req) => {
   }
 
   if (isDashboardRoute && req.auth && req.auth.user?.role !== "ADMIN") {
-    const aboutPath = locale === "en" ? "/en/about" : "/about";
-    return NextResponse.redirect(new URL(aboutPath, req.url));
+    return NextResponse.redirect(new URL("/about", req.url));
   }
 
   if (
@@ -46,15 +39,14 @@ export default auth((req) => {
     !isLegalRoute &&
     !isNewsletterRoute
   ) {
-    const url = new URL(onboardingPath, req.url);
+    const url = new URL("/onboarding", req.url);
     url.searchParams.set("from", pathname);
     return NextResponse.redirect(url);
   }
 
-  return intlMiddleware(req);
+  return NextResponse.next();
 });
 
 export const config = {
-  // Ensure we don't match static files or API routes unless intended
   matcher: ["/((?!api|_next|.*\\..*).*)"],
 };

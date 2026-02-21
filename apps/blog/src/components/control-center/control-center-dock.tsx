@@ -3,12 +3,10 @@
 import { ControlCenter } from "./control-center";
 import { ChevronDown, ChevronUp, Sliders } from "lucide-react";
 import { FaGithub, FaLinkedin, FaEnvelope, FaXTwitter } from "react-icons/fa6";
-import { useTranslations } from "next-intl";
 import { useState } from "react";
 import ContactForm from "@/components/contact/contact-form";
 
 export default function ControlCenterDock() {
-  const t = useTranslations("controlCenter");
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [showContact, setShowContact] = useState(false);
   const ownerEmail = "radio941016@gmail.com";
@@ -19,7 +17,7 @@ export default function ControlCenterDock() {
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
             <span className="inline-flex h-2 w-2 rounded-full bg-ember-accent" />
-            {t("title")}
+            Settings
           </div>
           <div className="flex items-center gap-2">
             <Sliders className="h-4 w-4 text-muted-foreground" />
@@ -91,7 +89,7 @@ export default function ControlCenterDock() {
             <div className="relative w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-foreground">
-                  {t("title")} · Contact
+                  Settings · Contact
                 </h3>
                 <button
                 type="button"

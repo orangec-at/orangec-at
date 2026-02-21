@@ -6,7 +6,6 @@ import { QuickActionItemComponent } from "./quick-action-item";
 import { SliderItemComponent } from "./slider-item";
 import { InfoItemComponent } from "./info-item";
 import MusicPlayerItemComponent from "./music-player-item";
-import { LanguageItemComponent } from "./language-item";
 
 interface ControlItemRendererProps {
   item: ControlItem;
@@ -31,8 +30,6 @@ export function ControlItemRenderer({ item, onAction }: ControlItemRendererProps
       return <InfoItemComponent item={item} />;
     case "music-player":
       return <MusicPlayerItemComponent item={item} onAction={onAction} />;
-    case "language":
-      return <LanguageItemComponent item={item} onAction={onAction} />;
 
     default:
       return null;
@@ -45,4 +42,3 @@ export * from "./theme-item";
 export * from "./quick-action-item";
 export * from "./slider-item";
 export * from "./info-item";
-export * from "./language-item";

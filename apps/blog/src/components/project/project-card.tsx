@@ -6,8 +6,6 @@ import { Card } from "@orangec-at/design";
 import { Badge } from "@orangec-at/design";
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslations, useLocale } from "next-intl";
-import { withLocalePath } from "@/lib/locale-path";
 import { MdClose } from "react-icons/md";
 
 interface ProjectCardProps {
@@ -16,11 +14,8 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project }: ProjectCardProps) {
   const [open, setOpen] = useState(false);
-  const t = useTranslations("projects");
-  const locale = useLocale();
-  const title = locale === "ko" ? project.title : project.titleEn || project.title;
-  const description =
-    locale === "ko" ? project.description : project.descriptionEn || project.description;
+  const title = project.titleEn || project.title;
+  const description = project.descriptionEn || project.description;
   const images = useMemo(
     () => (project.images && project.images.length > 0 ? project.images : project.image ? [project.image] : []),
     [project.images, project.image]
@@ -80,16 +75,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             )}
           </div>
           <div className="px-4 pb-4 flex justify-end">
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setOpen(true);
-              }}
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
               className="text-small font-medium text-muted-foreground transition-colors hover:text-ember-accent"
             >
-              {t("viewMore")}
-            </a>
+              View More
+            </button>
           </div>
         </div>
       </Card>
@@ -159,7 +151,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     </>
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                      {t("viewDetails")}
+                      View Project Details
                     </div>
                   )}
                 </div>
@@ -174,7 +166,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 {project.techStack.length > 0 && (
                   <div className="space-y-2">
                     <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
-                      {t("techStack")}
+                      Tech Stack
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {project.techStack.map((tech) => (
@@ -189,10 +181,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 {project.keyFeatures && project.keyFeatures.length > 0 && (
                   <div className="space-y-3">
                     <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
-                      {t("keyFeatures")}
+                      Key Features
                     </p>
                     <div className="space-y-2 text-small text-muted-foreground">
-                      {(locale === "ko" ? project.keyFeatures : project.keyFeaturesEn || project.keyFeatures).map((feature) => (
+                      {(project.keyFeaturesEn || project.keyFeatures).map((feature) => (
                         <div key={feature} className="flex items-start gap-2 leading-relaxed">
                           <span className="mt-[6px] inline-block h-2 w-2 rounded-full bg-ember-accent" />
                           <span>{feature}</span>
@@ -205,10 +197,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 {project.challenges && project.challenges.length > 0 && (
                   <div className="space-y-3">
                     <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
-                      {t("challenges")}
+                      Technical Challenges
                     </p>
                     <div className="space-y-2 text-small text-muted-foreground">
-                      {(locale === "ko" ? project.challenges : project.challengesEn || project.challenges).map((challenge) => (
+                      {(project.challengesEn || project.challenges).map((challenge) => (
                         <div key={challenge} className="flex items-start gap-2 leading-relaxed">
                           <span className="mt-[6px] inline-block h-2 w-2 rounded-full bg-ember-accent" />
                           <span>{challenge}</span>
@@ -227,7 +219,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                         rel="noreferrer"
                         className="text-small font-medium text-ember-accent transition-colors hover:text-ember-accent-dim"
                       >
-                        {t("liveSite")}
+                        Live Site
                       </a>
                     )}
                     {project.github && (
@@ -237,7 +229,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                         rel="noreferrer"
                         className="text-small font-medium text-ember-accent transition-colors hover:text-ember-accent-dim"
                       >
-                        {t("github")}
+                        GitHub
                       </a>
                     )}
                   </div>
@@ -246,16 +238,16 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 {project.relatedBlogPosts && project.relatedBlogPosts.length > 0 && (
                   <div className="space-y-2">
                     <p className="text-micro font-mono uppercase tracking-[0.14em] text-muted-foreground">
-                      {t("relatedPosts")}
+                      Related Blog Posts
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {project.relatedBlogPosts.map((slug) => (
                         <Link
                           key={slug}
-                          href={withLocalePath(locale, `/blog/${slug}`)}
+                          href={`/blog/${slug}`}
                           className="text-small font-medium text-ember-accent transition-colors hover:text-ember-accent-dim"
                         >
-                          {t("readMore")}
+                          Read More
                         </Link>
                       ))}
                     </div>

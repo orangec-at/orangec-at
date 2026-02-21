@@ -8,7 +8,6 @@ import { BlogPostMeta, getRelatedProjects } from "@/lib/blog-utils";
 import { translateCategory, translateTag } from "@/types/frontmatter";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import Link from "next/link";
-import { withLocalePath } from "@/lib/locale-path";
 
 interface BlogPostClientProps {
   mdxSource: MDXRemoteSerializeResult;
@@ -22,7 +21,6 @@ export default function BlogPostClient({
   mdxSource,
   blogMeta,
   blogSlug,
-  locale = "ko",
   availableTranslations = [],
 }: BlogPostClientProps) {
   const relatedProjects = getRelatedProjects(blogSlug);
@@ -37,11 +35,11 @@ export default function BlogPostClient({
               <Button
                 key={availableLocale}
                 asChild
-                variant={locale === availableLocale ? "default" : "outline"}
+                variant={availableLocale === "en" ? "default" : "outline"}
                 size="sm"
               >
-                <Link href={withLocalePath(availableLocale, `/blog/${blogSlug}`)}>
-                  {availableLocale === "ko" ? "한국어" : "English"}
+                <Link href={`/blog/${blogSlug}`}>
+                  English
                 </Link>
               </Button>
             ))}
@@ -56,12 +54,10 @@ export default function BlogPostClient({
                 {blogMeta.title}
               </h1>
               <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-4 sm:mb-6">
-                <span className="flex items-center gap-1">
-                  📅
-                  {new Date(blogMeta.date).toLocaleDateString(
-                    locale === "ko" ? "ko-KR" : "en-US"
-                  )}
-                </span>
+                  <span className="flex items-center gap-1">
+                    📅
+                    {new Date(blogMeta.date).toLocaleDateString("en-US")}
+                  </span>
                 {blogMeta.readTime && (
                   <span className="flex items-center gap-1">
                     ⏱️ {blogMeta.readTime}
@@ -69,7 +65,7 @@ export default function BlogPostClient({
                 )}
                 {blogMeta.category && (
                   <span className="flex items-center gap-1">
-                    📂 {translateCategory(blogMeta.category, locale)}
+                    📂 {translateCategory(blogMeta.category, "en")}
                   </span>
                 )}
               </div>
@@ -85,7 +81,7 @@ export default function BlogPostClient({
                       key={tag}
                       className="muji-label px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium tracking-wide"
                     >
-                      #{translateTag(tag, locale)}
+                      #{translateTag(tag, "en")}
                     </span>
                   ))}
                 </div>

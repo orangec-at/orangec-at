@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { ResumeSection } from "../resume-section";
 import { ResumeTable, Tr, TdLabel, TdValue } from "../resume-table";
 import { Skills } from "../types";
@@ -10,12 +9,10 @@ interface SkillsSectionProps {
 }
 
 export function SkillsSection({ data }: SkillsSectionProps) {
-  const t = useTranslations("resume.skills");
-
   const maxRows = Math.max(data.languages.length, data.computer.length);
 
   return (
-    <ResumeSection title={t("title")}>
+    <ResumeSection title="Skills">
       <ResumeTable>
         <tbody>
           {Array.from({ length: maxRows }).map((_, index) => {
@@ -24,10 +21,10 @@ export function SkillsSection({ data }: SkillsSectionProps) {
             const isLast = index === maxRows - 1;
 
             return (
-              <Tr key={index} isLast={isLast}>
+              <Tr key={`${lang?.language ?? "lang"}-${comp?.name ?? "comp"}-${index}`} isLast={isLast}>
                 {index === 0 ? (
                   <TdLabel rowSpan={data.languages.length} className="w-20">
-                    {t("language")}
+                    Language
                   </TdLabel>
                 ) : index >= data.languages.length ? (
                   <TdLabel className="w-20" />
@@ -44,7 +41,7 @@ export function SkillsSection({ data }: SkillsSectionProps) {
 
                 {index === 0 ? (
                   <TdLabel rowSpan={data.computer.length} className="w-20">
-                    {t("computer")}
+                    Computer
                   </TdLabel>
                 ) : index >= data.computer.length ? (
                   <TdLabel className="w-20" />

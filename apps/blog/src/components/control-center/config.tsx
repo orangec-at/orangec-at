@@ -12,33 +12,19 @@ export const defaultControlCenterConfig: ControlCenterConfig = {
       id: "theme",
       type: "theme",
       size: "large",
-      title: "테마",
+      title: "Theme",
       enabled: true,
       order: 1,
       currentTheme: "system" as const,
       onThemeChange: () => {}, // Will be injected by parent
     },
     {
-      id: "language",
-      type: "language",
-      size: "large",
-      title: "언어",
-      enabled: true,
-      order: 2,
-      currentLocale: "ko", // Will be injected by parent
-      availableLanguages: [
-        { code: "ko", name: "한국어", flag: "🇰🇷" },
-        { code: "en", name: "English", flag: "🇺🇸" },
-      ],
-      onLanguageChange: () => {}, // Will be injected by parent
-    },
-    {
       id: "music-player",
       type: "music-player",
       size: "wide",
-      title: "음악재생",
+      title: "Music Player",
       enabled: true,
-      order: 3,
+      order: 2,
       isPlaying: false,
       currentTrack: "God Is",
       artist: "",
@@ -46,20 +32,6 @@ export const defaultControlCenterConfig: ControlCenterConfig = {
       onPause: () => console.log("Pause clicked"),
       onNext: () => console.log("Next clicked"),
       onPrevious: () => console.log("Previous clicked"),
-    },
-    {
-      id: "language",
-      type: "language",
-      size: "large",
-      title: "언어",
-      enabled: true,
-      order: 3,
-      currentLocale: "ko",
-      availableLanguages: [
-        { code: "ko", name: "한국어", flag: "🇰🇷" },
-        { code: "en", name: "English", flag: "🇺🇸" },
-      ],
-      onLanguageChange: () => {}, // Will be injected by parent
     },
   ],
 };
@@ -76,33 +48,19 @@ export const inlineControlCenterConfig: ControlCenterConfig = {
       id: "theme",
       type: "theme",
       size: "medium",
-      title: "테마",
+      title: "Theme",
       enabled: true,
       order: 1,
       currentTheme: "system" as const,
       onThemeChange: () => {}, // Will be injected by parent
     },
     {
-      id: "language",
-      type: "language",
-      size: "medium",
-      title: "언어",
-      enabled: true,
-      order: 2,
-      currentLocale: "ko", // Will be injected by parent
-      availableLanguages: [
-        { code: "ko", name: "한국어", flag: "🇰🇷" },
-        { code: "en", name: "English", flag: "🇺🇸" },
-      ],
-      onLanguageChange: () => {}, // Will be injected by parent
-    },
-    {
       id: "music-player",
       type: "music-player",
       size: "wide",
-      title: "음악재생",
+      title: "Music Player",
       enabled: true,
-      order: 3,
+      order: 2,
       isPlaying: false,
       currentTrack: "God Is",
       artist: "",

@@ -3,8 +3,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
-import { withLocalePath } from "@/lib/locale-path";
 import type { Post } from "@/lib/types";
 
 interface FeaturedPostsProps {
@@ -24,7 +22,6 @@ const toShortDate = (isoDate: string) => {
 
 export function FeaturedPosts({ posts, onPostClick, onCatalogClick }: FeaturedPostsProps) {
   const router = useRouter();
-  const locale = useLocale();
   const prefersReducedMotion = useReducedMotion();
 
   const featuredPosts = (() => {
@@ -39,7 +36,7 @@ export function FeaturedPosts({ posts, onPostClick, onCatalogClick }: FeaturedPo
       return;
     }
 
-    router.push(withLocalePath(locale, `/blog/${post.slug}`));
+    router.push(`/blog/${post.slug}`);
   };
 
   const handleCatalogClick = () => {
@@ -48,7 +45,7 @@ export function FeaturedPosts({ posts, onPostClick, onCatalogClick }: FeaturedPo
       return;
     }
 
-    router.push(withLocalePath(locale, "/blog"));
+    router.push("/blog");
   };
 
   return (

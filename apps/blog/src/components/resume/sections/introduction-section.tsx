@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { ResumeSection } from "../resume-section";
 
 interface IntroductionSectionProps {
@@ -8,10 +7,8 @@ interface IntroductionSectionProps {
 }
 
 export function IntroductionSection({ content }: IntroductionSectionProps) {
-  const t = useTranslations("resume.introduction");
-
   return (
-    <ResumeSection title={t("title")}>
+    <ResumeSection title="About Me">
       <div className="rounded-lg bg-surface p-4">
         <p className="whitespace-pre-line leading-relaxed text-foreground/85">
           {content}

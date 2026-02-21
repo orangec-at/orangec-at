@@ -2,7 +2,6 @@
 
 import { useReducedMotion } from "framer-motion";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
 import { ShieldCheck } from "lucide-react";
 
 interface ExperienceItem {
@@ -12,9 +11,24 @@ interface ExperienceItem {
 }
 
 export default function HomeHero() {
-  const t = useTranslations("home.hero");
   const prefersReducedMotion = useReducedMotion();
-  const experiences = (t.raw("experiences") as ExperienceItem[]) || [];
+  const experiences: ExperienceItem[] = [
+    {
+      period: "Sep 2025 ~ Present",
+      company: "DPP Platform",
+      title: "Digital Product Passport FE (Next.js) · Full-time",
+    },
+    {
+      period: "Nov 2023 ~ Feb 2024",
+      company: "Midas IT",
+      title: "Cloud storage platform FE lead",
+    },
+    {
+      period: "Jan 2023 ~ Apr 2023",
+      company: "Midas IT",
+      title: "Membership system FE owner",
+    },
+  ];
 
   return (
     <section className="container-narrow py-section">
@@ -35,8 +49,8 @@ export default function HomeHero() {
               <ShieldCheck className="h-4 w-4 text-muted-foreground" />
               <span className="h-2 w-2 rounded-full bg-ember-accent" aria-hidden />
             </div>
-            <p className="text-body leading-snug text-muted-foreground">{t("title")}</p>
-            <p className="text-small text-muted-foreground">{t("location")}</p>
+            <p className="text-body leading-snug text-muted-foreground">Hi, I&apos;m a product-minded Frontend Developer</p>
+            <p className="text-small text-muted-foreground">Seoul, South Korea</p>
           </div>
         </div>
 

@@ -3,7 +3,6 @@
 import BlogCard from "@/components/blog/blog-card";
 import { MDXFrontmatter } from "@/types/frontmatter";
 import { useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
 import { grid } from "@/lib/design-tokens";
 
 interface BlogClientProps {
@@ -11,10 +10,21 @@ interface BlogClientProps {
 }
 
 export default function BlogClient({ posts }: BlogClientProps) {
-  const t = useTranslations("blog");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedTag, setSelectedTag] = useState<string>("all");
+
+  const labels = {
+    title: "Blog",
+    subtitle: "Thoughts and archives of OrangeCat.",
+    searchPlaceholder: "Search posts...",
+    allCategories: "All categories",
+    allTags: "All tags",
+    resetFilters: "Reset filters",
+    postCount: (count: number) => `${count} posts`,
+    noPostsFound: "No posts found",
+    adjustSearch: "Try adjusting your search or filters.",
+  };
 
   // 필터링된 포스트
   const filteredPosts = useMemo(() => {
@@ -51,9 +61,9 @@ export default function BlogClient({ posts }: BlogClientProps) {
         {/* 헤더 - MUJI 스타일 minimal spacing */}
         <div className="mb-4">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
-            {t("title")}
+            {labels.title}
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">{t("subtitle")}</p>
+          <p className="text-gray-600 dark:text-gray-300">{labels.subtitle}</p>
         </div>
 
         {/* 검색 및 필터 - MUJI 스타일 clean layout */}
@@ -62,12 +72,13 @@ export default function BlogClient({ posts }: BlogClientProps) {
           <div className="relative">
             <input
               type="text"
-              placeholder={t("searchPlaceholder")}
+              placeholder={labels.searchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="muji-input w-full px-4 py-3 pl-10 text-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
             />
             <svg
+              aria-hidden="true"
               className="absolute left-3 top-3.5 h-4 w-4 text-gray-400 dark:text-gray-500"
               fill="none"
               stroke="currentColor"
@@ -90,7 +101,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="muji-input px-3 py-2 text-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
             >
-              <option value="all">{t("allCategories")}</option>
+              <option value="all">{labels.allCategories}</option>
               {categories.map((category) => (
                 <option key={category} value={category}>
                   {category}
@@ -104,7 +115,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
               onChange={(e) => setSelectedTag(e.target.value)}
               className="muji-input px-3 py-2 text-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
             >
-              <option value="all">{t("allTags")}</option>
+              <option value="all">{labels.allTags}</option>
               {tags.map((tag) => (
                 <option key={tag} value={tag}>
                   #{tag}
@@ -117,6 +128,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
               selectedCategory !== "all" ||
               selectedTag !== "all") && (
               <button
+                type="button"
                 onClick={() => {
                   setSearchTerm("");
                   setSelectedCategory("all");
@@ -124,7 +136,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
                 }}
                 className="muji-input px-3 py-2 text-sm text-gray-700 hover:bg-wood-100 dark:hover:bg-gray-800"
               >
-                {t("resetFilters")}
+                {labels.resetFilters}
               </button>
             )}
           </div>
@@ -132,7 +144,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
 
         {/* 결과 카운트 */}
         <div className="text-sm text-gray-600 dark:text-gray-400">
-          {t("postCount", { count: filteredPosts.length })}
+          {labels.postCount(filteredPosts.length)}
         </div>
       </div>
 
@@ -163,6 +175,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
         <div className="text-center py-12">
           <div className="text-gray-400 dark:text-gray-500 mb-4">
             <svg
+              aria-hidden="true"
               className="mx-auto h-12 w-12"
               fill="none"
               stroke="currentColor"
@@ -177,10 +190,10 @@ export default function BlogClient({ posts }: BlogClientProps) {
             </svg>
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-            {t("noPostsFound")}
+            {labels.noPostsFound}
           </h3>
           <p className="text-gray-600 dark:text-gray-300">
-            {t("adjustSearch")}
+            {labels.adjustSearch}
           </p>
         </div>
       )}

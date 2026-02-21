@@ -2,15 +2,12 @@
 
 import { Moon, Sun } from "lucide-react";
 import { ThemeItem } from "../types";
-import { useTranslations } from "next-intl";
 
 interface ThemeItemProps {
   item: ThemeItem;
 }
 
 export function ThemeItemComponent({ item }: ThemeItemProps) {
-  const t = useTranslations("controlCenter");
-
   const normalizedTheme = item.currentTheme === "system" ? "light" : item.currentTheme;
   const nextTheme = normalizedTheme === "light" ? "dark" : "light";
 
@@ -26,10 +23,10 @@ export function ThemeItemComponent({ item }: ThemeItemProps) {
           )}
           <div className="min-w-0 flex-1">
             <div className="text-sm font-medium text-card-foreground">
-              {t("theme")}
+              Theme
             </div>
             <div className="text-xs text-muted-foreground truncate">
-              {normalizedTheme === "light" ? t("lightMode") : t("darkMode")}
+              {normalizedTheme === "light" ? "Light Mode" : "Dark Mode"}
             </div>
           </div>
         </div>
@@ -47,7 +44,7 @@ export function ThemeItemComponent({ item }: ThemeItemProps) {
             <Sun className="h-4 w-4" />
           )}
           <span className="text-sm font-semibold">
-            {normalizedTheme === "light" ? t("dark") : t("light")}
+            {normalizedTheme === "light" ? "Dark" : "Light"}
           </span>
         </button>
       </div>

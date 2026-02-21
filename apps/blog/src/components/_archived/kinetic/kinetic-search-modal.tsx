@@ -14,9 +14,24 @@ import {
   Star,
 } from "lucide-react";
 
-import { stripLocalePrefix, withLocalePath } from "@/lib/locale-path";
 import { blogApiUrl } from "@/lib/blog-api";
 import type { Fragment, Post } from "@/lib/types";
+
+const SUPPORTED_LOCALES = ["ko", "en"] as const;
+
+function stripLocalePrefix(pathname: string) {
+  const normalized = pathname.startsWith("/") ? pathname : `/${pathname}`;
+
+  for (const locale of SUPPORTED_LOCALES) {
+    const prefix = `/${locale}`;
+    if (normalized === prefix) return "/";
+    if (normalized.startsWith(`${prefix}/`)) {
+      return normalized.slice(prefix.length) || "/";
+    }
+  }
+
+  return normalized;
+}
 
 interface KineticSearchModalProps {
   isOpen: boolean;
@@ -180,7 +195,7 @@ export function KineticSearchModal({
 
   const handleRemoteResultClick = (result: RemoteSearchResult) => {
     const nextPathname = stripLocalePrefix(result.url || "/");
-    router.push(withLocalePath(locale, nextPathname));
+    router.push(nextPathname);
     onClose();
   };
 
@@ -229,6 +244,7 @@ export function KineticSearchModal({
                     </span>
                   </div>
                   <button
+                    type="button"
                     onClick={onClose}
                     className="group p-2 -m-2 w-10 h-10 border-2 border-stone-300 dark:border-white/30 flex items-center justify-center hover:bg-kinetic-orange hover:border-kinetic-orange transition-all duration-300"
                     aria-label="Close search"
@@ -272,6 +288,7 @@ export function KineticSearchModal({
                   <div className="flex flex-wrap justify-center gap-3">
                     {SEARCH_SUGGESTIONS.map((tag) => (
                       <button
+                        type="button"
                         key={tag}
                         onClick={() => setQuery(tag)}
                         className="group px-5 py-2.5 bg-[#f4f1ea] dark:bg-black border-2 border-stone-300 dark:border-white/20 font-mono text-[10px] uppercase tracking-widest text-[#78716c] dark:text-white/70 hover:border-kinetic-orange hover:text-kinetic-orange hover:bg-kinetic-orange/10 transition-all duration-300"

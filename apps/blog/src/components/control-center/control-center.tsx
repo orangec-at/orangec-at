@@ -3,10 +3,7 @@
 import { Button } from "@orangec-at/design";
 import { useTheme } from "@/contexts/theme-context";
 import { X } from "lucide-react";
-import { useLocale } from "next-intl";
 import { useMemo, useCallback, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { switchLocalePath } from "@/lib/locale-path";
 import {
   defaultControlCenterConfig,
   inlineControlCenterConfig,
@@ -30,10 +27,6 @@ export function ControlCenter({
   onAction,
 }: ControlCenterProps) {
   const { theme, setTheme } = useTheme();
-  const currentLocale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState("Audio removed");
@@ -54,19 +47,6 @@ export function ControlCenter({
     setCurrentTrack("Audio removed");
   }, []);
 
-  const switchLanguage = useCallback(
-    (newLocale: string) => {
-      const nextPathname = switchLocalePath(pathname, newLocale);
-      const query = searchParams.toString();
-      const hash = typeof window !== "undefined" ? window.location.hash : "";
-      const nextUrl = `${nextPathname}${query ? `?${query}` : ""}${hash}`;
-
-      router.push(nextUrl);
-      router.refresh();
-    },
-    [pathname, router, searchParams]
-  );
-
   // Create config with injected functions
   const config = useMemo(() => {
     const baseConfig =
@@ -80,13 +60,6 @@ export function ControlCenter({
           ...item,
           currentTheme: theme,
           onThemeChange: setTheme,
-        };
-      }
-      if (item.type === "language") {
-        return {
-          ...item,
-          currentLocale: currentLocale,
-          onLanguageChange: switchLanguage,
         };
       }
       if (item.type === "music-player") {
@@ -106,8 +79,6 @@ export function ControlCenter({
   }, [
     theme,
     setTheme,
-    currentLocale,
-    switchLanguage,
     variant,
     isPlaying,
     currentTrack,

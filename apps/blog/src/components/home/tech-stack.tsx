@@ -1,12 +1,9 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-
 export default function TechStack() {
-  const t = useTranslations("home.techStack");
   const techCategories = [
     {
-      category: t("core"),
+      category: "Core Technologies",
       techs: [
         "React",
         "TypeScript",
@@ -19,7 +16,7 @@ export default function TechStack() {
       ],
     },
     {
-      category: t("backend"),
+      category: "Backend Experience",
       techs: ["NestJS", "Prisma", "Node.js", "REST API"],
     },
     {

@@ -2,13 +2,9 @@
 
 import Link from "next/link";
 import { Github, Linkedin, Twitter } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
-
-import { withLocalePath } from "@/lib/locale-path";
 
 export default function Footer() {
-  const t = useTranslations("footer");
-  const locale = useLocale();
+  const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-border pt-8 pb-[calc(8rem+env(safe-area-inset-bottom))] md:py-8">
@@ -44,23 +40,15 @@ export default function Footer() {
         </div>
 
         <div className="flex items-center gap-4 text-sm">
-          <Link
-            href={withLocalePath(locale, "/privacy")}
-            className="ember-link"
-          >
-            {t("privacy")}
+          <Link href="/privacy" className="ember-link">
+            Privacy
           </Link>
-          <Link
-            href={withLocalePath(locale, "/terms")}
-            className="ember-link"
-          >
-            {t("terms")}
+          <Link href="/terms" className="ember-link">
+            Terms
           </Link>
         </div>
 
-        <p className="text-sm">
-          {t("copyright", { year: new Date().getFullYear() })}
-        </p>
+        <p className="text-sm">{`© ${year} OrangeCat's Blog. All rights reserved.`}</p>
       </div>
     </footer>
   );

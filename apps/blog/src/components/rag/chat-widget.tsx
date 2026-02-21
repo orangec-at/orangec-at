@@ -8,14 +8,13 @@ import { Card } from '@orangec-at/design';
 import { ChatMessages } from './chat-messages';
 import { ChatInput } from './chat-input';
 import { streamChat, type ChatMessage, type SourceDocument } from '@/lib/rag-client';
-import { useLocale } from 'next-intl';
 
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sources, setSources] = useState<SourceDocument[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const locale = useLocale();
+  const locale = 'en';
 
   const handleSubmit = async (query: string) => {
     if (!query.trim() || isLoading) return;
@@ -64,19 +63,14 @@ export function ChatWidget() {
 
       const errorMessage: ChatMessage = {
         role: 'assistant',
-        content:
-          locale === 'ko'
-            ? '죄송합니다. 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
-            : 'Sorry, an error occurred. Please try again later.',
+        content: 'Sorry, an error occurred. Please try again later.',
       };
       setMessages((prev) => [...prev, errorMessage]);
       setIsLoading(false);
     }
   };
 
-  const welcomeMessage = locale === 'ko'
-    ? '안녕하세요! 블로그 콘텐츠에 대해 궁금한 점을 물어보세요. 😊'
-    : 'Hello! Ask me anything about the blog content. 😊';
+  const welcomeMessage = 'Hello! Ask me anything about the blog content. 😊';
 
   return (
     <>
@@ -116,7 +110,7 @@ export function ChatWidget() {
                 <div className="flex items-center gap-2">
                   <MessageCircle className="h-5 w-5" />
                   <h3 className="font-semibold">
-                    {locale === 'ko' ? 'AI 어시스턴트' : 'AI Assistant'}
+                    AI Assistant
                   </h3>
                 </div>
                 <Button

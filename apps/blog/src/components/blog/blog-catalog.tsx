@@ -3,9 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, LayoutGrid, Search, SquareStack, Table } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
 import { type ComponentType, useMemo, useState } from "react";
-import { withLocalePath } from "@/lib/locale-path";
 import type { Post } from "@/lib/types";
 
 type ViewMode = "table" | "grid" | "card";
@@ -53,7 +51,6 @@ export function BlogCatalog({
   onSearchOpen,
 }: BlogCatalogProps) {
   const router = useRouter();
-  const locale = useLocale();
   const prefersReducedMotion = useReducedMotion();
   const [viewMode, setViewMode] = useState<ViewMode>("table");
 
@@ -63,7 +60,7 @@ export function BlogCatalog({
       return;
     }
 
-    router.push(withLocalePath(locale, `/blog/${post.slug}`));
+    router.push(`/blog/${post.slug}`);
   };
 
   const categoryCount = useMemo(

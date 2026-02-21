@@ -9,8 +9,7 @@ export type ControlItemType =
   | "quick-action" 
   | "slider"
   | "info"
-  | "music-player"
-  | "language";
+  | "music-player";
 
 export interface BaseControlItem {
   id: string;
@@ -78,17 +77,6 @@ export interface MusicPlayerItem extends BaseControlItem {
   onPrevious?: () => void;
 }
 
-export interface LanguageItem extends BaseControlItem {
-  type: "language";
-  currentLocale: string;
-  availableLanguages: {
-    code: string;
-    name: string;
-    flag: string;
-  }[];
-  onLanguageChange?: (locale: string) => void;
-}
-
 export type ControlItem = 
   | ConnectivityItem 
   | MediaItem 
@@ -96,8 +84,7 @@ export type ControlItem =
   | QuickActionItem 
   | SliderItem 
   | InfoItem
-  | MusicPlayerItem
-  | LanguageItem;
+  | MusicPlayerItem;
 
 export interface ControlCenterConfig {
   items: ControlItem[];

@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { ResumeSection } from "../resume-section";
 import { ResumeTable, Tr, Th, TdValue, TheadRow } from "../resume-table";
 import { Education } from "../types";
@@ -10,21 +9,19 @@ interface EducationSectionProps {
 }
 
 export function EducationSection({ data }: EducationSectionProps) {
-  const t = useTranslations("resume.education");
-
   return (
-    <ResumeSection title={t("title")}>
+    <ResumeSection title="Education">
       <ResumeTable>
         <thead>
           <TheadRow>
-            <Th>{t("date")}</Th>
-            <Th>{t("school")}</Th>
-            <Th isLast>{t("major")}</Th>
+            <Th>Date</Th>
+            <Th>School</Th>
+            <Th isLast>Major</Th>
           </TheadRow>
         </thead>
         <tbody>
           {data.map((item, index) => (
-            <Tr key={index} isLast={index === data.length - 1}>
+            <Tr key={`${item.date}-${item.school}`} isLast={index === data.length - 1}>
               <TdValue>{item.date}</TdValue>
               <TdValue>{item.school}</TdValue>
               <TdValue isLast>{item.major}</TdValue>

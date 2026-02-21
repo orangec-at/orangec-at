@@ -1,14 +1,26 @@
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+import HomeClient from "./client";
+import { FEATURED_PROJECTS } from "@/data/projects";
+import { getBlogPosts } from "@/lib/blog-utils.server";
 
-export default async function RootPage() {
-  // Get the Accept-Language header to determine user's preferred language
-  const headersList = await headers();
-  const acceptLanguage = headersList.get("accept-language") || "";
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Home | Jaeil Lee",
+    description:
+      "Explore Jaeil Lee's product engineering portfolio, recent writings, and featured projects.",
+    alternates: {
+      canonical: "/",
+    },
+  };
+}
 
-  // Simple language detection - prioritize Korean if detected
-  const preferredLanguage = acceptLanguage.includes("ko") ? "ko" : "en";
+export default async function HomePage() {
+  const blogPosts = await getBlogPosts();
 
-  // Redirect to the appropriate language route
-  redirect(`/${preferredLanguage}`);
+  return (
+    <HomeClient
+      recentPosts={blogPosts.slice(0, 3)}
+      featuredProjects={FEATURED_PROJECTS}
+    />
+  );
 }

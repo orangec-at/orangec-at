@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { ResumeSection } from "../resume-section";
 import { ResumeTable, TdLabel, TdValue, Tr } from "../resume-table";
 import { PersonalInfo } from "../types";
@@ -10,28 +9,26 @@ interface PersonalInfoSectionProps {
 }
 
 export function PersonalInfoSection({ data }: PersonalInfoSectionProps) {
-  const t = useTranslations("resume.personalInfo");
-
   return (
-    <ResumeSection title={t("title")}>
+    <ResumeSection title="Personal Information">
       <ResumeTable>
         <tbody>
           <Tr>
-            <TdLabel className="w-24">{t("name")}</TdLabel>
+            <TdLabel className="w-24">Name</TdLabel>
             <TdValue isLast>
               {data.nameKorean} / {data.nameEnglish}
             </TdValue>
           </Tr>
 
           <Tr>
-            <TdLabel>{t("email")}</TdLabel>
+            <TdLabel>Email</TdLabel>
             <TdValue colSpan={2} isLast>
               {data.email}
             </TdValue>
           </Tr>
           {(data.sns || data.twitter || data.linkedin || data.blog) && (
             <Tr>
-              <TdLabel className="align-top">{t("sns")}</TdLabel>
+              <TdLabel className="align-top">SNS</TdLabel>
               <TdValue isLast>
                 <div className="flex flex-wrap gap-2">
                   {data.sns && (
@@ -46,7 +43,7 @@ export function PersonalInfoSection({ data }: PersonalInfoSectionProps) {
                       rel="noopener noreferrer"
                       className="inline-flex items-center rounded-full border border-border bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     >
-                      {t("twitter")}
+                      X
                     </a>
                   )}
                   {data.linkedin && (
@@ -56,7 +53,7 @@ export function PersonalInfoSection({ data }: PersonalInfoSectionProps) {
                       rel="noopener noreferrer"
                       className="inline-flex items-center rounded-full border border-border bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     >
-                      {t("linkedin")}
+                      LinkedIn
                     </a>
                   )}
                   {data.blog && (
@@ -66,7 +63,7 @@ export function PersonalInfoSection({ data }: PersonalInfoSectionProps) {
                       rel="noopener noreferrer"
                       className="inline-flex items-center rounded-full border border-border bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     >
-                      {t("blog")}
+                      Blog
                     </a>
                   )}
                 </div>

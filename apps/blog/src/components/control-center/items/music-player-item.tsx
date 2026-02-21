@@ -1,6 +1,5 @@
 import { Play, Pause, SkipForward, SkipBack } from "lucide-react";
 import { MusicPlayerItem } from "../types";
-import { useTranslations } from "next-intl";
 
 interface MusicPlayerItemProps {
   item: MusicPlayerItem;
@@ -11,9 +10,8 @@ export default function MusicPlayerItemComponent({
   item,
   onAction,
 }: MusicPlayerItemProps) {
-  const t = useTranslations("controlCenter");
   const trackLabel =
-    item.currentTrack?.trim().length > 0 ? item.currentTrack : t("noMusic");
+    item.currentTrack?.trim().length > 0 ? item.currentTrack : "No music playing";
 
   const handlePlay = () => {
     item.onPlay?.();
